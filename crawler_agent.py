@@ -35,7 +35,12 @@ def same_domain(base, url):
 
 def slugify(url, base):
     path = urlparse(url).path.strip("/")
-    return path if path else "home"
+    if not path:
+        return "home"
+    # Use the last path segment so nested paths (e.g. GoDaddy blog posts
+    # at /blog/f/<slug>) produce a flat, valid WP post_name instead of a
+    # slug containing "/".
+    return path.rsplit("/", 1)[-1]
 
 
 def element_text(el):
@@ -127,30 +132,55 @@ def discover_links(page, base_url):
         if not href or href.startswith("mailto:") or href.startswith("tel:"):
             continue
         full = urljoin(base_url, href)
-        full = full.split("#")[0].rstrip("/")
+        # Strip the query string too, not just the fragment -- sites like
+        # this one link to the same page repeatedly with different filter/
+        # tracking params (e.g. /blog?blogcategory=X, /blog?blog=y), which
+        # otherwise get crawled as separate "pages" with identical content.
+        full = full.split("#")[0].split("?")[0].rstrip("/")
         if same_domain(base_url, full):
             links.add(full)
     return links
 
 
 # ---- Qualification Agent hook -------------------------------------------
-# Cheap keyword/DOM checks to flag pages that fall outside the
+# Structural/DOM checks to flag pages that fall outside the
 # informational-site scope (payments, logins, forums). This is NOT a
 # substitute for the real Qualification Agent -- it's a first-pass filter
 # so the crawler can flag risk early rather than silently processing
 # something out of scope.
-RISK_PATTERNS = [
-    (re.compile(r"stripe|paypal|checkout|add.to.cart|shopping.cart", re.I), "possible ecommerce/payment"),
-    (re.compile(r"login|sign.?in|my.account|password", re.I), "possible login/account area"),
-    (re.compile(r"forum|community.board|discourse|phpbb", re.I), "possible forum/community feature"),
-]
+#
+# Earlier this matched keywords anywhere in the page's raw HTML text
+# ("password", "login", "community", "cart", ...). On a cybersecurity
+# advisory site, ordinary blog prose about password hygiene or online
+# communities constantly tripped that -- silently dropping real,
+# in-scope content instead of flagging actual functionality. These checks
+# look for concrete signals (form fields, URL path, known SDK scripts)
+# instead of topic vocabulary.
+URL_PATH_RISK_PATTERN = re.compile(
+    r"/(login|sign-?in|my-?account|register|cart|checkout|forum)(/|$)", re.I
+)
 
 
-def flag_risks(html_text):
+def flag_risks(page, url):
     flags = []
-    for pattern, label in RISK_PATTERNS:
-        if pattern.search(html_text):
-            flags.append(label)
+
+    path = urlparse(url).path
+    if URL_PATH_RISK_PATTERN.search(path):
+        flags.append(f"URL path suggests account/cart/forum area: {path}")
+
+    if page.query_selector("input[type='password']"):
+        flags.append("possible login/account area (password field present)")
+
+    if page.query_selector(
+        "[class*='add-to-cart' i], [class*='shopping-cart' i], "
+        "a[href*='/cart'], a[href*='/checkout'], "
+        "script[src*='stripe.com'], script[src*='paypal.com']"
+    ):
+        flags.append("possible ecommerce/payment (cart/checkout element or payment SDK present)")
+
+    if page.query_selector("[class*='phpbb' i], [class*='discourse-forum' i], a[href*='/forum']"):
+        flags.append("possible forum/community feature (forum software marker present)")
+
     return flags
 
 
@@ -187,8 +217,7 @@ def crawl(start_url, max_pages=100):
             meta_desc_el = page.query_selector("meta[name='description']")
             meta_desc = meta_desc_el.get_attribute("content") if meta_desc_el else ""
 
-            html_text = page.content()
-            risks = flag_risks(html_text)
+            risks = flag_risks(page, url)
             if risks:
                 risk_flags[url] = risks
                 print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
