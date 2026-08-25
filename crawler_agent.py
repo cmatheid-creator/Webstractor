@@ -132,11 +132,17 @@ def discover_links(page, base_url):
         if not href or href.startswith("mailto:") or href.startswith("tel:"):
             continue
         full = urljoin(base_url, href)
-        # Strip the query string too, not just the fragment -- sites like
-        # this one link to the same page repeatedly with different filter/
-        # tracking params (e.g. /blog?blogcategory=X, /blog?blog=y), which
-        # otherwise get crawled as separate "pages" with identical content.
-        full = full.split("#")[0].split("?")[0].rstrip("/")
+        # Strip only the fragment, not the query string. Query-string
+        # variants of a listing page (e.g. /blog?blogcategory=X) render
+        # different post links than the bare page -- an earlier version
+        # stripped them here to avoid re-extracting the same content
+        # under multiple URLs, but that also meant those variants were
+        # never *visited*, so posts only linked from a filtered view were
+        # never discovered at all. Content-level dedup is handled in
+        # crawl() instead, keyed on the query-stripped path, so we still
+        # visit every variant for link discovery without saving duplicate
+        # pages.
+        full = full.split("#")[0].rstrip("/")
         if same_domain(base_url, full):
             links.add(full)
     return links
@@ -189,6 +195,7 @@ def crawl(start_url, max_pages=100):
     to_visit = {start_url.rstrip("/")}
     pages = []
     risk_flags = {}
+    extracted_paths = set()
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -213,32 +220,40 @@ def crawl(start_url, max_pages=100):
                 print(f"  [skip] {url} -- {e}")
                 continue
 
-            title = page.title()
-            meta_desc_el = page.query_selector("meta[name='description']")
-            meta_desc = meta_desc_el.get_attribute("content") if meta_desc_el else ""
+            # Query-string variants of the same page (e.g. blog category
+            # filters) are still visited -- below, discover_links() reads
+            # their hrefs, since some linked posts only surface on a
+            # filtered view -- but content is only extracted and saved
+            # once per canonical (query-stripped) path, so we don't end
+            # up with duplicate "pages" for the same content.
+            canonical_path = urlparse(url).path.rstrip("/") or "/"
+            if canonical_path not in extracted_paths:
+                risks = flag_risks(page, url)
+                if risks:
+                    risk_flags[url] = risks
+                    print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
+                else:
+                    try:
+                        blocks = extract_blocks(page)
+                    except Exception as e:
+                        print(f"  [skip] {url} -- extraction failed: {e}")
+                        blocks = None
 
-            risks = flag_risks(page, url)
-            if risks:
-                risk_flags[url] = risks
-                print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
-                continue  # out of scope for this pipeline -- human review
-
-            try:
-                blocks = extract_blocks(page)
-            except Exception as e:
-                print(f"  [skip] {url} -- extraction failed: {e}")
-                continue
-
-            pages.append({
-                "old_url": url,
-                "slug": slugify(url, start_url),
-                "title": title,
-                "meta_description": meta_desc or "",
-                "type": "page",
-                "is_front_page": (url.rstrip("/") == start_url.rstrip("/")),
-                "blocks": blocks,
-            })
-            print(f"  [ok] {url} -- {len(blocks)} blocks")
+                    if blocks is not None:
+                        title = page.title()
+                        meta_desc_el = page.query_selector("meta[name='description']")
+                        meta_desc = meta_desc_el.get_attribute("content") if meta_desc_el else ""
+                        extracted_paths.add(canonical_path)
+                        pages.append({
+                            "old_url": url,
+                            "slug": slugify(url, start_url),
+                            "title": title,
+                            "meta_description": meta_desc or "",
+                            "type": "page",
+                            "is_front_page": (url.rstrip("/") == start_url.rstrip("/")),
+                            "blocks": blocks,
+                        })
+                        print(f"  [ok] {url} -- {len(blocks)} blocks")
 
             new_links = discover_links(page, start_url)
             to_visit |= (new_links - visited)
