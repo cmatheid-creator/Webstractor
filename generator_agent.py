@@ -19,8 +19,21 @@ seed of the real "Generator Agent" in the multi-agent pipeline.
 
 import json
 import html
+import re
 from datetime import datetime, timezone
 from xml.sax.saxutils import escape as xml_escape
+
+# GoDaddy Website Builder can't do real nested nav menus, so some source
+# sites fake a sub-item look by prefixing the page <title> itself with a
+# dash (e.g. "- AI Strategy" under an "AI" category). The real WP site
+# gets an actual parent/child menu, so that prefix is markup cruft, not
+# content -- strip it before it lands in a migrated page title.
+LEADING_DASH_TITLE = re.compile(r"^[-–—]\s+")
+
+
+def clean_title(title):
+    return LEADING_DASH_TITLE.sub("", title)
+
 
 SRC = "structured_content.json"
 OUT_WXR = "stratecon-migration.xml"
@@ -96,7 +109,7 @@ def block_to_gutenberg(block):
 
 def build_item_xml(page, post_id):
     blocks_md = "\n\n".join(block_to_gutenberg(b) for b in page["blocks"])
-    title = xml_escape(page["title"])
+    title = xml_escape(clean_title(page["title"]))
     slug = page["slug"]
     meta_desc = xml_escape(page.get("meta_description", ""))
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
