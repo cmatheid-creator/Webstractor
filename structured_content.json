@@ -1,0 +1,123 @@
+{
+  "site": {
+    "title": "Stratecon Tech Advisors",
+    "tagline": "Trusted Technology Advice",
+    "theme_color": "#1d2b52",
+    "old_domain": "stratecon.tech"
+  },
+  "pages": [
+    {
+      "old_url": "https://stratecon.tech/",
+      "slug": "home",
+      "title": "Trusted Technology Advisers | Cybersecurity Solutions",
+      "meta_description": "Stratecon Tech Advisors offers trusted technology advice for responsible AI, comprehensive cybersecurity, and communications solutions to grow your business.",
+      "type": "page",
+      "is_front_page": true,
+      "blocks": [
+        {"type": "heading", "level": 1, "text": "Trusted Technology Advice"},
+        {"type": "paragraph", "text": "Securing Your Digital Future"},
+        {"type": "heading", "level": 2, "text": "Tailored Services"},
+        {"type": "heading", "level": 4, "text": "Technology Concierge"},
+        {"type": "paragraph", "text": "With a commitment to driving strategic innovation, we offer expert guidance tailored to your unique business needs, empowering you to leverage the latest technological advancements effectively and achieve sustainable growth."},
+        {"type": "heading", "level": 4, "text": "Virtual CIO"},
+        {"type": "paragraph", "text": "Backed by extensive technological acumen, our vCIOs seamlessly integrate into your team, providing strategic IT leadership to align your technology initiatives with overarching business goals, fostering agility and competitive advantage."},
+        {"type": "heading", "level": 4, "text": "IT Staff Augmentation"},
+        {"type": "paragraph", "text": "We can supplement your existing IT team for special projects or ongoing needs. We can work with your IT team to fill gaps in time and resources, ensuring you accomplish your strategic business goals."},
+        {"type": "heading", "level": 2, "text": "Focused Expertise"},
+        {"type": "heading", "level": 4, "text": "Artificial Intelligence"},
+        {"type": "paragraph", "text": "We can help you build an Artificial Intelligence (AI) Strategy that will enhance employee productivity, improve customer experience (CX) and automate business processes while adhering to your privacy and security standards."},
+        {"type": "heading", "level": 4, "text": "Communications"},
+        {"type": "paragraph", "text": "We can assist with all of your communications needs, ranging from Unified Communications as a Service (UCaaS), to Contact Center as a Service (CCaaS), support for Remote/Hybrid Work, and site-to-site Connectivity."},
+        {"type": "heading", "level": 4, "text": "Cybersecurity"},
+        {"type": "paragraph", "text": "Secure your business with a full suite of cybersecurity solutions designed to identify, detect, protect, respond to and recover from emerging security threats. Secure your business, and your brand."},
+        {"type": "heading", "level": 2, "text": "Frequently Asked Questions"},
+        {"type": "faq", "items": [
+          {"q": "Who is Stratecon Tech Advisors?", "a": "Stratecon Tech Advisors is an IT advisory company that provides services to businesses of all sizes. We specialize in helping businesses improve their technology infrastructure and streamline their operations."},
+          {"q": "What services does Stratecon Tech Advisors offer?", "a": "Stratecon Tech Advisors helps clients assess where technology can accomplish key business goals, then we recommend best-in-class technology solutions to meet those goals. We can make tailor-fit recommendations, or we can provide several options that fit our client's unique business needs."},
+          {"q": "How much do Stratecon Tech Advisors services cost?", "a": "The cost of Stratecon Tech Advisor's services varies depending on the specific needs of each client. In many cases, there is no direct cost to the client, as we are paid commissions by the vendors our clients select. Contact us today to learn more about our pricing and to discuss your specific needs."}
+        ]},
+        {"type": "newsletter_signup", "label": "Stay Informed", "text": "Subscribe to our newsletter and blog updates to stay current on the hottest trends and key issues in IT!"}
+      ]
+    },
+    {
+      "old_url": "https://stratecon.tech/about",
+      "slug": "about",
+      "title": "About | Stratecon Tech Advisors",
+      "meta_description": "Learn about Stratecon Tech Advisors and our mission to help businesses grow through the intelligent use of technology.",
+      "type": "page",
+      "blocks": [
+        {"type": "heading", "level": 1, "text": "About Stratecon Tech Advisors"},
+        {"type": "paragraph", "text": "I started in the Information Technology (IT) industry at age 19 as a college intern (back when I had hair!), and I've been a continual learner ever since."},
+        {"type": "paragraph", "text": "I have worked across a very broad range of technologies in my 30+ year career, including Data Networking, Voice over IP (VoIP), HD Video, Unified Communications as a Service (UCaaS), Contact Center as a Service (CCaaS), Quality Management, Workforce Management, Artificial Intelligence (AI), and Sustainable Business Practices (People, Profit, and Planet). I have had the pleasure of working with some of the best people in the industry along the way, and many of them are now Stratecon Tech Advisors! We look forward to sharing our experiences, research, best practices, and resources to help you leverage technology to drive business success."},
+        {"type": "heading", "level": 2, "text": "Our Mission"},
+        {"type": "paragraph", "text": "Our mission is to help businesses of all sizes reach their full potential through the intelligent use of technology."},
+        {"type": "paragraph", "text": "Our team of experts has years of experience in the IT industry. We are passionate about helping businesses succeed and we pride ourselves on our technical expertise and exceptional customer service. We offer a wide range of IT advisory services, all designed to help you build the most effective and efficient IT product portfolio that will secure and grow your business."}
+      ]
+    },
+    {
+      "old_url": "https://stratecon.tech/services",
+      "slug": "services",
+      "title": "Services",
+      "meta_description": "Stratecon Tech Advisors offers Technology Concierge and Virtual CIO services to help your business grow.",
+      "type": "page",
+      "blocks": [
+        {"type": "heading", "level": 1, "text": "Services"},
+        {"type": "heading", "level": 2, "text": "Technology Concierge"},
+        {"type": "paragraph", "text": "We're here to help fill those gaps with a suite of technology services that will help your business grow. As your personal Technology Concierge, we procure a custom portfolio of industry-leading technology providers that are best suited to achieving your unique business goals."},
+        {"type": "list", "items": [
+          "Seamlessly integrate technology to streamline operations",
+          "Your team can focus on core business objectives while we handle technology vetting",
+          "Optimize processes for enhanced efficiency and productivity",
+          "Eliminate the complexities of technology to save time and resources"
+        ]},
+        {"type": "heading", "level": 2, "text": "Virtual CIO"},
+        {"type": "paragraph", "text": "Whether meeting a temporary or ongoing need, our vCIOs seamlessly integrate into your team, providing strategic IT leadership to align your technology initiatives with your business goals."},
+        {"type": "list", "items": [
+          "Personalized approach to address unique business technology needs",
+          "Expert team dedicated to understanding and fulfilling your requirements"
+        ]}
+      ]
+    },
+    {
+      "old_url": "https://stratecon.tech/contact",
+      "slug": "contact",
+      "title": "Contact",
+      "meta_description": "Contact Stratecon Tech Advisors for IT vendor procurement, IT roadmap development, and AI strategy services.",
+      "type": "page",
+      "blocks": [
+        {"type": "heading", "level": 1, "text": "Contact Us"},
+        {"type": "list", "items": [
+          "IT vendor procurement, selection, and vetting",
+          "IT Roadmap development",
+          "AI strategy, policy, and documentation"
+        ]},
+        {"type": "contact_form", "note": "Original site contact form fields not fully visible in extracted content \u2014 flagged for manual confirmation of exact fields (name/email/message vs. additional fields) before go-live."}
+      ]
+    }
+  ],
+  "navigation": [
+    {"label": "Home", "slug": "home"},
+    {"label": "AI", "children": [
+      {"label": "AI Solutions", "old_url": "https://stratecon.tech/ai-solutions", "status": "not_yet_extracted"},
+      {"label": "AI Strategy", "old_url": "https://stratecon.tech/ai-strategy-1", "status": "not_yet_extracted"},
+      {"label": "AI for Sales", "old_url": "https://stratecon.tech/ai-for-sales-1", "status": "not_yet_extracted"},
+      {"label": "AI for Customer Service", "old_url": "https://stratecon.tech/ai-for-customer-service", "status": "not_yet_extracted"}
+    ]},
+    {"label": "Communications", "children": [
+      {"label": "Communications Solutions", "old_url": "https://stratecon.tech/communications-solutions", "status": "not_yet_extracted"},
+      {"label": "Connectivity", "old_url": "https://stratecon.tech/connectivity", "status": "not_yet_extracted"},
+      {"label": "Customer Experience", "old_url": "https://stratecon.tech/customer-experience", "status": "not_yet_extracted"},
+      {"label": "Unified Communications", "old_url": "https://stratecon.tech/unified-communications", "status": "not_yet_extracted"}
+    ]},
+    {"label": "Cybersecurity", "children": [
+      {"label": "Cybersecurity Solutions", "old_url": "https://stratecon.tech/cybersecurity-solutions", "status": "not_yet_extracted"},
+      {"label": "Risk Assessment", "old_url": "https://stratecon.tech/risk-assessment-1", "status": "not_yet_extracted"},
+      {"label": "Threat ID & Detection", "old_url": "https://stratecon.tech/threat-id-%26-detection", "status": "not_yet_extracted"},
+      {"label": "Threat Protection", "old_url": "https://stratecon.tech/threat-protection", "status": "not_yet_extracted"}
+    ]},
+    {"label": "Services", "slug": "services"},
+    {"label": "Blog", "old_url": "https://stratecon.tech/blog", "status": "not_yet_extracted"},
+    {"label": "Contact", "slug": "contact"},
+    {"label": "About", "slug": "about"}
+  ]
+}
