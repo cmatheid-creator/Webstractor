@@ -159,7 +159,13 @@ def crawl(start_url, max_pages=100):
             visited.add(url)
 
             try:
-                page.goto(url, wait_until="networkidle", timeout=20000)
+                # "networkidle" waits for zero in-flight requests for 500ms,
+                # which many real sites (analytics beacons, chat widgets,
+                # font loading) never reach -- causing false-negative
+                # timeouts even though the page rendered fine. "load" plus
+                # a short settle delay is more reliable in practice.
+                page.goto(url, wait_until="load", timeout=30000)
+                page.wait_for_timeout(1000)
             except Exception as e:
                 print(f"  [skip] {url} -- {e}")
                 continue
