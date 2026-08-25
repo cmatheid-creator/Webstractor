@@ -104,6 +104,44 @@ def block_to_gutenberg(block):
             f'<!-- QA FLAG: {note} -->'
         )
 
+    if t == "forms_detected":
+        # Real per-field form data the crawler found -- surface it as a QA
+        # note with a placeholder shortcode, same shape as contact_form,
+        # rather than falling through to the generic unhandled-type
+        # placeholder (which would show raw "[Unhandled block type]" text
+        # to site visitors on every page with a form).
+        parts = []
+        for i, fields in enumerate(block.get("forms", []), 1):
+            field_desc = ", ".join(
+                f"{f['name'] or '(unnamed)'} ({f['type']})" for f in fields
+            ) or "no fields detected"
+            parts.append(
+                '<!-- wp:shortcode -->[contact-form-7 id="TBD" title="Form"]<!-- /wp:shortcode -->\n'
+                f'<!-- QA FLAG: form {i} on this page had fields: {field_desc} -- '
+                'confirm against the live site and wire to the real form plugin. -->'
+            )
+        return "\n\n".join(parts)
+
+    if t == "images_detected":
+        # Image download/re-hosting isn't built yet (see CLAUDE.md). Note
+        # it in an HTML comment for QA instead of leaking visible
+        # placeholder text into the page -- missing images are silent by
+        # default until that agent exists, not a visible defect on every
+        # migrated page.
+        count = len(block.get("images", []))
+        return (
+            f'<!-- QA FLAG: {count} image(s) detected on the source page '
+            'but not migrated -- image download/re-hosting not yet built. -->'
+        )
+
+    if t == "faq_raw_unverified":
+        note = html.escape(block.get("note", ""))
+        parts = [f'<!-- QA FLAG: {note} -->']
+        for raw in block.get("raw_text_blocks", []):
+            text = html.escape(raw)
+            parts.append(f'<!-- wp:paragraph -->\n<p>{text}</p>\n<!-- /wp:paragraph -->')
+        return "\n\n".join(parts)
+
     return f'<!-- wp:paragraph --><p>[Unhandled block type: {t}]</p><!-- /wp:paragraph -->'
 
 
@@ -185,20 +223,33 @@ def build_redirects_csv(data):
     for item in data["navigation"]:
         if "old_url" in item and item.get("status") == "not_yet_extracted":
             lines.append(f"{item['old_url']},/PENDING-EXTRACTION/")
-    return "\n".join(lines)
+    return "\n".join(lines) + "\n"
 
 
 def build_qa_report(data):
-    total_nav_items = sum(
-        1 + len(item.get("children", [])) for item in data["navigation"]
-    )
-    extracted = len(data["pages"])
+    pages = data["pages"]
+    extracted = len(pages)
+    flags = data.get("qualification_flags", {})
     pending = sum(
         1
-        for item in data["navigation"]
+        for item in data.get("navigation", [])
         for child in item.get("children", [item] if "old_url" in item else [])
         if child.get("status") == "not_yet_extracted"
     )
+
+    def count_blocks(block_type):
+        return sum(1 for p in pages for b in p["blocks"] if b["type"] == block_type)
+
+    forms_count = count_blocks("forms_detected")
+    images_count = sum(
+        len(b.get("images", []))
+        for p in pages
+        for b in p["blocks"]
+        if b["type"] == "images_detected"
+    )
+    faq_unverified_count = count_blocks("faq_raw_unverified")
+    newsletter_count = count_blocks("newsletter_signup")
+    contact_form_count = count_blocks("contact_form")
 
     lines = []
     lines.append(f"# Migration QA Report — {data['site']['title']}")
@@ -208,21 +259,37 @@ def build_qa_report(data):
     lines.append("## Summary")
     lines.append("")
     lines.append(f"- **{extracted} pages** fully extracted, structured, and converted to a ready-to-import WordPress file.")
-    lines.append(f"- **{pending} pages** in the navigation were not yet crawled in this prototype run (this demo covers Home, About, Services, and Contact only — the full pipeline would cover every page automatically).")
-    lines.append("- **0 payment, login, or account features detected** on the pages processed — consistent with an informational-site profile.")
+    if pending:
+        lines.append(f"- **{pending} pages** in the site navigation were not yet crawled and are not included in this file.")
+    if flags:
+        lines.append(f"- **{len(flags)} pages** were flagged by the qualification check (possible login/payment/forum area) and excluded from this file — see below.")
+    else:
+        lines.append("- **0 payment, login, or account features detected** on the pages processed — consistent with an informational-site profile.")
     lines.append("")
     lines.append("## Items flagged for human review before go-live")
     lines.append("")
-    lines.append("- **Contact form fields**: the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
-    lines.append("- **Newsletter signup**: mapped to a placeholder shortcode. Needs to be wired to whichever email tool (Mailchimp, etc.) the new site will use.")
-    lines.append("- **Images**: not included in this prototype run — the full pipeline downloads and re-hosts every image with matching alt text; none were pulled here since this run focused on text/structure.")
-    lines.append("- **12 sub-pages** (AI Solutions, Communications Solutions, Cybersecurity Solutions, and their children, plus the Blog) still need to run through the pipeline — flagged as pending, not dropped.")
+    if contact_form_count:
+        lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
+    if forms_count:
+        lines.append(f"- **Forms detected** ({forms_count} page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.")
+    if newsletter_count:
+        lines.append(f"- **Newsletter signup** ({newsletter_count} page(s)): mapped to a placeholder shortcode. Needs to be wired to whichever email tool (Mailchimp, etc.) the new site will use.")
+    if images_count:
+        lines.append(f"- **Images** ({images_count} detected across the crawled pages): not migrated in this run — image download/re-hosting isn't built yet. Noted per-page in an HTML comment so nothing is silently missing, but no images will appear on the imported pages until that's built.")
+    if faq_unverified_count:
+        lines.append(f"- **Low-confidence FAQ/accordion extraction** ({faq_unverified_count} page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.")
+    if flags:
+        lines.append(f"- **{len(flags)} page(s) excluded** by the qualification check:")
+        for url, reasons in flags.items():
+            lines.append(f"  - {url} — {'; '.join(reasons)}")
+    if pending:
+        lines.append(f"- **{pending} page(s)** in the site navigation were not yet crawled — flagged as pending, not dropped.")
     lines.append("")
     lines.append("## What's in the attached files")
     lines.append("")
     lines.append("- `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.")
     lines.append("- `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.")
-    return "\n".join(lines)
+    return "\n".join(lines) + "\n"
 
 
 def main():

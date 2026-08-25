@@ -244,13 +244,20 @@ def crawl(start_url, max_pages=100):
                         meta_desc_el = page.query_selector("meta[name='description']")
                         meta_desc = meta_desc_el.get_attribute("content") if meta_desc_el else ""
                         extracted_paths.add(canonical_path)
+                        # Record the canonical, query-stripped URL, not
+                        # whichever query-string variant happened to be
+                        # the first one visited -- that variant is an
+                        # implementation detail of how this page's links
+                        # were discovered, not the URL real backlinks or
+                        # bookmarks would use for redirects.
+                        canonical_url = url.split("?")[0].rstrip("/")
                         pages.append({
-                            "old_url": url,
-                            "slug": slugify(url, start_url),
+                            "old_url": canonical_url,
+                            "slug": slugify(canonical_url, start_url),
                             "title": title,
                             "meta_description": meta_desc or "",
                             "type": "page",
-                            "is_front_page": (url.rstrip("/") == start_url.rstrip("/")),
+                            "is_front_page": (canonical_url == start_url.rstrip("/")),
                             "blocks": blocks,
                         })
                         print(f"  [ok] {url} -- {len(blocks)} blocks")
