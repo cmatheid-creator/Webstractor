@@ -38,6 +38,19 @@ def slugify(url, base):
     return path if path else "home"
 
 
+def element_text(el):
+    """Get an element's text, tolerating nodes inner_text() rejects (e.g.
+    an SVG icon matched by a broad selector isn't an HTMLElement)."""
+    try:
+        text = el.inner_text()
+    except Exception:
+        try:
+            text = el.text_content()
+        except Exception:
+            text = ""
+    return " ".join((text or "").split())
+
+
 def extract_blocks(page):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
@@ -46,7 +59,7 @@ def extract_blocks(page):
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol")
     for el in elements:
         tag = el.evaluate("e => e.tagName.toLowerCase()")
-        text = (el.inner_text() or "").strip()
+        text = element_text(el)
         if not text:
             continue
 
@@ -56,9 +69,9 @@ def extract_blocks(page):
             blocks.append({"type": "paragraph", "text": text})
         elif tag in ("ul", "ol"):
             items = [
-                li.inner_text().strip()
+                element_text(li)
                 for li in el.query_selector_all("li")
-                if li.inner_text().strip()
+                if element_text(li)
             ]
             if items:
                 blocks.append({"type": "list", "items": items})
@@ -70,7 +83,7 @@ def extract_blocks(page):
     )
     faq_items = []
     for el in faq_candidates:
-        text = (el.inner_text() or "").strip()
+        text = element_text(el)
         if "?" in text and len(text) < 2000:
             faq_items.append(text)
     if faq_items:
@@ -181,7 +194,12 @@ def crawl(start_url, max_pages=100):
                 print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
                 continue  # out of scope for this pipeline -- human review
 
-            blocks = extract_blocks(page)
+            try:
+                blocks = extract_blocks(page)
+            except Exception as e:
+                print(f"  [skip] {url} -- extraction failed: {e}")
+                continue
+
             pages.append({
                 "old_url": url,
                 "slug": slugify(url, start_url),
