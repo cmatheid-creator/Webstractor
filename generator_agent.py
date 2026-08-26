@@ -20,7 +20,9 @@ seed of the real "Generator Agent" in the multi-agent pipeline.
 import json
 import html
 import re
+import hashlib
 from datetime import datetime, timezone
+from urllib.parse import urlparse
 from xml.sax.saxutils import escape as xml_escape
 
 # GoDaddy Website Builder can't do real nested nav menus, so some source
@@ -33,6 +35,27 @@ LEADING_DASH_TITLE = re.compile(r"^[-–—]\s+")
 
 def clean_title(title):
     return LEADING_DASH_TITLE.sub("", title)
+
+
+IMAGE_EXT_RE = re.compile(r"\.(jpe?g|png|gif|webp|svg|avif)$", re.I)
+
+
+def image_slug(url):
+    """Derive a filesystem-safe slug from an image URL's own filename.
+
+    GoDaddy's CDN often appends a resize suffix after the real filename
+    (e.g. ".../photo.jpg/:/rs=w:400,h:300"), so the last path segment
+    isn't reliably the filename -- scan segments for one that actually
+    ends in an image extension instead. Falls back to a stable hash if
+    none is found, so re-runs on the same data produce the same slug.
+    """
+    for segment in urlparse(url).path.split("/"):
+        if IMAGE_EXT_RE.search(segment):
+            base = IMAGE_EXT_RE.sub("", segment)
+            slug = re.sub(r"[^a-z0-9]+", "-", base.lower()).strip("-")
+            if slug:
+                return slug
+    return "image-" + hashlib.sha1(url.encode()).hexdigest()[:10]
 
 
 SRC = "structured_content.json"
@@ -122,16 +145,23 @@ def block_to_gutenberg(block):
             )
         return "\n\n".join(parts)
 
-    if t == "images_detected":
-        # Image download/re-hosting isn't built yet (see CLAUDE.md). Note
-        # it in an HTML comment for QA instead of leaking visible
-        # placeholder text into the page -- missing images are silent by
-        # default until that agent exists, not a visible defect on every
-        # migrated page.
-        count = len(block.get("images", []))
+    if t == "image":
+        # The <img> src here still points at the original site's CDN --
+        # see build_attachment_items()/build_wxr() for how the actual
+        # file gets re-hosted into the new site's media library via a
+        # WXR attachment item. Rewriting this src to the new site's
+        # eventual upload URL isn't reliable to predict in advance (it
+        # depends on WordPress's own filename-collision handling at
+        # import time), so this is flagged for a manual swap once the
+        # real media-library copy exists after import.
+        src = xml_escape(block["src"])
+        alt = xml_escape(block.get("alt", ""))
         return (
-            f'<!-- QA FLAG: {count} image(s) detected on the source page '
-            'but not migrated -- image download/re-hosting not yet built. -->'
+            '<!-- wp:image -->\n'
+            f'<figure class="wp-block-image"><img src="{src}" alt="{alt}"/></figure>\n'
+            '<!-- /wp:image -->\n'
+            '<!-- QA FLAG: still points at the original site -- swap to the '
+            're-hosted media-library copy after import. -->'
         )
 
     if t == "faq_raw_unverified":
@@ -181,6 +211,60 @@ def build_item_xml(page, post_id):
   </item>"""
 
 
+def collect_unique_images(pages):
+    """Dedupe image blocks across all pages by URL (the same logo/icon
+    typically repeats on every page) and return {url: alt} pairs."""
+    images = {}
+    for page in pages:
+        for block in page["blocks"]:
+            if block["type"] == "image" and block["src"] not in images:
+                images[block["src"]] = block.get("alt", "")
+    return images
+
+
+def build_attachment_item_xml(url, alt, attachment_id):
+    """A WXR attachment item pointing at the original image URL. This is
+    WordPress's own native mechanism for re-hosting external media: when
+    "Download and import file attachments" is checked during import (the
+    default), the importer fetches the file from wp:attachment_url itself
+    and creates a real, independent copy in the new site's media library
+    -- no custom download/hosting code needed here."""
+    slug = image_slug(url)
+    title = xml_escape(alt or slug)
+    alt_escaped = xml_escape(alt)
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    src = xml_escape(url)
+
+    return f"""  <item>
+    <title>{title}</title>
+    <link>{NEW_BASE_URL}/{slug}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{src}</guid>
+    <description></description>
+    <content:encoded><![CDATA[]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{attachment_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[{slug}]]></wp:post_name>
+    <wp:status><![CDATA[inherit]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[attachment]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <wp:attachment_url><![CDATA[{src}]]></wp:attachment_url>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_wp_attachment_image_alt]]></wp:meta_key>
+      <wp:meta_value><![CDATA[{alt_escaped}]]></wp:meta_value>
+    </wp:postmeta>
+  </item>"""
+
+
 def build_wxr(data):
     site = data["site"]
     items_xml = []
@@ -188,6 +272,13 @@ def build_wxr(data):
     for page in data["pages"]:
         items_xml.append(build_item_xml(page, post_id))
         post_id += 1
+
+    # Attachment IDs start well past the highest possible page post_id
+    # (100 + one per page) so the two ranges can never collide.
+    attachment_id = 10000
+    for url, alt in collect_unique_images(data["pages"]).items():
+        items_xml.append(build_attachment_item_xml(url, alt, attachment_id))
+        attachment_id += 1
 
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
@@ -241,12 +332,8 @@ def build_qa_report(data):
         return sum(1 for p in pages for b in p["blocks"] if b["type"] == block_type)
 
     forms_count = count_blocks("forms_detected")
-    images_count = sum(
-        len(b.get("images", []))
-        for p in pages
-        for b in p["blocks"]
-        if b["type"] == "images_detected"
-    )
+    image_instances = count_blocks("image")
+    unique_image_count = len(collect_unique_images(pages))
     faq_unverified_count = count_blocks("faq_raw_unverified")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
@@ -274,8 +361,16 @@ def build_qa_report(data):
         lines.append(f"- **Forms detected** ({forms_count} page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.")
     if newsletter_count:
         lines.append(f"- **Newsletter signup** ({newsletter_count} page(s)): mapped to a placeholder shortcode. Needs to be wired to whichever email tool (Mailchimp, etc.) the new site will use.")
-    if images_count:
-        lines.append(f"- **Images** ({images_count} detected across the crawled pages): not migrated in this run — image download/re-hosting isn't built yet. Noted per-page in an HTML comment so nothing is silently missing, but no images will appear on the imported pages until that's built.")
+    if unique_image_count:
+        lines.append(
+            f"- **Images** ({unique_image_count} unique, {image_instances} placements across "
+            "the crawled pages): included as WXR attachment items pointing at the original "
+            "site's URLs. Check **\"Download and import file attachments\"** during import "
+            "(the default) so WordPress fetches real, independent copies into your media "
+            "library. The inline image blocks on each page still reference the *original* "
+            "site's URL, though — swap those to the new media-library copies before "
+            "decommissioning the old site."
+        )
     if faq_unverified_count:
         lines.append(f"- **Low-confidence FAQ/accordion extraction** ({faq_unverified_count} page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.")
     if flags:

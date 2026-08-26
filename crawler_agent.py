@@ -56,14 +56,38 @@ def element_text(el):
     return " ".join((text or "").split())
 
 
-def extract_blocks(page):
+MIN_CONTENT_IMAGE_SIZE = 24  # px; filters tracking pixels and tiny UI icons
+
+
+def extract_blocks(page, page_url):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
 
-    # Headings + paragraphs + lists, in document order
-    elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol")
+    # Headings + paragraphs + lists + images, in document order. Images
+    # used to be collected in a separate pass at the end of the function
+    # and dumped into one page-level block, disconnected from where they
+    # actually appeared -- every page ended up with all its images
+    # bunched at the bottom regardless of layout. Including "img" in the
+    # same document-order query keeps each image roughly where it
+    # belongs in the content.
+    elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
         tag = el.evaluate("e => e.tagName.toLowerCase()")
+
+        if tag == "img":
+            src = el.get_attribute("src")
+            if not src:
+                continue
+            dims = el.evaluate("e => ({w: e.naturalWidth, h: e.naturalHeight})")
+            if dims["w"] < MIN_CONTENT_IMAGE_SIZE or dims["h"] < MIN_CONTENT_IMAGE_SIZE:
+                continue  # likely a tracking pixel or decorative icon
+            blocks.append({
+                "type": "image",
+                "src": urljoin(page_url, src),
+                "alt": el.get_attribute("alt") or "",
+            })
+            continue
+
         text = element_text(el)
         if not text:
             continue
@@ -111,16 +135,6 @@ def extract_blocks(page):
         forms.append(fields)
     if forms:
         blocks.append({"type": "forms_detected", "forms": forms})
-
-    # Images
-    images = []
-    for img in page.query_selector_all("img"):
-        src = img.get_attribute("src")
-        alt = img.get_attribute("alt") or ""
-        if src:
-            images.append({"src": src, "alt": alt})
-    if images:
-        blocks.append({"type": "images_detected", "images": images})
 
     return blocks
 
@@ -234,7 +248,7 @@ def crawl(start_url, max_pages=100):
                     print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
                 else:
                     try:
-                        blocks = extract_blocks(page)
+                        blocks = extract_blocks(page, url)
                     except Exception as e:
                         print(f"  [skip] {url} -- extraction failed: {e}")
                         blocks = None
