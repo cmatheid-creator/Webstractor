@@ -59,6 +59,22 @@ def element_text(el):
 MIN_CONTENT_IMAGE_SIZE = 24  # px; filters tracking pixels and tiny UI icons
 
 
+# Site-wide chrome to exclude from content extraction: any of the three
+# <nav> elements on a GoDaddy Website Builder page (main nav, mobile nav
+# drawer, footer nav), the [data-ux="Header"] wrapper around the whole
+# header (which also contains the logo and hamburger icon, not just the
+# nav), and the footer widget (marked with the standard ARIA landmark
+# role="contentinfo", not a <footer> tag). Without this, the entire
+# site navigation -- every heading, list item, and image in the header
+# and footer -- gets extracted as if it were unique page content, since
+# it's still just <ul>/<li>/<img> markup like everything else on the
+# page. That's not a rare edge case here: it silently duplicated the
+# same ~40-item nav list (twice -- once for the visible nav, once for
+# the mobile drawer) onto the front of every single one of the 37
+# extracted pages.
+CHROME_SELECTOR = 'nav, [data-ux="Header"], [role="contentinfo"]'
+
+
 def extract_blocks(page, page_url):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
@@ -73,6 +89,9 @@ def extract_blocks(page, page_url):
     seen_image_urls = set()
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
+        if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
+            continue  # inside the header, footer, or a nav -- not page content
+
         tag = el.evaluate("e => e.tagName.toLowerCase()")
 
         if tag == "img":
