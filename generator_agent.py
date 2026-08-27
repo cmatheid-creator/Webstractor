@@ -58,6 +58,37 @@ def image_slug(url):
     return "image-" + hashlib.sha1(url.encode()).hexdigest()[:10]
 
 
+def canonical_attachment_url(url):
+    """The URL WordPress's importer can actually download, or None if
+    there isn't one.
+
+    WordPress's fetch_remote_file() rejects a download whose URL doesn't
+    end in a recognized image extension -- it checks the URL string
+    itself (basename of the path), not what the server actually returns.
+    GoDaddy's CDN puts the real filename+extension mid-path, followed by
+    resize/crop parameters (".../photo.png/:/rs=w:400,h:300"), so the
+    last path segment is never a real extension and every one of these
+    URLs fails that check as-is.
+
+    Confirmed against the live CDN: truncating the URL right after the
+    extension (dropping the transform suffix) still serves the correct,
+    full-resolution image -- but only when an extension exists somewhere
+    in the path to truncate at. Many of this CDN's stock-photo URLs
+    (".../stock/10130/:/cr=...") have no filename or extension anywhere,
+    just an opaque ID -- confirmed the CDN rejects any tampered path
+    (400/404), so there's no way to construct a URL WordPress will
+    accept for these; they can't be auto-imported via this mechanism at
+    all and are the caller's responsibility to flag, not silently drop.
+    """
+    parsed = urlparse(url)
+    segments = parsed.path.split("/")
+    for i, segment in enumerate(segments):
+        if IMAGE_EXT_RE.search(segment):
+            truncated_path = "/".join(segments[: i + 1])
+            return f"{parsed.scheme}://{parsed.netloc}{truncated_path}"
+    return None
+
+
 SRC = "structured_content.json"
 SRC_BRAND = "brand.json"
 OUT_WXR = "stratecon-migration.xml"
@@ -224,19 +255,40 @@ def collect_unique_images(pages):
     return images
 
 
+def partition_images_by_importability(images):
+    """Split {url: alt} into (importable, not_importable) based on
+    whether canonical_attachment_url() found a usable URL. Images in
+    not_importable still display fine in page content (hotlinked to the
+    original site), they just can't get a real WXR attachment item --
+    the caller is responsible for surfacing that, not silently dropping
+    them."""
+    importable, not_importable = {}, {}
+    for url, alt in images.items():
+        target = importable if canonical_attachment_url(url) else not_importable
+        target[url] = alt
+    return importable, not_importable
+
+
 def build_attachment_item_xml(url, alt, attachment_id):
     """A WXR attachment item pointing at the original image URL. This is
     WordPress's own native mechanism for re-hosting external media: when
     "Download and import file attachments" is checked during import (the
     default), the importer fetches the file from wp:attachment_url itself
     and creates a real, independent copy in the new site's media library
-    -- no custom download/hosting code needed here."""
+    -- no custom download/hosting code needed here.
+
+    Uses canonical_attachment_url(), not the raw url, as the actual
+    wp:attachment_url -- WordPress's importer rejects a download whose
+    URL doesn't end in a recognized image extension, and this CDN's
+    transform-suffixed URLs never do. Caller must only pass urls that
+    canonical_attachment_url() resolves; see
+    partition_images_by_importability()."""
     slug = image_slug(url)
     title = xml_escape(alt or slug)
     alt_escaped = xml_escape(alt)
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
-    src = xml_escape(url)
+    src = xml_escape(canonical_attachment_url(url))
 
     return f"""  <item>
     <title>{title}</title>
@@ -278,7 +330,8 @@ def build_wxr(data):
     # Attachment IDs start well past the highest possible page post_id
     # (100 + one per page) so the two ranges can never collide.
     attachment_id = 10000
-    for url, alt in collect_unique_images(data["pages"]).items():
+    importable, _ = partition_images_by_importability(collect_unique_images(data["pages"]))
+    for url, alt in importable.items():
         items_xml.append(build_attachment_item_xml(url, alt, attachment_id))
         attachment_id += 1
 
@@ -335,7 +388,9 @@ def build_qa_report(data, brand=None):
 
     forms_count = count_blocks("forms_detected")
     image_instances = count_blocks("image")
-    unique_image_count = len(collect_unique_images(pages))
+    importable_images, non_importable_images = partition_images_by_importability(
+        collect_unique_images(pages)
+    )
     faq_unverified_count = count_blocks("faq_raw_unverified")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
@@ -363,16 +418,29 @@ def build_qa_report(data, brand=None):
         lines.append(f"- **Forms detected** ({forms_count} page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.")
     if newsletter_count:
         lines.append(f"- **Newsletter signup** ({newsletter_count} page(s)): mapped to a placeholder shortcode. Needs to be wired to whichever email tool (Mailchimp, etc.) the new site will use.")
-    if unique_image_count:
+    total_unique_images = len(importable_images) + len(non_importable_images)
+    if total_unique_images:
         lines.append(
-            f"- **Images** ({unique_image_count} unique, {image_instances} placements across "
-            "the crawled pages): included as WXR attachment items pointing at the original "
-            "site's URLs. Check **\"Download and import file attachments\"** during import "
-            "(the default) so WordPress fetches real, independent copies into your media "
-            "library. The inline image blocks on each page still reference the *original* "
-            "site's URL, though — swap those to the new media-library copies before "
-            "decommissioning the old site."
+            f"- **Images** ({total_unique_images} unique, {image_instances} placements across "
+            f"the crawled pages): {len(importable_images)} included as WXR attachment items "
+            "pointing at the original site's URLs. Check **\"Download and import file "
+            "attachments\"** during import (the default) so WordPress fetches real, "
+            "independent copies into your media library. The inline image blocks on each "
+            "page still reference the *original* site's URL, though — swap those to the new "
+            "media-library copies before decommissioning the old site."
         )
+        if non_importable_images:
+            lines.append(
+                f"- **{len(non_importable_images)} image(s) can't be auto-imported into the "
+                "media library**: their source URLs (this site's stock-photo CDN links) have "
+                "no filename or extension anywhere in the path, just an opaque ID -- "
+                "WordPress's importer requires a recognized image extension in the URL itself "
+                "and rejects these regardless of what the server actually returns. They still "
+                "display correctly on the migrated pages (hotlinked to the original site), "
+                "they just won't get an independent media-library copy automatically -- "
+                "save them from the browser and upload manually if you want copies before "
+                "decommissioning the old site."
+            )
     if faq_unverified_count:
         lines.append(f"- **Low-confidence FAQ/accordion extraction** ({faq_unverified_count} page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.")
     if flags:
