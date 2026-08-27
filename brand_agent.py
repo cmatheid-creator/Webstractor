@@ -95,21 +95,36 @@ def extract_typography(page):
     return typography
 
 
+def find_body_content_element(page):
+    """The BodyAlpha-tagged element if the page has one, else <body>.
+
+    NOT the same as page.query_selector('[data-typography="BodyAlpha"],
+    body') -- a CSS selector list returns the first DOCUMENT-ORDER match
+    across all of them, and <body> structurally precedes every one of
+    its own descendants (including any BodyAlpha element), so that
+    "fallback" selector actually always resolves to <body> itself. This
+    does the fallback explicitly instead.
+    """
+    return page.query_selector('[data-typography="BodyAlpha"]') or page.query_selector("body")
+
+
 def extract_colors(page):
     colors = {}
+    content_el = find_body_content_element(page)
 
-    # <body> itself is usually unstyled on these sites -- the actual
-    # page background lives on a wrapper div somewhere inside it, and an
-    # untouched <body> computes to the browser default (transparent
-    # background, black text) rather than anything the site's design
-    # actually specifies. Walking up from a real content element (where
-    # the site's CSS has definitely applied) to the nearest ancestor
-    # with a non-transparent background finds the color a visitor
-    # actually sees behind that content.
-    content_el = page.query_selector(
-        '[data-typography="BodyAlpha"], h1, body'
-    )
     if content_el:
+        # <body> itself is usually unstyled on these sites -- the actual
+        # page background lives on a wrapper div somewhere between
+        # <body> and the real content, and an untouched <body> computes
+        # to the browser default (fully transparent) rather than
+        # anything the site's design actually specifies. Walking up
+        # from a real content element -- not <body>, which would skip
+        # right past any wrapper div sitting below it -- to the nearest
+        # ancestor with a non-transparent background finds the color a
+        # visitor actually sees behind that content. If nothing up the
+        # chain ever paints a background, the page is relying on the
+        # browser's plain white canvas, which is the honest answer here
+        # (not "transparent", which isn't a usable palette color).
         bg = content_el.evaluate(
             """e => {
                 let node = e;
@@ -120,14 +135,12 @@ def extract_colors(page):
                     }
                     node = node.parentElement;
                 }
-                return getComputedStyle(document.body).backgroundColor;
+                return 'rgb(255, 255, 255)';
             }"""
         )
         colors["background"] = rgb_to_hex(bg)
 
-    body_text_el = page.query_selector('[data-typography="BodyAlpha"], body')
-    if body_text_el:
-        text_color = body_text_el.evaluate("e => getComputedStyle(e).color")
+        text_color = content_el.evaluate("e => getComputedStyle(e).color")
         colors["text"] = rgb_to_hex(text_color)
 
     button = page.query_selector('[data-typography="ButtonAlpha"]')
@@ -139,7 +152,11 @@ def extract_colors(page):
         colors["button_background"] = rgb_to_hex(style["bg"])
         colors["button_text"] = rgb_to_hex(style["text"])
 
-    link = page.query_selector('[data-typography="LinkAlpha"], a')
+    # Explicit fallback, not a combined selector -- see
+    # find_body_content_element() for why: <a> tags near the top of the
+    # DOM (skip links, nav, a logo wrapper) would otherwise always win
+    # over the actual LinkAlpha-styled content link.
+    link = page.query_selector('[data-typography="LinkAlpha"]') or page.query_selector("a")
     if link:
         style = link.evaluate("e => getComputedStyle(e).color")
         colors["link"] = rgb_to_hex(style)
@@ -148,7 +165,15 @@ def extract_colors(page):
 
 
 def extract_logo(page, base_url):
-    el = page.query_selector('[data-ux="ImageLogo"], header img, img[alt*="logo" i]')
+    # Explicit fallback chain, not a combined selector -- see
+    # find_body_content_element() for why that matters: a generic
+    # "header img" appearing earlier in the DOM than the real
+    # data-ux="ImageLogo" element would otherwise silently win.
+    el = (
+        page.query_selector('[data-ux="ImageLogo"]')
+        or page.query_selector("header img")
+        or page.query_selector('img[alt*="logo" i]')
+    )
     if not el:
         return None
     src = el.get_attribute("src")
