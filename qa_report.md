@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-08-25 07:16 UTC
+Generated: 2026-08-27 19:19 UTC
 
 ## Summary
 
@@ -10,7 +10,7 @@ Generated: 2026-08-25 07:16 UTC
 ## Items flagged for human review before go-live
 
 - **Forms detected** (20 page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.
-- **Images** (169 detected across the crawled pages): not migrated in this run — image download/re-hosting isn't built yet. Noted per-page in an HTML comment so nothing is silently missing, but no images will appear on the imported pages until that's built.
+- **Images** (94 unique, 132 placements across the crawled pages): included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. The inline image blocks on each page still reference the *original* site's URL, though — swap those to the new media-library copies before decommissioning the old site.
 - **Low-confidence FAQ/accordion extraction** (1 page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.
 
 ## What's in the attached files
