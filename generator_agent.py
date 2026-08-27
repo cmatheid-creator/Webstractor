@@ -436,19 +436,34 @@ def build_theme_json(brand):
         "LinkAlpha": "Link",
         "NavAlpha": "Navigation",
     }
-    font_families = []
-    seen_families = set()
+    # When several roles share one font family -- typically a workhorse
+    # font used for body text, nav, links, and buttons, plus a separate
+    # display font just for large headings -- name it after whichever
+    # role best represents how it's actually used, not whichever role
+    # happened to be listed first (e.g. a font shared by BodyAlpha and
+    # HeadingDelta is "Body", not "Heading (Tertiary)").
+    name_priority = [
+        "BodyAlpha", "HeadingAlpha", "HeadingBeta", "HeadingDelta",
+        "NavAlpha", "LinkAlpha", "ButtonAlpha",
+    ]
+    roles_by_family = {}
     for role, info in brand.get("typography", {}).items():
         family = info.get("font_family")
-        if not family or family in seen_families:
-            continue
-        seen_families.add(family)
+        if family:
+            roles_by_family.setdefault(family, []).append(role)
+
+    font_families = []
+    for family, roles in roles_by_family.items():
+        best_role = min(
+            roles,
+            key=lambda r: name_priority.index(r) if r in name_priority else len(name_priority),
+        )
         primary_name = family.split(",")[0].strip().strip("\"'")
-        slug = re.sub(r"[^a-z0-9]+", "-", primary_name.lower()).strip("-") or role.lower()
+        slug = re.sub(r"[^a-z0-9]+", "-", primary_name.lower()).strip("-") or best_role.lower()
         font_families.append({
             "slug": slug,
             "fontFamily": family,
-            "name": role_names.get(role, role),
+            "name": role_names.get(best_role, best_role),
         })
 
     theme = {

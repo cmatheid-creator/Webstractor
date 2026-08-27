@@ -52,17 +52,23 @@ TYPOGRAPHY_ROLES = [
     "NavAlpha",
 ]
 
-RGB_RE = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)")
+RGB_RE = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)")
 
 
 def rgb_to_hex(value):
     """Convert a computed-style color string ("rgb(29, 43, 82)") to hex.
-    Passes through unrecognized formats (e.g. "transparent") unchanged."""
+    Passes through unrecognized formats (e.g. the literal "transparent")
+    unchanged. An explicit alpha of 0 -- e.g. "rgba(0, 0, 0, 0)", which is
+    <body>'s default background before any site CSS touches it -- means
+    "nothing painted here", not "opaque black"; naively dropping the
+    alpha channel would misreport it as #000000."""
     m = RGB_RE.match(value or "")
     if not m:
         return value
-    r, g, b = (int(x) for x in m.groups())
-    return f"#{r:02x}{g:02x}{b:02x}"
+    r, g, b, a = m.groups()
+    if a is not None and float(a) == 0:
+        return "transparent"
+    return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
 
 
 def extract_typography(page):
@@ -92,12 +98,37 @@ def extract_typography(page):
 def extract_colors(page):
     colors = {}
 
-    body_style = page.evaluate(
-        "() => { const s = getComputedStyle(document.body); "
-        "return {bg: s.backgroundColor, text: s.color}; }"
+    # <body> itself is usually unstyled on these sites -- the actual
+    # page background lives on a wrapper div somewhere inside it, and an
+    # untouched <body> computes to the browser default (transparent
+    # background, black text) rather than anything the site's design
+    # actually specifies. Walking up from a real content element (where
+    # the site's CSS has definitely applied) to the nearest ancestor
+    # with a non-transparent background finds the color a visitor
+    # actually sees behind that content.
+    content_el = page.query_selector(
+        '[data-typography="BodyAlpha"], h1, body'
     )
-    colors["background"] = rgb_to_hex(body_style["bg"])
-    colors["text"] = rgb_to_hex(body_style["text"])
+    if content_el:
+        bg = content_el.evaluate(
+            """e => {
+                let node = e;
+                while (node) {
+                    const bg = getComputedStyle(node).backgroundColor;
+                    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+                        return bg;
+                    }
+                    node = node.parentElement;
+                }
+                return getComputedStyle(document.body).backgroundColor;
+            }"""
+        )
+        colors["background"] = rgb_to_hex(bg)
+
+    body_text_el = page.query_selector('[data-typography="BodyAlpha"], body')
+    if body_text_el:
+        text_color = body_text_el.evaluate("e => getComputedStyle(e).color")
+        colors["text"] = rgb_to_hex(text_color)
 
     button = page.query_selector('[data-typography="ButtonAlpha"]')
     if button:
