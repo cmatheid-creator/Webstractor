@@ -208,7 +208,7 @@ def block_to_gutenberg(block):
     return f'<!-- wp:paragraph --><p>[Unhandled block type: {t}]</p><!-- /wp:paragraph -->'
 
 
-def build_item_xml(page, post_id):
+def build_item_xml(page, post_id, parent_post_id=0):
     blocks_md = "\n\n".join(block_to_gutenberg(b) for b in page["blocks"])
     title = xml_escape(clean_title(page["title"]))
     slug = page["slug"]
@@ -232,7 +232,7 @@ def build_item_xml(page, post_id):
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[{slug}]]></wp:post_name>
     <wp:status><![CDATA[draft]]></wp:status>
-    <wp:post_parent>0</wp:post_parent>
+    <wp:post_parent>{parent_post_id}</wp:post_parent>
     <wp:menu_order>0</wp:menu_order>
     <wp:post_type><![CDATA[page]]></wp:post_type>
     <wp:post_password><![CDATA[]]></wp:post_password>
@@ -319,12 +319,184 @@ def build_attachment_item_xml(url, alt, attachment_id):
   </item>"""
 
 
+def href_to_slug(href):
+    """Match crawler_agent.py's own slugify(): the last path segment, or
+    "home" for the front page. Keeps nav hrefs ("/ai-solutions",
+    "/threat-id-%26-detection") matchable against page slugs without
+    needing the crawler and generator to agree on a shared module."""
+    if not href:
+        return None
+    path = href.rstrip("/")
+    if not path:
+        return "home"
+    return path.rsplit("/", 1)[-1]
+
+
+def build_page_parent_map(navigation, known_slugs):
+    """{child_slug: parent_slug} for WXR wp:post_parent, derived from the
+    nav's dropdown structure. GoDaddy's nav categories (e.g. "AI") have
+    no page of their own (href="#") -- their first dropdown child (e.g.
+    "AI Solutions") is the real hub page for that section, and the
+    other children become its sub-pages. A category whose first child
+    doesn't resolve to a known page is left alone rather than guessing
+    a hierarchy from incomplete data -- its items just stay top-level.
+    """
+    parent_map = {}
+    for item in navigation:
+        children = item.get("children") or []
+        if not children:
+            continue
+        hub_slug = href_to_slug(children[0].get("href"))
+        if hub_slug not in known_slugs:
+            continue
+        for child in children[1:]:
+            child_slug = href_to_slug(child.get("href"))
+            if child_slug and child_slug in known_slugs and child_slug != hub_slug:
+                parent_map[child_slug] = hub_slug
+    return parent_map
+
+
+NAV_MENU_SLUG = "main-menu"
+NAV_MENU_NAME = "Main Menu"
+
+
+def build_nav_menu_term_xml(term_id):
+    return f"""  <wp:term>
+    <wp:term_id>{term_id}</wp:term_id>
+    <wp:term_taxonomy>nav_menu</wp:term_taxonomy>
+    <wp:term_slug>{NAV_MENU_SLUG}</wp:term_slug>
+    <wp:term_name><![CDATA[{NAV_MENU_NAME}]]></wp:term_name>
+  </wp:term>"""
+
+
+def build_nav_menu_item_xml(item_id, title, target_page_post_id, menu_order, parent_item_id=0):
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return f"""  <item>
+    <title>{xml_escape(title)}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={item_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{item_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>{menu_order}</wp:menu_order>
+    <wp:post_type><![CDATA[nav_menu_item]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="nav_menu" nicename="{NAV_MENU_SLUG}"><![CDATA[{NAV_MENU_NAME}]]></category>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_menu_item_type]]></wp:meta_key>
+      <wp:meta_value><![CDATA[post_type]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_menu_item_object]]></wp:meta_key>
+      <wp:meta_value><![CDATA[page]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_menu_item_object_id]]></wp:meta_key>
+      <wp:meta_value><![CDATA[{target_page_post_id}]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_menu_item_menu_item_parent]]></wp:meta_key>
+      <wp:meta_value><![CDATA[{parent_item_id}]]></wp:meta_value>
+    </wp:postmeta>
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_menu_item_target]]></wp:meta_key>
+      <wp:meta_value><![CDATA[]]></wp:meta_value>
+    </wp:postmeta>
+  </item>"""
+
+
+def build_nav_menu_items_xml(navigation, pages_by_slug):
+    """WXR items for a real, importable WordPress navigation menu built
+    from the site's actual scraped nav structure (see
+    crawler_agent.py's extract_navigation()) -- not hardcoded per-site.
+
+    A GoDaddy nav category like "AI" has no page of its own (href="#"),
+    just a dropdown; that's not something a WP menu item can point at,
+    so it's linked to its hub page instead (the same one
+    build_page_parent_map() uses) -- the original nav left it
+    unclickable, but pointing it somewhere real is more standard menu
+    behavior and costs nothing.
+
+    Returns (items_xml, term_xml, skipped_labels) -- skipped_labels are
+    top-level or child entries whose href didn't match any crawled page
+    (e.g. a nav link to a page that got excluded by the qualification
+    check), reported by the caller rather than silently dropped.
+    """
+    known_slugs = set(pages_by_slug)
+    items_xml = []
+    skipped = []
+    item_id = 20000
+    menu_order = 1
+
+    for top in navigation:
+        children = top.get("children") or []
+        top_slug = href_to_slug(top.get("href"))
+        link_slug = top_slug if top_slug in known_slugs else None
+        if link_slug is None and children:
+            hub_slug = href_to_slug(children[0].get("href"))
+            if hub_slug in known_slugs:
+                link_slug = hub_slug
+
+        if link_slug is None:
+            skipped.append(top["label"])
+            continue
+
+        top_item_id = item_id
+        items_xml.append(build_nav_menu_item_xml(
+            item_id, clean_title(top["label"]), pages_by_slug[link_slug], menu_order,
+        ))
+        item_id += 1
+        menu_order += 1
+
+        for child in children:
+            child_slug = href_to_slug(child.get("href"))
+            if child_slug not in known_slugs:
+                skipped.append(child["label"])
+                continue
+            items_xml.append(build_nav_menu_item_xml(
+                item_id, clean_title(child["label"]), pages_by_slug[child_slug],
+                menu_order, parent_item_id=top_item_id,
+            ))
+            item_id += 1
+            menu_order += 1
+
+    term_xml = build_nav_menu_term_xml(term_id=2) if items_xml else None
+    return items_xml, term_xml, skipped
+
+
 def build_wxr(data):
     site = data["site"]
+    navigation = data.get("navigation") or []
+
+    # Assign page post_ids first and build a slug lookup before anything
+    # that needs to reference "the page for this slug" -- post_parent
+    # assignment and nav menu item targets both do.
+    post_id = 100
+    pages_by_slug = {}
+    for page in data["pages"]:
+        pages_by_slug[page["slug"]] = post_id
+        post_id += 1
+
+    parent_map = build_page_parent_map(navigation, set(pages_by_slug))
+
     items_xml = []
     post_id = 100
     for page in data["pages"]:
-        items_xml.append(build_item_xml(page, post_id))
+        parent_slug = parent_map.get(page["slug"])
+        parent_post_id = pages_by_slug.get(parent_slug, 0) if parent_slug else 0
+        items_xml.append(build_item_xml(page, post_id, parent_post_id))
         post_id += 1
 
     # Attachment IDs start well past the highest possible page post_id
@@ -335,8 +507,16 @@ def build_wxr(data):
         items_xml.append(build_attachment_item_xml(url, alt, attachment_id))
         attachment_id += 1
 
+    # Nav menu item IDs (20000+) are a third range, past attachments,
+    # so none of the three can ever collide.
+    menu_items_xml, menu_term_xml, _skipped_nav_labels = build_nav_menu_items_xml(
+        navigation, pages_by_slug
+    )
+    items_xml.extend(menu_items_xml)
+
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    term_block = f"\n{menu_term_xml}" if menu_term_xml else ""
 
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
@@ -353,7 +533,7 @@ def build_wxr(data):
   <language>en-US</language>
   <wp:wxr_version>1.2</wp:wxr_version>
   <wp:base_site_url>{NEW_BASE_URL}</wp:base_site_url>
-  <wp:base_blog_url>{NEW_BASE_URL}</wp:base_blog_url>
+  <wp:base_blog_url>{NEW_BASE_URL}</wp:base_blog_url>{term_block}
 {chr(10).join(items_xml)}
 </channel>
 </rss>
@@ -394,6 +574,11 @@ def build_qa_report(data, brand=None):
     faq_unverified_count = count_blocks("faq_raw_unverified")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
+
+    known_slugs = {p["slug"] for p in pages}
+    menu_items_xml, _, skipped_nav_labels = build_nav_menu_items_xml(
+        data.get("navigation") or [], {slug: 0 for slug in known_slugs}
+    )
 
     lines = []
     lines.append(f"# Migration QA Report — {data['site']['title']}")
@@ -441,6 +626,21 @@ def build_qa_report(data, brand=None):
                 "save them from the browser and upload manually if you want copies before "
                 "decommissioning the old site."
             )
+    if menu_items_xml:
+        lines.append(
+            f"- **Navigation menu** ({len(menu_items_xml)} item(s), matching the site's real "
+            "nav structure including page hierarchy) included as a WordPress menu named "
+            "\"Main Menu\", ready on import. **One manual step required**: WordPress doesn't "
+            "auto-assign an imported menu to a theme location — go to Appearance → Menus (or "
+            "the Site Editor's Navigation block for a block theme) and assign \"Main Menu\" to "
+            "your primary menu location."
+        )
+    if skipped_nav_labels:
+        lines.append(
+            f"- **{len(skipped_nav_labels)} nav item(s) skipped**: linked to a page that wasn't "
+            f"in this crawl ({', '.join(skipped_nav_labels)}) — added to the site's nav after "
+            "the crawl, or excluded by the qualification check. Add manually if needed."
+        )
     if faq_unverified_count:
         lines.append(f"- **Low-confidence FAQ/accordion extraction** ({faq_unverified_count} page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.")
     if flags:

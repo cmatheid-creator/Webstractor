@@ -241,12 +241,70 @@ def flag_risks(page, url):
     return flags
 
 
+def extract_navigation(page):
+    """The site's real top-level navigation, as a nested tree:
+    [{"label": ..., "href": ..., "children": [{"label": ..., "href": ...}, ...]}, ...]
+
+    GoDaddy Website Builder's header nav (found by inspecting the live
+    site's markup) is a <nav data-aid="HEADER_NAV_RENDERED"> containing
+    a flat <ul> of top-level <li data-ux="NavListItemInline"> items.
+    A plain link (e.g. "Home") has a single <a> with a real href. A
+    category with a dropdown (e.g. "AI") has an <a data-ux=
+    "NavLinkDropdown" href="#"> -- not a real destination -- followed
+    by a sibling <ul data-ux="Dropdown"> of <li data-ux="ListItem">
+    children, each a real link.
+
+    The nav also renders a second copy of the same top-level items
+    under a "More" overflow dropdown (data-aid="NAV_MORE") for
+    responsive collapse -- confirmed by inspecting the live page, this
+    duplicates the visible items rather than containing anything
+    unique, so it's skipped entirely rather than needing to be merged
+    or deduped against the real one.
+    """
+    return page.evaluate(
+        """() => {
+            const nav = document.querySelector('nav[data-aid="HEADER_NAV_RENDERED"]');
+            if (!nav) return [];
+            const topUl = nav.querySelector('ul[data-ux="List"]');
+            if (!topUl) return [];
+
+            const topItems = Array.from(topUl.children).filter(
+                el => el.matches('li[data-ux="NavListItemInline"]')
+            );
+            const result = [];
+            for (const li of topItems) {
+                const firstA = li.querySelector('a');
+                if (!firstA || firstA.dataset.aid === 'NAV_MORE') continue;
+
+                const href = firstA.getAttribute('href');
+                const item = {
+                    label: firstA.textContent.trim(),
+                    href: (href && href !== '#') ? href : null,
+                };
+
+                const dropdown = li.querySelector('ul[data-ux="Dropdown"]');
+                if (dropdown) {
+                    item.children = Array.from(
+                        dropdown.querySelectorAll('li[data-ux="ListItem"] a')
+                    ).map(a => ({
+                        label: a.textContent.trim(),
+                        href: a.getAttribute('href'),
+                    }));
+                }
+                result.push(item);
+            }
+            return result;
+        }"""
+    )
+
+
 def crawl(start_url, max_pages=100):
     visited = set()
     to_visit = {start_url.rstrip("/")}
     pages = []
     risk_flags = {}
     extracted_paths = set()
+    navigation = []
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -270,6 +328,12 @@ def crawl(start_url, max_pages=100):
             except Exception as e:
                 print(f"  [skip] {url} -- {e}")
                 continue
+
+            if not navigation and url.split("?")[0].rstrip("/") == start_url.rstrip("/"):
+                try:
+                    navigation = extract_navigation(page)
+                except Exception as e:
+                    print(f"  [warn] nav extraction failed: {e}")
 
             # Query-string variants of the same page (e.g. blog category
             # filters) are still visited -- below, discover_links() reads
@@ -326,7 +390,7 @@ def crawl(start_url, max_pages=100):
             "old_domain": urlparse(start_url).netloc,
         },
         "pages": pages,
-        "navigation": [],
+        "navigation": navigation,
         "qualification_flags": risk_flags,
     }
 
