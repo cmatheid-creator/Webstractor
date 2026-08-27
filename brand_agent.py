@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+"""
+Brand Agent (prototype)
+------------------------
+Visits a site's homepage with a real browser and extracts brand tokens --
+logo, favicon, colors, and typography -- from the page's actually-rendered
+(computed) styles.
+
+Static HTML alone isn't enough for this: on GoDaddy Website Builder sites,
+most colors and fonts are generated at runtime by a CSS-in-JS engine and
+never appear as literal values in the server-rendered markup. This uses
+getComputedStyle() in a real rendered page instead of guessing from raw
+CSS/HTML.
+
+GoDaddy Website Builder marks up semantic type roles via a
+data-typography attribute (HeadingAlpha, BodyAlpha, ButtonAlpha,
+LinkAlpha, NavAlpha, ...) and the header logo via data-ux="ImageLogo" --
+this reads the computed style of the first element carrying each role
+rather than guessing from CSS class names, which are usually
+machine-generated and meaningless (e.g. "c1-2p c1-2q").
+
+Run this somewhere with real internet access -- e.g. Claude Code on your
+own machine -- not inside a locked-down sandbox.
+
+Setup:
+    pip install playwright
+    playwright install chromium
+
+Usage:
+    python3 brand_agent.py https://stratecon.tech
+
+Output:
+    brand.json -- feed this into generator_agent.py alongside
+    structured_content.json to produce a WordPress theme.json with the
+    extracted color palette and typography.
+"""
+
+import sys
+import json
+import re
+from urllib.parse import urljoin
+
+from playwright.sync_api import sync_playwright
+
+TYPOGRAPHY_ROLES = [
+    "HeadingAlpha",
+    "HeadingBeta",
+    "HeadingDelta",
+    "BodyAlpha",
+    "ButtonAlpha",
+    "LinkAlpha",
+    "NavAlpha",
+]
+
+RGB_RE = re.compile(r"rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)")
+
+
+def rgb_to_hex(value):
+    """Convert a computed-style color string ("rgb(29, 43, 82)") to hex.
+    Passes through unrecognized formats (e.g. "transparent") unchanged."""
+    m = RGB_RE.match(value or "")
+    if not m:
+        return value
+    r, g, b = (int(x) for x in m.groups())
+    return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def extract_typography(page):
+    """For each known type role, read the computed font-family/size/weight
+    of the first element carrying it. Roles that don't appear on this
+    page (e.g. a role only used elsewhere on the site) are simply absent
+    from the result rather than guessed at."""
+    typography = {}
+    for role in TYPOGRAPHY_ROLES:
+        el = page.query_selector(f'[data-typography="{role}"]')
+        if not el:
+            continue
+        style = el.evaluate(
+            "e => { const s = getComputedStyle(e); "
+            "return {fontFamily: s.fontFamily, fontSize: s.fontSize, "
+            "fontWeight: s.fontWeight, color: s.color}; }"
+        )
+        typography[role] = {
+            "font_family": style["fontFamily"],
+            "font_size": style["fontSize"],
+            "font_weight": style["fontWeight"],
+            "color": rgb_to_hex(style["color"]),
+        }
+    return typography
+
+
+def extract_colors(page):
+    colors = {}
+
+    body_style = page.evaluate(
+        "() => { const s = getComputedStyle(document.body); "
+        "return {bg: s.backgroundColor, text: s.color}; }"
+    )
+    colors["background"] = rgb_to_hex(body_style["bg"])
+    colors["text"] = rgb_to_hex(body_style["text"])
+
+    button = page.query_selector('[data-typography="ButtonAlpha"]')
+    if button:
+        style = button.evaluate(
+            "e => { const s = getComputedStyle(e); "
+            "return {bg: s.backgroundColor, text: s.color}; }"
+        )
+        colors["button_background"] = rgb_to_hex(style["bg"])
+        colors["button_text"] = rgb_to_hex(style["text"])
+
+    link = page.query_selector('[data-typography="LinkAlpha"], a')
+    if link:
+        style = link.evaluate("e => getComputedStyle(e).color")
+        colors["link"] = rgb_to_hex(style)
+
+    return colors
+
+
+def extract_logo(page, base_url):
+    el = page.query_selector('[data-ux="ImageLogo"], header img, img[alt*="logo" i]')
+    if not el:
+        return None
+    src = el.get_attribute("src")
+    if not src:
+        return None
+    return {
+        "url": urljoin(base_url, src),
+        "alt": el.get_attribute("alt") or "",
+    }
+
+
+def extract_favicon(page, base_url):
+    el = page.query_selector(
+        'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]'
+    )
+    if not el:
+        return None
+    href = el.get_attribute("href")
+    return urljoin(base_url, href) if href else None
+
+
+def extract_brand(url):
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        # Same rationale as crawler_agent.py: "networkidle" false-negatives
+        # on sites with persistent background connections.
+        page.goto(url, wait_until="load", timeout=30000)
+        page.wait_for_timeout(1000)
+
+        brand = {
+            "source_url": url,
+            "logo": extract_logo(page, url),
+            "favicon_url": extract_favicon(page, url),
+            "colors": extract_colors(page),
+            "typography": extract_typography(page),
+        }
+
+        browser.close()
+    return brand
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python3 brand_agent.py https://example.com")
+        sys.exit(1)
+
+    url = sys.argv[1]
+    print(f"Extracting brand tokens from {url} ...")
+    brand = extract_brand(url)
+
+    with open("brand.json", "w") as f:
+        json.dump(brand, f, indent=2)
+
+    print("Wrote brand.json:")
+    print(json.dumps(brand, indent=2))
+    print("\nFeed this into generator_agent.py alongside structured_content.json")
+    print("to produce a WordPress theme.json with the extracted palette.")
+
+
+if __name__ == "__main__":
+    main()

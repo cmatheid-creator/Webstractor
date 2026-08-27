@@ -59,9 +59,11 @@ def image_slug(url):
 
 
 SRC = "structured_content.json"
+SRC_BRAND = "brand.json"
 OUT_WXR = "stratecon-migration.xml"
 OUT_REDIRECTS = "redirects.csv"
 OUT_QA = "qa_report.md"
+OUT_THEME = "theme.json"
 
 NEW_BASE_URL = "https://staging.stratecon-newsite.example"  # placeholder staging URL
 
@@ -317,7 +319,7 @@ def build_redirects_csv(data):
     return "\n".join(lines) + "\n"
 
 
-def build_qa_report(data):
+def build_qa_report(data, brand=None):
     pages = data["pages"]
     extracted = len(pages)
     flags = data.get("qualification_flags", {})
@@ -379,17 +381,99 @@ def build_qa_report(data):
             lines.append(f"  - {url} — {'; '.join(reasons)}")
     if pending:
         lines.append(f"- **{pending} page(s)** in the site navigation were not yet crawled — flagged as pending, not dropped.")
+    if brand:
+        logo = brand.get("logo")
+        colors = brand.get("colors", {})
+        color_list = ", ".join(f"{k}: {v}" for k, v in colors.items() if v)
+        lines.append(
+            f"- **Brand tokens extracted**: {len(brand.get('typography', {}))} typography role(s), "
+            f"colors ({color_list or 'none found'}). Included as `{OUT_THEME}` -- a WordPress "
+            "block-theme color palette and font list, ready to drop into a block theme's "
+            "theme.json (or use as a reference when configuring Site Editor colors/fonts by hand)."
+        )
+        if logo:
+            lines.append(
+                f"- **Logo** found at {logo['url']} -- not set automatically (that's done via "
+                "Appearance → Editor → Site Identity in WordPress, not theme.json); download it "
+                "from the original site and upload it there."
+            )
     lines.append("")
     lines.append("## What's in the attached files")
     lines.append("")
     lines.append("- `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.")
     lines.append("- `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.")
+    if brand:
+        lines.append(f"- `{OUT_THEME}` — the extracted color palette and font list in WordPress's block-theme format.")
     return "\n".join(lines) + "\n"
+
+
+def build_theme_json(brand):
+    """A WordPress block-theme theme.json fragment (settings.color.palette
+    and settings.typography.fontFamilies) built from brand_agent.py's
+    extracted tokens. Not a complete theme.json -- WP block themes need
+    more than colors/fonts to function -- this is the piece a human (or
+    a future Architecture Agent) merges into one, or uses as a reference
+    when setting the palette/fonts by hand in the Site Editor."""
+    colors = brand.get("colors", {})
+    palette = []
+
+    def add_color(slug, name, value):
+        if value and value.startswith("#"):
+            palette.append({"slug": slug, "color": value, "name": name})
+
+    add_color("background", "Background", colors.get("background"))
+    add_color("foreground", "Text", colors.get("text"))
+    add_color("primary", "Primary (Button)", colors.get("button_background"))
+    add_color("primary-text", "Primary Button Text", colors.get("button_text"))
+    add_color("link", "Link", colors.get("link"))
+
+    role_names = {
+        "HeadingAlpha": "Heading",
+        "HeadingBeta": "Heading (Secondary)",
+        "HeadingDelta": "Heading (Tertiary)",
+        "BodyAlpha": "Body",
+        "ButtonAlpha": "Button",
+        "LinkAlpha": "Link",
+        "NavAlpha": "Navigation",
+    }
+    font_families = []
+    seen_families = set()
+    for role, info in brand.get("typography", {}).items():
+        family = info.get("font_family")
+        if not family or family in seen_families:
+            continue
+        seen_families.add(family)
+        primary_name = family.split(",")[0].strip().strip("\"'")
+        slug = re.sub(r"[^a-z0-9]+", "-", primary_name.lower()).strip("-") or role.lower()
+        font_families.append({
+            "slug": slug,
+            "fontFamily": family,
+            "name": role_names.get(role, role),
+        })
+
+    theme = {
+        "$schema": "https://schemas.wp.org/trunk/theme.json",
+        "version": 2,
+        "settings": {
+            "color": {"palette": palette},
+            "typography": {"fontFamilies": font_families},
+        },
+    }
+    return json.dumps(theme, indent=2) + "\n"
 
 
 def main():
     with open(SRC) as f:
         data = json.load(f)
+
+    # brand.json is optional -- produced by the separate brand_agent.py,
+    # not required for the core WXR/redirects/QA output.
+    brand = None
+    try:
+        with open(SRC_BRAND) as f:
+            brand = json.load(f)
+    except FileNotFoundError:
+        pass
 
     with open(OUT_WXR, "w") as f:
         f.write(build_wxr(data))
@@ -398,9 +482,17 @@ def main():
         f.write(build_redirects_csv(data))
 
     with open(OUT_QA, "w") as f:
-        f.write(build_qa_report(data))
+        f.write(build_qa_report(data, brand))
 
-    print(f"Wrote {OUT_WXR}, {OUT_REDIRECTS}, {OUT_QA}")
+    outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA]
+    if brand:
+        with open(OUT_THEME, "w") as f:
+            f.write(build_theme_json(brand))
+        outputs.append(OUT_THEME)
+    else:
+        print(f"({SRC_BRAND} not found -- skipping {OUT_THEME}; run brand_agent.py first to include it)")
+
+    print(f"Wrote {', '.join(outputs)}")
 
 
 if __name__ == "__main__":
