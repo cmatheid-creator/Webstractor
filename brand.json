@@ -1,0 +1,59 @@
+{
+  "source_url": "https://stratecon.tech",
+  "logo": {
+    "url": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=h:88,cg:true,m/qt=q:95",
+    "alt": "STRATECON TECH ADVISORS"
+  },
+  "favicon_url": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=w:57,h:57,m",
+  "colors": {
+    "background": "#ffffff",
+    "text": "#5e5e5e",
+    "button_background": "#1d2b52",
+    "button_text": "#fafafa",
+    "link": "#1d2b52"
+  },
+  "typography": {
+    "HeadingAlpha": {
+      "font_family": "\"Playfair Display\", Georgia, serif",
+      "font_size": "44px",
+      "font_weight": "400",
+      "color": "#1d2b52"
+    },
+    "HeadingBeta": {
+      "font_family": "\"Playfair Display\", Georgia, serif",
+      "font_size": "32px",
+      "font_weight": "400",
+      "color": "#1d2b52"
+    },
+    "HeadingDelta": {
+      "font_family": "Cabin, Georgia, serif",
+      "font_size": "22px",
+      "font_weight": "400",
+      "color": "#1b1b1b"
+    },
+    "BodyAlpha": {
+      "font_family": "Cabin, Georgia, serif",
+      "font_size": "16px",
+      "font_weight": "400",
+      "color": "#5e5e5e"
+    },
+    "ButtonAlpha": {
+      "font_family": "Cabin, Georgia, serif",
+      "font_size": "14px",
+      "font_weight": "600",
+      "color": "#fafafa"
+    },
+    "LinkAlpha": {
+      "font_family": "Cabin, Georgia, serif",
+      "font_size": "16px",
+      "font_weight": "400",
+      "color": "#1d2b52"
+    },
+    "NavAlpha": {
+      "font_family": "Cabin, Georgia, serif",
+      "font_size": "14px",
+      "font_weight": "600",
+      "color": "#1d2b52"
+    }
+  }
+}
