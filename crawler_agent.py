@@ -70,20 +70,38 @@ def extract_blocks(page, page_url):
     # bunched at the bottom regardless of layout. Including "img" in the
     # same document-order query keeps each image roughly where it
     # belongs in the content.
+    seen_image_urls = set()
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
         tag = el.evaluate("e => e.tagName.toLowerCase()")
 
         if tag == "img":
-            src = el.get_attribute("src")
-            if not src:
-                continue
-            dims = el.evaluate("e => ({w: e.naturalWidth, h: e.naturalHeight})")
-            if dims["w"] < MIN_CONTENT_IMAGE_SIZE or dims["h"] < MIN_CONTENT_IMAGE_SIZE:
-                continue  # likely a tracking pixel or decorative icon
+            # GoDaddy Website Builder lazy-loads below-the-fold images:
+            # src holds a 1x1 transparent GIF placeholder until the
+            # image actually scrolls into view (which headless crawling
+            # never triggers), and the real URL sits in data-srclazy.
+            # naturalWidth/Height can't be used to size-filter these --
+            # the placeholder is the only thing ever loaded into the
+            # element, so it always reads as 1x1 regardless of what the
+            # real image is.
+            lazy_src = el.get_attribute("data-srclazy")
+            if lazy_src:
+                src = lazy_src
+            else:
+                src = el.get_attribute("src")
+                if not src:
+                    continue
+                dims = el.evaluate("e => ({w: e.naturalWidth, h: e.naturalHeight})")
+                if dims["w"] < MIN_CONTENT_IMAGE_SIZE or dims["h"] < MIN_CONTENT_IMAGE_SIZE:
+                    continue  # likely a tracking pixel or decorative icon
+
+            abs_src = urljoin(page_url, src)
+            if abs_src in seen_image_urls:
+                continue  # e.g. duplicate desktop/mobile logo markup
+            seen_image_urls.add(abs_src)
             blocks.append({
                 "type": "image",
-                "src": urljoin(page_url, src),
+                "src": abs_src,
                 "alt": el.get_attribute("alt") or "",
             })
             continue
