@@ -356,8 +356,18 @@ def build_page_parent_map(navigation, known_slugs):
     return parent_map
 
 
-NAV_MENU_SLUG = "main-menu"
-NAV_MENU_NAME = "Main Menu"
+
+# "main-menu" collides with common theme/demo-content menu slugs (Divi's
+# demo layout packs, and plenty of others, ship a menu using exactly
+# that name). WordPress's importer reuses an existing term for a
+# matching wp:term_slug instead of creating a new one, so importing
+# into a menu name this generic can silently merge our real menu items
+# in among leftover demo content -- confirmed happening on a real test
+# import, where several "(Invalid)" items turned out to be pre-existing
+# Divi demo menu entries pointing at pages that don't exist on this
+# site. A distinctive name makes that collision very unlikely.
+NAV_MENU_SLUG = "migrated-site-menu"
+NAV_MENU_NAME = "Migrated Site Menu"
 
 
 def build_nav_menu_term_xml(term_id):
@@ -629,11 +639,14 @@ def build_qa_report(data, brand=None):
     if menu_items_xml:
         lines.append(
             f"- **Navigation menu** ({len(menu_items_xml)} item(s), matching the site's real "
-            "nav structure including page hierarchy) included as a WordPress menu named "
-            "\"Main Menu\", ready on import. **One manual step required**: WordPress doesn't "
-            "auto-assign an imported menu to a theme location — go to Appearance → Menus (or "
-            "the Site Editor's Navigation block for a block theme) and assign \"Main Menu\" to "
-            "your primary menu location."
+            f"nav structure including page hierarchy) included as a WordPress menu named "
+            f"\"{NAV_MENU_NAME}\", ready on import. If the target site already has a menu with "
+            f"the same name (e.g. from theme demo content), WordPress merges into it rather "
+            f"than creating a separate one — check for and remove any unrelated/invalid items "
+            f"after import. **One manual step required regardless**: WordPress doesn't "
+            f"auto-assign an imported menu to a theme location — go to Appearance → Menus (or "
+            f"the Site Editor's Navigation block for a block theme) and assign "
+            f"\"{NAV_MENU_NAME}\" to your primary menu location."
         )
     if skipped_nav_labels:
         lines.append(
