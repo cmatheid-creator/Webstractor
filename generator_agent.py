@@ -486,6 +486,107 @@ def build_nav_menu_items_xml(navigation, pages_by_slug):
     return items_xml, term_xml, skipped
 
 
+def _navigation_link_attrs(label, slug, pages_by_slug):
+    return json.dumps(
+        {
+            "label": clean_title(label),
+            "type": "page",
+            "id": pages_by_slug[slug],
+            "url": f"{NEW_BASE_URL}/{slug}/",
+            "kind": "post-type",
+        },
+        separators=(",", ":"),
+    )
+
+
+def build_wp_navigation_content(navigation, pages_by_slug):
+    """Gutenberg block markup (wp:navigation-link / wp:navigation-submenu)
+    for a wp_navigation post -- the object type modern block themes
+    actually use, as opposed to build_nav_menu_items_xml()'s classic
+    nav_menu. A classic menu only shows up in a theme's Navigation block
+    picker via a "convert existing menu" bridge that depends on the
+    theme having registered a classic menu location -- confirmed absent
+    on a real block theme (Twenty Twenty-Four registers none, so
+    Appearance > Menus doesn't even exist while it's active) --
+    while a wp_navigation post is what that same picker lists
+    natively, regardless of classic menu locations, since it's the same
+    object type the Site Editor itself creates when a person builds a
+    Navigation block by hand.
+
+    Same resolution rules as build_nav_menu_items_xml() (category
+    headers link to their hub page, unresolvable hrefs are skipped, not
+    guessed at) -- kept as separate, independent logic rather than
+    shared, since these two produce fundamentally different output
+    (nav_menu_item posts vs. inline block markup) from the same input.
+    """
+    known_slugs = set(pages_by_slug)
+    blocks = []
+    skipped = []
+
+    for top in navigation:
+        children = top.get("children") or []
+        top_slug = href_to_slug(top.get("href"))
+        link_slug = top_slug if top_slug in known_slugs else None
+        if link_slug is None and children:
+            hub_slug = href_to_slug(children[0].get("href"))
+            if hub_slug in known_slugs:
+                link_slug = hub_slug
+
+        if link_slug is None:
+            skipped.append(top["label"])
+            continue
+
+        top_attrs = _navigation_link_attrs(top["label"], link_slug, pages_by_slug)
+
+        if not children:
+            blocks.append(f"<!-- wp:navigation-link {top_attrs} /-->")
+            continue
+
+        child_blocks = []
+        for child in children:
+            child_slug = href_to_slug(child.get("href"))
+            if child_slug not in known_slugs:
+                skipped.append(child["label"])
+                continue
+            child_attrs = _navigation_link_attrs(child["label"], child_slug, pages_by_slug)
+            child_blocks.append(f"<!-- wp:navigation-link {child_attrs} /-->")
+
+        blocks.append(
+            f"<!-- wp:navigation-submenu {top_attrs} -->\n"
+            + "\n".join(child_blocks)
+            + "\n<!-- /wp:navigation-submenu -->"
+        )
+
+    return "\n".join(blocks), skipped
+
+
+def build_wp_navigation_item_xml(content, post_id):
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return f"""  <item>
+    <title>{xml_escape(NAV_MENU_NAME)}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={post_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[{content}]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{post_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[{NAV_MENU_SLUG}]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[wp_navigation]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+  </item>"""
+
+
 def build_wxr(data):
     site = data["site"]
     navigation = data.get("navigation") or []
@@ -518,11 +619,22 @@ def build_wxr(data):
         attachment_id += 1
 
     # Nav menu item IDs (20000+) are a third range, past attachments,
-    # so none of the three can ever collide.
+    # so none of the three can ever collide. Generates both a classic
+    # nav_menu (for classic/hybrid themes) and a wp_navigation post (for
+    # modern block themes, which is what a Navigation block's own "use
+    # existing" picker actually lists) from the same source data, so the
+    # imported site works regardless of which kind of theme it ends up
+    # using.
     menu_items_xml, menu_term_xml, _skipped_nav_labels = build_nav_menu_items_xml(
         navigation, pages_by_slug
     )
     items_xml.extend(menu_items_xml)
+
+    wp_navigation_content, _skipped_wp_nav_labels = build_wp_navigation_content(
+        navigation, pages_by_slug
+    )
+    if wp_navigation_content:
+        items_xml.append(build_wp_navigation_item_xml(wp_navigation_content, post_id=30000))
 
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
@@ -639,14 +751,21 @@ def build_qa_report(data, brand=None):
     if menu_items_xml:
         lines.append(
             f"- **Navigation menu** ({len(menu_items_xml)} item(s), matching the site's real "
-            f"nav structure including page hierarchy) included as a WordPress menu named "
-            f"\"{NAV_MENU_NAME}\", ready on import. If the target site already has a menu with "
+            f"nav structure including page hierarchy) is included **twice**, in two different "
+            f"WordPress formats, so it works automatically regardless of which kind of theme "
+            f"the target site uses:\n"
+            f"  - A classic menu named \"{NAV_MENU_NAME}\" (for classic/hybrid themes — "
+            f"Appearance → Menus, assign it to a menu location).\n"
+            f"  - A block-theme navigation entry (`wp_navigation`, also named "
+            f"\"{NAV_MENU_NAME}\") for block themes like Twenty Twenty-Four. Add a Navigation "
+            f"block anywhere in the Site Editor and use its **\"Choose or create a Navigation "
+            f"menu\"** picker to select \"{NAV_MENU_NAME}\" — no menu-location registration "
+            f"needed, since block themes don't use those. This is the one manual click left in "
+            f"the process; everything else in the menu itself (structure, labels, links, "
+            f"hierarchy) is generated. If the target site already has a menu/navigation with "
             f"the same name (e.g. from theme demo content), WordPress merges into it rather "
             f"than creating a separate one — check for and remove any unrelated/invalid items "
-            f"after import. **One manual step required regardless**: WordPress doesn't "
-            f"auto-assign an imported menu to a theme location — go to Appearance → Menus (or "
-            f"the Site Editor's Navigation block for a block theme) and assign "
-            f"\"{NAV_MENU_NAME}\" to your primary menu location."
+            f"after import."
         )
     if skipped_nav_labels:
         lines.append(
