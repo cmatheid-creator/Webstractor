@@ -6135,5 +6135,64 @@
       "href": "/about"
     }
   ],
-  "qualification_flags": {}
+  "qualification_flags": {},
+  "footer": {
+    "links": [
+      {
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "label": "AI Solutions",
+        "href": "/ai-solutions"
+      },
+      {
+        "label": "Communications Solutions",
+        "href": "/communications-solutions"
+      },
+      {
+        "label": "Cybersecurity Solutions",
+        "href": "/cybersecurity-solutions"
+      },
+      {
+        "label": "Services",
+        "href": "/services"
+      },
+      {
+        "label": "Blog",
+        "href": "/blog"
+      },
+      {
+        "label": "Contact",
+        "href": "/contact"
+      },
+      {
+        "label": "About",
+        "href": "/about"
+      }
+    ],
+    "social_links": [
+      {
+        "platform": "facebook",
+        "label": "Facebook",
+        "href": "https://www.facebook.com/profile.php?id=61557601061291"
+      },
+      {
+        "platform": "linkedin",
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/company/stratecon-tech-advisors/"
+      }
+    ],
+    "legal_links": [
+      {
+        "label": "Privacy Policy",
+        "href": "/privacy-policy"
+      },
+      {
+        "label": "Terms of Service",
+        "href": "/terms-of-service"
+      }
+    ],
+    "copyright_text": "Copyright \u00a9 2026 STRATECON TECH ADVISORS, a division of Sustainable Investments, LLC - All Rights Reserved."
+  }
 }

@@ -587,6 +587,139 @@ def build_wp_navigation_item_xml(content, post_id):
   </item>"""
 
 
+# The block theme currently being tested against (Twenty Twenty-Four).
+# wp_template_part posts only override a theme's own header/footer when
+# this taxonomy term matches the theme actually active on import -- if a
+# client site ends up on a different block theme, this (and the markup
+# below, which assumes TT4's block vocabulary: site-logo, site-title,
+# a flex group for the header) needs to change to match.
+THEME_SLUG = "twentytwentyfour"
+
+
+def build_header_template_part_content(wp_navigation_post_id):
+    """Gutenberg block markup for a header template part: logo, site
+    title, and the real migrated nav menu (referenced by ID, not
+    duplicated -- editing the Navigation block anywhere updates both).
+
+    Imported as a wp_template_part with post_name "header" plus the
+    wp_theme taxonomy term above, this transparently replaces the
+    target theme's own header.html -- which every block theme's
+    page/single templates pull in via {"slug":"header"} -- for every
+    page, site-wide, with no manual Site Editor work. This is exactly
+    the mechanism the Site Editor itself uses when a person edits the
+    header by hand; generating it here just does that step for them.
+    """
+    return (
+        '<!-- wp:group {"tagName":"header","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
+        '<header class="wp-block-group">\n'
+        "<!-- wp:site-logo /-->\n"
+        "<!-- wp:site-title /-->\n"
+        f'<!-- wp:navigation {{"ref":{wp_navigation_post_id}}} /-->\n'
+        "</header>\n"
+        "<!-- /wp:group -->"
+    )
+
+
+def build_footer_template_part_content(footer, pages_by_slug):
+    """Gutenberg block markup for a footer template part, built from the
+    site's real extracted footer content (crawler_agent.py's
+    extract_footer()) rather than left as the target theme's own
+    placeholder/demo footer -- which is what silently stays in place
+    without this. Same resolution rules as build_wp_navigation_content()
+    for links: unresolvable hrefs are skipped, not guessed at.
+
+    Returns (content, skipped_labels).
+    """
+    known_slugs = set(pages_by_slug)
+    skipped = []
+
+    link_blocks = []
+    for link in footer.get("links") or []:
+        slug = href_to_slug(link.get("href"))
+        if slug not in known_slugs:
+            skipped.append(link.get("label"))
+            continue
+        attrs = _navigation_link_attrs(link["label"], slug, pages_by_slug)
+        link_blocks.append(f"<!-- wp:navigation-link {attrs} /-->")
+
+    nav_block = ""
+    if link_blocks:
+        nav_block = (
+            '<!-- wp:navigation {"layout":{"type":"flex","justifyContent":"center"},"overlayMenu":"never"} -->\n'
+            + "\n".join(link_blocks)
+            + "\n<!-- /wp:navigation -->\n"
+        )
+
+    social_links = [s for s in (footer.get("social_links") or []) if s.get("href")]
+    social_block = ""
+    if social_links:
+        items = "\n".join(
+            '<!-- wp:social-link {"url":%s,"service":%s} /-->'
+            % (json.dumps(s["href"]), json.dumps(s.get("platform") or ""))
+            for s in social_links
+        )
+        social_block = (
+            '<!-- wp:social-links {"className":"is-style-logos-only"} -->\n'
+            '<ul class="wp-block-social-links is-style-logos-only">\n'
+            f"{items}\n"
+            "</ul>\n"
+            "<!-- /wp:social-links -->\n"
+        )
+
+    copyright_html = xml_escape(footer.get("copyright_text") or "")
+    for legal in footer.get("legal_links") or []:
+        legal_slug = href_to_slug(legal.get("href"))
+        url = f"{NEW_BASE_URL}/{legal_slug}/" if legal_slug in known_slugs else legal.get("href")
+        if url:
+            copyright_html += f' | <a href="{xml_escape(url)}">{xml_escape(legal.get("label", ""))}</a>'
+
+    copyright_block = ""
+    if copyright_html:
+        copyright_block = (
+            '<!-- wp:paragraph {"align":"center","fontSize":"small"} -->\n'
+            f'<p class="has-text-align-center has-small-font-size">{copyright_html}</p>\n'
+            "<!-- /wp:paragraph -->\n"
+        )
+
+    content = (
+        '<!-- wp:group {"tagName":"footer","style":{"spacing":{"blockGap":"1rem"}},"layout":{"type":"constrained"}} -->\n'
+        '<footer class="wp-block-group">\n'
+        f"{nav_block}{social_block}{copyright_block}"
+        "</footer>\n"
+        "<!-- /wp:group -->"
+    )
+    return content, skipped
+
+
+def build_template_part_item_xml(post_id, slug, area, title, content):
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return f"""  <item>
+    <title>{xml_escape(title)}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={post_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[{content}]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{post_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[{slug}]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[wp_template_part]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="wp_theme" nicename="{THEME_SLUG}"><![CDATA[{THEME_SLUG}]]></category>
+    <category domain="wp_template_part_area" nicename="{area}"><![CDATA[{area}]]></category>
+  </item>"""
+
+
 def build_wxr(data):
     site = data["site"]
     navigation = data.get("navigation") or []
@@ -633,8 +766,28 @@ def build_wxr(data):
     wp_navigation_content, _skipped_wp_nav_labels = build_wp_navigation_content(
         navigation, pages_by_slug
     )
+    wp_navigation_post_id = 30000
     if wp_navigation_content:
-        items_xml.append(build_wp_navigation_item_xml(wp_navigation_content, post_id=30000))
+        items_xml.append(build_wp_navigation_item_xml(wp_navigation_content, post_id=wp_navigation_post_id))
+
+        # Template part IDs (40000+) are a fourth range, past the
+        # wp_navigation post, so none of the four can ever collide. The
+        # header only makes sense once there's a real wp_navigation post
+        # for it to reference -- skipped otherwise rather than emitting
+        # a header with a dangling nav reference.
+        header_content = build_header_template_part_content(wp_navigation_post_id)
+        items_xml.append(
+            build_template_part_item_xml(40000, "header", "header", "Header", header_content)
+        )
+
+    footer_data = data.get("footer") or {}
+    if footer_data.get("links") or footer_data.get("copyright_text") or footer_data.get("social_links"):
+        footer_content, _skipped_footer_labels = build_footer_template_part_content(
+            footer_data, pages_by_slug
+        )
+        items_xml.append(
+            build_template_part_item_xml(40001, "footer", "footer", "Footer", footer_content)
+        )
 
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
@@ -757,15 +910,25 @@ def build_qa_report(data, brand=None):
             f"  - A classic menu named \"{NAV_MENU_NAME}\" (for classic/hybrid themes — "
             f"Appearance → Menus, assign it to a menu location).\n"
             f"  - A block-theme navigation entry (`wp_navigation`, also named "
-            f"\"{NAV_MENU_NAME}\") for block themes like Twenty Twenty-Four. Add a Navigation "
-            f"block anywhere in the Site Editor and use its **\"Choose or create a Navigation "
-            f"menu\"** picker to select \"{NAV_MENU_NAME}\" — no menu-location registration "
-            f"needed, since block themes don't use those. This is the one manual click left in "
-            f"the process; everything else in the menu itself (structure, labels, links, "
-            f"hierarchy) is generated. If the target site already has a menu/navigation with "
-            f"the same name (e.g. from theme demo content), WordPress merges into it rather "
-            f"than creating a separate one — check for and remove any unrelated/invalid items "
-            f"after import."
+            f"\"{NAV_MENU_NAME}\") for block themes like Twenty Twenty-Four. This one is wired "
+            f"in automatically (see the header/footer bullet below) — nothing to click for it "
+            f"specifically."
+        )
+        lines.append(
+            f"- **Header and footer**: this file also replaces the target theme's own "
+            f"header/footer (currently generated for **{THEME_SLUG}** — see note below if the "
+            f"target site uses a different block theme) with real ones built from the site's "
+            f"actual content: the header gets the site logo/title plus the migrated nav menu "
+            f"above, already linked by reference — nothing to assign by hand; the footer is "
+            f"rebuilt from the original site's real footer (its own nav links, social icons, "
+            f"and copyright/legal text), not the theme's generic demo footer. This is what the "
+            f"page layout in earlier test imports was missing — WordPress's importer has no way "
+            f"to override a theme's header/footer templates on its own, so without this the "
+            f"pages rendered inside whatever blank/demo chrome the theme shipped with. If the "
+            f"target site is on a **different block theme than {THEME_SLUG}**, this override "
+            f"won't take (WordPress scopes it to the specific theme) — the header/footer will "
+            f"need to be rebuilt by hand once, or regenerated by changing `THEME_SLUG` in "
+            f"generator_agent.py to match and re-running it."
         )
     if skipped_nav_labels:
         lines.append(

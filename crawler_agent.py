@@ -298,6 +298,67 @@ def extract_navigation(page):
     )
 
 
+def extract_footer(page):
+    """The site's real footer content, as rendered -- not the target
+    theme's own placeholder footer, which is what a WXR import without
+    this leaves in place. GoDaddy Website Builder's footer widget
+    (found by inspecting the live site's markup) is the element bearing
+    role="contentinfo", containing: a flat <ul data-ux="NavFooter"> of
+    top-level page links (no dropdown/category nesting the way the
+    header nav has), a data-aid="FOOTER_SOCIAL_LINKS" block of social
+    icon links (each with an aria-label like "Facebook Social Link"),
+    and a data-aid="FOOTER_COPYRIGHT_RENDERED" paragraph containing the
+    copyright line plus inline Privacy Policy / Terms of Service links.
+
+    Returns {"links": [...], "social_links": [...], "legal_links": [...],
+    "copyright_text": "..."} -- any piece that isn't found on this site
+    is simply omitted/empty rather than guessed at.
+    """
+    return page.evaluate(
+        """() => {
+            const footer = document.querySelector('[role="contentinfo"]');
+            if (!footer) return null;
+
+            const links = Array.from(
+                footer.querySelectorAll('ul[data-ux="NavFooter"] a')
+            ).map(a => ({
+                label: a.textContent.trim(),
+                href: a.getAttribute('href'),
+            })).filter(l => l.label && l.href);
+
+            const socialBlock = footer.querySelector('[data-aid="FOOTER_SOCIAL_LINKS"]');
+            const social_links = socialBlock
+                ? Array.from(socialBlock.querySelectorAll('a[href]')).map(a => {
+                    const label = (a.getAttribute('aria-label') || '').replace(/\\s*Social Link$/i, '').trim();
+                    return {
+                        platform: label.toLowerCase(),
+                        label: label,
+                        href: a.getAttribute('href'),
+                    };
+                })
+                : [];
+
+            const copyrightBlock = footer.querySelector('[data-aid="FOOTER_COPYRIGHT_RENDERED"]');
+            let copyright_text = '';
+            let legal_links = [];
+            if (copyrightBlock) {
+                legal_links = Array.from(copyrightBlock.querySelectorAll('a[href]')).map(a => ({
+                    label: a.textContent.trim(),
+                    href: a.getAttribute('href'),
+                }));
+                // The copyright line and the trailing "| Privacy Policy |
+                // Terms of Service" links share one text node -- clone the
+                // block and strip the <a> tags to isolate just the prose.
+                const clone = copyrightBlock.cloneNode(true);
+                clone.querySelectorAll('a').forEach(a => a.remove());
+                copyright_text = clone.textContent.replace(/\\|\\s*$/, '').trim();
+            }
+
+            return { links, social_links, legal_links, copyright_text };
+        }"""
+    )
+
+
 def crawl(start_url, max_pages=100):
     visited = set()
     to_visit = {start_url.rstrip("/")}
@@ -305,6 +366,7 @@ def crawl(start_url, max_pages=100):
     risk_flags = {}
     extracted_paths = set()
     navigation = []
+    footer = {}
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
@@ -334,6 +396,10 @@ def crawl(start_url, max_pages=100):
                     navigation = extract_navigation(page)
                 except Exception as e:
                     print(f"  [warn] nav extraction failed: {e}")
+                try:
+                    footer = extract_footer(page) or {}
+                except Exception as e:
+                    print(f"  [warn] footer extraction failed: {e}")
 
             # Query-string variants of the same page (e.g. blog category
             # filters) are still visited -- below, discover_links() reads
@@ -391,6 +457,7 @@ def crawl(start_url, max_pages=100):
         },
         "pages": pages,
         "navigation": navigation,
+        "footer": footer,
         "qualification_flags": risk_flags,
     }
 
