@@ -163,9 +163,20 @@ def mark_content_cards(page):
     non-visible elements, so only the one real heading per card is ever
     picked up.
 
-    Groups cards by their nearest shared <div data-ux="Grid"> ancestor
-    (falling back to the immediate parent if a card somehow isn't inside
-    one), tagging each card with data-migration-card-group="<n>" and
+    Groups cards by walking each card up its ancestor chain (capped at 8
+    levels to avoid over-grouping unrelated cards elsewhere on the page)
+    to the closest ancestor that contains more than one ContentCard --
+    that's the row wrapper, whatever GoDaddy happens to tag it with.
+    Confirmed necessary against the real site: a 3-card row's cards each
+    turned out to sit inside their own single-cell <div data-ux="Grid">
+    (one GridCell each), not one shared Grid the way the two-column
+    media_text pattern works -- grouping by nearest data-ux="Grid"
+    ancestor alone split every card into its own one-card group instead
+    of uniting the row. Falls back to the card's own parent if no such
+    ancestor is found within the cap, so a lone card still gets a group
+    of one rather than being skipped.
+
+    Tags each card with data-migration-card-group="<n>" and
     data-migration-card-index="<i>" so extract_blocks() can pull the
     whole row together the first time it encounters any element inside
     any card belonging to that group.
@@ -177,16 +188,24 @@ def mark_content_cards(page):
             let groupCounter = 0;
             let count = 0;
             for (const card of cards) {
-                const grid = card.closest('[data-ux="Grid"]') || card.parentElement;
-                let gid = groupIds.get(grid);
+                let node = card.parentElement;
+                let rowAncestor = null;
+                for (let depth = 0; node && depth < 8; depth++, node = node.parentElement) {
+                    if (node.querySelectorAll('[data-ux="ContentCard"]').length > 1) {
+                        rowAncestor = node;
+                        break;
+                    }
+                }
+                const key = rowAncestor || card.parentElement;
+                let gid = groupIds.get(key);
                 if (gid === undefined) {
                     gid = groupCounter++;
-                    groupIds.set(grid, gid);
+                    groupIds.set(key, gid);
                 }
                 const idx = parseInt(
-                    grid.getAttribute('data-migration-card-next-index') || '0', 10
+                    key.getAttribute('data-migration-card-next-index') || '0', 10
                 );
-                grid.setAttribute('data-migration-card-next-index', String(idx + 1));
+                key.setAttribute('data-migration-card-next-index', String(idx + 1));
                 card.setAttribute('data-migration-card-group', String(gid));
                 card.setAttribute('data-migration-card-index', String(idx));
                 count++;
