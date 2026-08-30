@@ -179,10 +179,24 @@ def extract_logo(page, base_url):
     src = el.get_attribute("src")
     if not src:
         return None
-    return {
+    logo = {
         "url": urljoin(base_url, src),
         "alt": el.get_attribute("alt") or "",
     }
+    # The logo's actual rendered size on the live page -- not its natural
+    # image dimensions, which are usually much larger (GoDaddy serves a
+    # high-DPI srcset) than how big it's actually displayed. Confirmed a
+    # real gap without this: WordPress's core/site-logo block defaults to
+    # a small fixed width with no signal to size it correctly, rendering
+    # noticeably smaller than the original site's header.
+    box = el.evaluate(
+        "e => ({w: Math.round(e.getBoundingClientRect().width), "
+        "h: Math.round(e.getBoundingClientRect().height)})"
+    )
+    if box["w"] > 0 and box["h"] > 0:
+        logo["width"] = box["w"]
+        logo["height"] = box["h"]
+    return logo
 
 
 def extract_favicon(page, base_url):

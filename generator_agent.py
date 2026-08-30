@@ -167,22 +167,22 @@ def block_to_gutenberg(block):
         level = block.get("level", 2)
         text = html.escape(block["text"])
 
-        # Level-1 headings map to GoDaddy Website Builder's "SectionHeading"
-        # role (confirmed in the live site's own markup: a real <h1
-        # data-ux="SectionHeading"> even though it's semantically a
-        # section title, not the page's main heading -- GoDaddy promotes
-        # it via a data-promoted-from attribute). The original site
-        # flanks these with a horizontal rule on each side; centered
-        # heading blocks alone lose that treatment entirely, so it's
-        # rebuilt here with a flex group and two separators sized to
-        # fill the remaining space via an inline style -- core/separator
-        # has no "grow" attribute of its own to reach for.
-        if level == 1:
-            # SectionHeading is confirmed (structurally, not just by
-            # convention) to always be brand.json's "HeadingBeta" role --
-            # applying its real font/size/weight/color here is what fixes
-            # this heading rendering at WordPress's generic (much larger)
-            # default size instead of the original site's actual one.
+        # GoDaddy Website Builder's "SectionHeading" role -- confirmed in
+        # the live site's own markup -- gets flanked with a horizontal
+        # rule on each side, and it's the *role* that decides this, not
+        # the HTML heading level: the same "HeadingBeta" role shows up as
+        # a real <h1> on one page (GoDaddy promotes it there via a
+        # data-promoted-from attribute) and a plain <h2> on another (e.g.
+        # "AI Solutions"), but the original site renders both identically
+        # with dividers. An earlier version keyed this off level==1
+        # instead, confirmed wrong on a real test import: the <h1> case
+        # got its dividers, but every "HeadingBeta" <h2> rendered as a
+        # plain heading with none. Centered heading blocks alone lose the
+        # divider treatment entirely, so it's rebuilt here with a flex
+        # group and two separators sized to fill the remaining space via
+        # an inline style -- core/separator has no "grow" attribute of
+        # its own to reach for.
+        if block.get("typography_role") == "HeadingBeta":
             hs = _brand_role_style("HeadingBeta", _BRAND) or {}
             extra_attrs = ""
             extra_classes = ""
@@ -204,10 +204,10 @@ def block_to_gutenberg(block):
                 '<!-- wp:separator {"className":"is-style-wide"} -->\n'
                 '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
                 '<!-- /wp:separator -->\n'
-                f'<!-- wp:heading {{"level":1,"textAlign":"center","style":{{"spacing":{{"margin":'
+                f'<!-- wp:heading {{"level":{level},"textAlign":"center","style":{{"spacing":{{"margin":'
                 f'{{"top":"0","bottom":"0"}}}}}}{extra_attrs}}} -->\n'
-                f'<h1 class="wp-block-heading has-text-align-center{extra_classes}" '
-                f'style="{extra_css}">{text}</h1>\n'
+                f'<h{level} class="wp-block-heading has-text-align-center{extra_classes}" '
+                f'style="{extra_css}">{text}</h{level}>\n'
                 '<!-- /wp:heading -->\n'
                 '<!-- wp:separator {"className":"is-style-wide"} -->\n'
                 '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
@@ -216,7 +216,7 @@ def block_to_gutenberg(block):
                 '<!-- /wp:group -->'
             )
 
-        # Other heading levels: apply the real per-role font/size/weight/
+        # Other heading roles: apply the real per-role font/size/weight/
         # color when the crawler captured which GoDaddy typography role
         # this specific heading used (data-typography) -- not just a
         # WordPress generic default. Older structured_content.json files
@@ -377,13 +377,17 @@ def block_to_gutenberg(block):
                     '<!-- /wp:image -->'
                 )
 
+            # Confirmed against the live site: each card's heading,
+            # paragraph, and button are centered under its image, not
+            # left-aligned the way a plain heading/paragraph/buttons
+            # block defaults to.
             heading = card.get("heading")
             if heading:
                 hs = _brand_role_style(card.get("heading_role"), _BRAND)
                 text = html.escape(heading)
                 if hs:
-                    attrs = '"level":4'
-                    classes = "wp-block-heading"
+                    attrs = '"level":4,"textAlign":"center"'
+                    classes = "wp-block-heading has-text-align-center"
                     css = []
                     if hs.get("font_family_slug"):
                         attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
@@ -403,16 +407,16 @@ def block_to_gutenberg(block):
                     )
                 else:
                     parts.append(
-                        '<!-- wp:heading {"level":4} -->\n'
-                        f'<h4 class="wp-block-heading">{text}</h4>\n'
+                        '<!-- wp:heading {"level":4,"textAlign":"center"} -->\n'
+                        f'<h4 class="wp-block-heading has-text-align-center">{text}</h4>\n'
                         '<!-- /wp:heading -->'
                     )
 
             text = card.get("text")
             if text:
                 parts.append(
-                    '<!-- wp:paragraph -->\n'
-                    f'<p>{html.escape(text)}</p>\n'
+                    '<!-- wp:paragraph {"align":"center"} -->\n'
+                    f'<p class="has-text-align-center">{html.escape(text)}</p>\n'
                     '<!-- /wp:paragraph -->'
                 )
 
@@ -427,7 +431,7 @@ def block_to_gutenberg(block):
                 label = html.escape(cta.get("label") or "Learn More")
                 url_escaped = xml_escape(url or "#")
                 parts.append(
-                    '<!-- wp:buttons -->\n'
+                    '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->\n'
                     '<div class="wp-block-buttons">\n'
                     '<!-- wp:button -->\n'
                     f'<div class="wp-block-button"><a class="wp-block-button__link '
@@ -933,12 +937,20 @@ def build_header_template_part_content(wp_navigation_post_id):
         typography["fontWeight"] = nav_style["font_weight"]
     nav_attrs += ',"style":' + json.dumps({"typography": typography}, separators=(",", ":"))
 
+    # The logo's real rendered width (brand_agent.py's extract_logo()
+    # captures this from the live page's own getBoundingClientRect(), not
+    # its much-larger natural image dimensions) -- confirmed a real gap
+    # without this: core/site-logo's own default width rendered
+    # noticeably smaller than the original site's actual header logo.
+    logo_width = ((_BRAND or {}).get("logo") or {}).get("width")
+    logo_attrs = f' {{"width":{logo_width}}}' if logo_width else ""
+
     return (
         '<!-- wp:group {"align":"full","className":"has-global-padding","layout":{"type":"constrained"}} -->\n'
         '<div class="wp-block-group alignfull has-global-padding">\n'
         '<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
         '<div class="wp-block-group alignwide">\n'
-        "<!-- wp:site-logo /-->\n"
+        f"<!-- wp:site-logo{logo_attrs} /-->\n"
         f'<!-- wp:navigation {{{nav_attrs}}} /-->\n'
         "</div>\n"
         "<!-- /wp:group -->\n"
