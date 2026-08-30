@@ -255,6 +255,102 @@ def extract_content_card(card, page_url, seen_image_urls):
     return card_data
 
 
+def mark_post_feeds(page):
+    """Tags GoDaddy Website Builder's "RSS Feed" widget -- confirmed via
+    live markup: a <div data-ux="Grid" data-aid="RSS_FEEDS_RENDERED">
+    listing real blog posts (title/excerpt/date/categories/link) as
+    cards, used for things like an "AI Insights" section embedding
+    recent blog posts on a landing page. Was previously invisible to
+    extract_blocks() entirely: its thumbnail is a CSS background-image
+    on a plain <div>, not an <img>, so the normal image selector never
+    matched it, and while its heading/paragraph text would otherwise
+    match the generic selector, doing so lost the post's link, date, and
+    categories, and interleaved unrelated cards' text with no grouping.
+
+    One of the widget's own GridCells is just category-filter tabs (a
+    <nav>, no post card) -- confirmed real, not a bug in this markup;
+    only cells that actually contain a `data-ux="Card"` are tagged.
+
+    Tags each qualifying GridCell with data-migration-post-feed-group=
+    "<n>" (shared per widget, since a page could in principle have more
+    than one) so extract_blocks() can pull the whole feed together the
+    first time it encounters any element inside any of its cards.
+    """
+    return page.evaluate(
+        """() => {
+            const grids = document.querySelectorAll(
+                '[data-ux="Grid"][data-aid="RSS_FEEDS_RENDERED"]'
+            );
+            let count = 0;
+            let gid = 0;
+            for (const grid of grids) {
+                const cells = grid.querySelectorAll('[data-ux="GridCell"]');
+                let tagged = false;
+                for (const cell of cells) {
+                    if (cell.querySelector('[data-ux="Card"]')) {
+                        cell.setAttribute('data-migration-post-feed-group', String(gid));
+                        tagged = true;
+                        count++;
+                    }
+                }
+                if (tagged) gid++;
+            }
+            return count;
+        }"""
+    )
+
+
+def extract_post_feed_card(cell, page_url, seen_image_urls):
+    """Pull one blog-post preview out of a GoDaddy RSS feed widget card
+    (see mark_post_feeds()) into a dict. Any missing piece is simply
+    omitted rather than dropping the whole card."""
+    card_data = {}
+
+    link_el = cell.query_selector('a[data-ux="Link"]')
+    href = link_el.get_attribute("href") if link_el else None
+    if href:
+        card_data["href"] = urljoin(page_url, href)
+
+    # The thumbnail is a CSS background-image on a plain <div>, not an
+    # <img> -- resolve_image_src() (built around an <img>'s src/
+    # data-srclazy attributes) doesn't apply here at all.
+    bg_el = cell.query_selector('[data-ux="Background"]')
+    if bg_el is not None:
+        bg_css = bg_el.evaluate("e => getComputedStyle(e).backgroundImage")
+        m = re.search(r'url\(["\']?(.*?)["\']?\)', bg_css or "")
+        if m and m.group(1) and m.group(1).lower() != "none":
+            abs_src = urljoin(page_url, m.group(1))
+            if abs_src not in seen_image_urls:
+                seen_image_urls.add(abs_src)
+                card_data["image_src"] = abs_src
+
+    date_el = cell.query_selector('[data-aid="RSS_FEED_POST_DATE_RENDERED"]')
+    if date_el is not None:
+        text = element_text(date_el)
+        if text:
+            card_data["date"] = text
+
+    cat_el = cell.query_selector('[data-aid="RSS_FEED_POST_CATEGORIES_RENDERED"]')
+    if cat_el is not None:
+        text = element_text(cat_el)
+        if text:
+            card_data["categories"] = text
+
+    heading_el = cell.query_selector('h4[data-ux="CardHeading"]')
+    if heading_el is not None:
+        text = element_text(heading_el)
+        if text:
+            card_data["heading"] = text
+
+    excerpt_el = cell.query_selector('p[data-aid="RSS_FEED_POST_CONTENT_RENDERED"]')
+    if excerpt_el is not None:
+        text = element_text(excerpt_el)
+        if text:
+            card_data["excerpt"] = text
+
+    return card_data
+
+
 def resolve_image_src(el, page_url, seen_image_urls):
     """Shared by the normal per-image extraction and the media_text
     pair extraction below, so both apply the exact same lazy-load/
@@ -322,6 +418,7 @@ def extract_blocks(page, page_url):
 
     mark_media_text_pairs(page)
     mark_content_cards(page)
+    mark_post_feeds(page)
 
     # Headings + paragraphs + lists + images, in document order. Images
     # used to be collected in a separate pass at the end of the function
@@ -332,6 +429,7 @@ def extract_blocks(page, page_url):
     # belongs in the content.
     seen_image_urls = set()
     emitted_card_groups = set()
+    emitted_post_feed_groups = set()
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
@@ -360,6 +458,30 @@ def extract_blocks(page, page_url):
                 card_dicts = [c for c in card_dicts if c]
                 if card_dicts:
                     blocks.append({"type": "card_group", "cards": card_dicts})
+            continue
+
+        # Same idea for a detected RSS feed widget (e.g. an "AI Insights"
+        # recent-posts section) -- pull the whole feed together the
+        # first time we hit any element inside any of its post cards.
+        post_feed_group_id = el.evaluate(
+            """e => {
+                const cell = e.closest('[data-migration-post-feed-group]');
+                return cell ? cell.getAttribute('data-migration-post-feed-group') : null;
+            }"""
+        )
+        if post_feed_group_id is not None:
+            if post_feed_group_id not in emitted_post_feed_groups:
+                emitted_post_feed_groups.add(post_feed_group_id)
+                cells = page.query_selector_all(
+                    f'[data-migration-post-feed-group="{post_feed_group_id}"]'
+                )
+                posts = [
+                    extract_post_feed_card(c, page_url, seen_image_urls)
+                    for c in cells
+                ]
+                posts = [p for p in posts if p]
+                if posts:
+                    blocks.append({"type": "post_feed", "posts": posts})
             continue
 
         # Anything inside a detected side-by-side text column is pulled

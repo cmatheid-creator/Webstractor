@@ -459,6 +459,104 @@ def block_to_gutenberg(block):
             're-hosted media-library copy after import. -->'
         )
 
+    if t == "post_feed":
+        # GoDaddy Website Builder's "RSS Feed" widget -- confirmed via
+        # live markup (see crawler_agent.py's mark_post_feeds()): a grid
+        # of real blog-post previews (thumbnail, date, categories,
+        # title, excerpt, "Continue Reading"), e.g. an "AI Insights"
+        # section on a landing page. Every post it links to is itself a
+        # page in this same crawl, so each preview points at the
+        # *migrated* copy via the same href-to-slug lookup card_group's
+        # CTA uses, not the original site -- falls back to the original
+        # href only if that post genuinely isn't in this crawl. Rendered
+        # in rows of 3 columns, matching this site's other card rows.
+        posts = block.get("posts", [])
+        row_blocks = []
+        any_images = False
+        for i in range(0, len(posts), 3):
+            column_blocks = []
+            for post in posts[i:i + 3]:
+                parts = []
+
+                href = post.get("href")
+                slug = href_to_slug(href) if href else None
+                url = (
+                    f"{NEW_BASE_URL}/{slug}/"
+                    if slug and _PAGES_BY_SLUG and slug in _PAGES_BY_SLUG
+                    else href
+                )
+                url_escaped = xml_escape(url) if url else None
+
+                image_src = post.get("image_src")
+                if image_src:
+                    any_images = True
+                    img_html = f'<img src="{xml_escape(image_src)}" alt=""/>'
+                    if url_escaped:
+                        img_html = f'<a href="{url_escaped}">{img_html}</a>'
+                    parts.append(
+                        '<!-- wp:image {"sizeSlug":"large"} -->\n'
+                        f'<figure class="wp-block-image size-large">{img_html}</figure>\n'
+                        '<!-- /wp:image -->'
+                    )
+
+                meta_bits = [b for b in (post.get("date"), post.get("categories")) if b]
+                if meta_bits:
+                    meta_text = html.escape(" | ".join(meta_bits))
+                    parts.append(
+                        '<!-- wp:paragraph {"fontSize":"small"} -->\n'
+                        f'<p class="has-small-font-size">{meta_text}</p>\n'
+                        '<!-- /wp:paragraph -->'
+                    )
+
+                heading = post.get("heading")
+                if heading:
+                    text = html.escape(heading)
+                    inner = f'<a href="{url_escaped}">{text}</a>' if url_escaped else text
+                    parts.append(
+                        '<!-- wp:heading {"level":4} -->\n'
+                        f'<h4 class="wp-block-heading">{inner}</h4>\n'
+                        '<!-- /wp:heading -->'
+                    )
+
+                excerpt = post.get("excerpt")
+                if excerpt:
+                    parts.append(
+                        '<!-- wp:paragraph -->\n'
+                        f'<p>{html.escape(excerpt)}</p>\n'
+                        '<!-- /wp:paragraph -->'
+                    )
+
+                if url_escaped:
+                    parts.append(
+                        '<!-- wp:paragraph -->\n'
+                        f'<p><a href="{url_escaped}">Continue Reading</a></p>\n'
+                        '<!-- /wp:paragraph -->'
+                    )
+
+                column_content = "\n\n".join(parts)
+                column_blocks.append(
+                    '<!-- wp:column -->\n'
+                    f'<div class="wp-block-column">\n{column_content}\n</div>\n'
+                    '<!-- /wp:column -->'
+                )
+
+            columns_content = "\n\n".join(column_blocks)
+            row_blocks.append(
+                '<!-- wp:columns {"align":"wide"} -->\n'
+                '<div class="wp-block-columns alignwide">\n'
+                f"{columns_content}\n"
+                '</div>\n'
+                '<!-- /wp:columns -->'
+            )
+
+        result = "\n\n".join(row_blocks)
+        if any_images:
+            result += (
+                '\n\n<!-- QA FLAG: post preview images still point at the original '
+                'site -- swap to the re-hosted media-library copy after import. -->'
+            )
+        return result
+
     if t == "faq_raw_unverified":
         note = html.escape(block.get("note", ""))
         parts = [f'<!-- QA FLAG: {note} -->']
@@ -510,8 +608,9 @@ def collect_unique_images(pages):
     """Dedupe image blocks across all pages by URL (the same logo/icon
     typically repeats on every page) and return {url: alt} pairs. Covers
     plain "image" blocks, the image half of a "media_text" side-by-side
-    pair, and each card's image within a "card_group" -- all three carry
-    a real image that needs its own WXR attachment item."""
+    pair, each card's image within a "card_group", and each post's
+    thumbnail within a "post_feed" -- all four carry a real image that
+    needs its own WXR attachment item."""
     images = {}
     for page in pages:
         for block in page["blocks"]:
@@ -522,6 +621,11 @@ def collect_unique_images(pages):
                     image = card.get("image")
                     if image and image["src"] not in images:
                         images[image["src"]] = image.get("alt", "")
+            elif block["type"] == "post_feed":
+                for post in block.get("posts", []):
+                    image_src = post.get("image_src")
+                    if image_src and image_src not in images:
+                        images[image_src] = ""
     return images
 
 
@@ -1279,8 +1383,17 @@ def build_qa_report(data, brand=None):
         for card in b.get("cards", [])
         if card.get("image")
     )
+    post_feed_image_instances = sum(
+        1
+        for p in pages
+        for b in p["blocks"]
+        if b["type"] == "post_feed"
+        for post in b.get("posts", [])
+        if post.get("image_src")
+    )
     image_instances = (
-        count_blocks("image") + count_blocks("media_text") + card_group_image_instances
+        count_blocks("image") + count_blocks("media_text")
+        + card_group_image_instances + post_feed_image_instances
     )
     media_text_count = count_blocks("media_text")
     importable_images, non_importable_images = partition_images_by_importability(
