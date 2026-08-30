@@ -928,6 +928,68 @@ def build_template_part_item_xml(post_id, slug, area, title, content):
   </item>"""
 
 
+def build_page_template_content():
+    """Override for the target theme's default "page" template --
+    same overall structure (header template part, a small top spacer,
+    the real post content, footer template part) but without the
+    wp:post-title and wp:post-featured-image blocks Twenty Twenty-
+    Four's own page.html always includes.
+
+    WordPress's generic page template shows the post's title
+    prominently above its content on every page -- reasonable for a
+    blank new WP page, but redundant here: confirmed on a real test
+    import, a page titled "AI Solutions" rendered that title twice --
+    once as this generic banner, and again moments later as the page's
+    own in-content heading, which the original site never did. No
+    featured images are set on any imported page either, so that block
+    would only ever render empty space; dropped for the same reason.
+    """
+    return (
+        '<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->\n\n'
+        '<!-- wp:group {"tagName":"main"} -->\n'
+        '<main class="wp-block-group">\n'
+        '<!-- wp:group {"layout":{"type":"constrained"}} -->\n'
+        '<div class="wp-block-group">\n'
+        '<!-- wp:spacer {"height":"var:preset|spacing|50"} -->\n'
+        '<div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>\n'
+        '<!-- /wp:spacer -->\n'
+        '</div>\n'
+        '<!-- /wp:group -->\n\n'
+        '<!-- wp:post-content {"lock":{"move":false,"remove":true},"layout":{"type":"constrained"}} /-->\n'
+        '</main>\n'
+        '<!-- /wp:group -->\n\n'
+        '<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->'
+    )
+
+
+def build_page_template_item_xml(post_id, content):
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return f"""  <item>
+    <title>{xml_escape('Page')}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={post_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[{content}]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{post_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[page]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[wp_template]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="wp_theme" nicename="{THEME_SLUG}"><![CDATA[{THEME_SLUG}]]></category>
+  </item>"""
+
+
 def build_wxr(data, brand=None):
     global _BRAND
     _BRAND = brand
@@ -1004,6 +1066,8 @@ def build_wxr(data, brand=None):
         global_styles_content = build_global_styles_content(brand)
         if global_styles_content:
             items_xml.append(build_global_styles_item_xml(40002, global_styles_content))
+
+    items_xml.append(build_page_template_item_xml(40003, build_page_template_content()))
 
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")

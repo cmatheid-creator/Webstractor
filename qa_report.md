@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-08-30 12:35 UTC
+Generated: 2026-08-30 13:18 UTC
 
 ## Summary
 
