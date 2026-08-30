@@ -608,14 +608,21 @@ def build_header_template_part_content(wp_navigation_post_id):
     page, site-wide, with no manual Site Editor work. This is exactly
     the mechanism the Site Editor itself uses when a person edits the
     header by hand; generating it here just does that step for them.
+
+    Uses a plain (untagged) group, not {"tagName":"header"} -- WordPress
+    already wraps a template part's rendered content in a <header> tag
+    based on its area (the wp_template_part_area taxonomy term below),
+    so tagging the inner group too produced invalid, doubly-nested
+    <header><header>...</header></header> markup, confirmed in a real
+    test import's page source.
     """
     return (
-        '<!-- wp:group {"tagName":"header","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
-        '<header class="wp-block-group">\n'
+        '<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
+        '<div class="wp-block-group">\n'
         "<!-- wp:site-logo /-->\n"
         "<!-- wp:site-title /-->\n"
         f'<!-- wp:navigation {{"ref":{wp_navigation_post_id}}} /-->\n'
-        "</header>\n"
+        "</div>\n"
         "<!-- /wp:group -->"
     )
 
@@ -627,6 +634,10 @@ def build_footer_template_part_content(footer, pages_by_slug):
     placeholder/demo footer -- which is what silently stays in place
     without this. Same resolution rules as build_wp_navigation_content()
     for links: unresolvable hrefs are skipped, not guessed at.
+
+    Uses a plain (untagged) group, not {"tagName":"footer"} -- same
+    double-wrapping issue as build_header_template_part_content(); see
+    its docstring.
 
     Returns (content, skipped_labels).
     """
@@ -682,10 +693,10 @@ def build_footer_template_part_content(footer, pages_by_slug):
         )
 
     content = (
-        '<!-- wp:group {"tagName":"footer","style":{"spacing":{"blockGap":"1rem"}},"layout":{"type":"constrained"}} -->\n'
-        '<footer class="wp-block-group">\n'
+        '<!-- wp:group {"style":{"spacing":{"blockGap":"1rem"}},"layout":{"type":"constrained"}} -->\n'
+        '<div class="wp-block-group">\n'
         f"{nav_block}{social_block}{copyright_block}"
-        "</footer>\n"
+        "</div>\n"
         "<!-- /wp:group -->"
     )
     return content, skipped
