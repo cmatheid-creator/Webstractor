@@ -805,6 +805,33 @@ def crawl(start_url, max_pages=100):
                 # a short settle delay is more reliable in practice.
                 page.goto(url, wait_until="load", timeout=30000)
                 page.wait_for_timeout(1000)
+                # Some GoDaddy Website Builder widgets (confirmed for the
+                # "RSS Feed" widget, see mark_post_feeds()) lazy-mount
+                # their real content only once scrolled into view --
+                # never triggered by a plain page.goto(), which leaves
+                # the initial viewport rendered and nothing below it.
+                # Confirmed as the actual cause of a real gap: the same
+                # widget rendered its posts fine on a page where it sits
+                # near the top, but came up completely empty on a longer
+                # page where it sits well below the fold. Scrolling
+                # through the whole page in steps (not straight to the
+                # bottom, which can skip past an IntersectionObserver's
+                # trigger point for content still off-screen mid-jump)
+                # gives every section a chance to mount before extraction.
+                page.evaluate(
+                    """async () => {
+                        const step = window.innerHeight * 0.8;
+                        let y = 0;
+                        const height = () => document.body.scrollHeight;
+                        while (y < height()) {
+                            y += step;
+                            window.scrollTo(0, y);
+                            await new Promise(r => setTimeout(r, 250));
+                        }
+                        window.scrollTo(0, 0);
+                    }"""
+                )
+                page.wait_for_timeout(500)
             except Exception as e:
                 print(f"  [skip] {url} -- {e}")
                 continue

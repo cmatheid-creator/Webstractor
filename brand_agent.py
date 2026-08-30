@@ -166,8 +166,14 @@ def extract_colors(page):
     # generated footer inherited the page's plain white background
     # instead of the original site's actual footer treatment. Same
     # walk-up-to-the-nearest-painted-ancestor logic as the page
-    # background above, just rooted at <footer> instead of body content.
-    footer_el = page.query_selector("footer")
+    # background above, just rooted at the footer instead of body
+    # content. GoDaddy Website Builder doesn't actually use a semantic
+    # <footer> tag -- confirmed on a real crawl this silently found
+    # nothing and skipped footer_background entirely; its real footer
+    # wrapper is a plain <div role="contentinfo">, the ARIA landmark
+    # equivalent, which every real HTML5 <footer> also carries -- so
+    # this selector still matches a theme that does use one.
+    footer_el = page.query_selector('footer, [role="contentinfo"]')
     if footer_el:
         footer_bg = footer_el.evaluate(
             """e => {
