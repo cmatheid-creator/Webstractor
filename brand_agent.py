@@ -161,6 +161,30 @@ def extract_colors(page):
         style = link.evaluate("e => getComputedStyle(e).color")
         colors["link"] = rgb_to_hex(style)
 
+    # The footer commonly uses a distinct (usually light gray) background
+    # from the rest of the page -- confirmed a real gap without this: the
+    # generated footer inherited the page's plain white background
+    # instead of the original site's actual footer treatment. Same
+    # walk-up-to-the-nearest-painted-ancestor logic as the page
+    # background above, just rooted at <footer> instead of body content.
+    footer_el = page.query_selector("footer")
+    if footer_el:
+        footer_bg = footer_el.evaluate(
+            """e => {
+                let node = e;
+                while (node) {
+                    const bg = getComputedStyle(node).backgroundColor;
+                    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+                        return bg;
+                    }
+                    node = node.parentElement;
+                }
+                return null;
+            }"""
+        )
+        if footer_bg:
+            colors["footer_background"] = rgb_to_hex(footer_bg)
+
     return colors
 
 

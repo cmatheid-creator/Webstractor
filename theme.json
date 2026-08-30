@@ -28,6 +28,11 @@
           "slug": "link",
           "color": "#1d2b52",
           "name": "Link"
+        },
+        {
+          "slug": "footer-background",
+          "color": "#f7f7f7",
+          "name": "Footer Background"
         }
       ]
     },

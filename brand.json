@@ -12,7 +12,8 @@
     "text": "#5e5e5e",
     "button_background": "#1d2b52",
     "button_text": "#fafafa",
-    "link": "#1d2b52"
+    "link": "#1d2b52",
+    "footer_background": "#f7f7f7"
   },
   "typography": {
     "HeadingAlpha": {

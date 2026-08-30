@@ -1075,6 +1075,18 @@ def build_footer_template_part_content(footer, pages_by_slug):
     double-wrapping issue as build_header_template_part_content(); see
     its docstring.
 
+    Wrapped the same two-level way as the header (an outer full-width
+    group, an inner "align":"wide" one) and for the same reason,
+    confirmed on a real test import: without an explicit wide inner
+    width, the nav links wrap onto a second line that the original site
+    never does, because a plain "constrained" child inherits the
+    theme's much narrower default *reading* width, not its *wide* one.
+    The outer group is also where the footer's real background color
+    goes (brand.json's "footer_background", when the crawl captured
+    one) -- confirmed distinct from the page's own background on the
+    live site, not something a plain content-width group could paint
+    edge to edge on its own.
+
     Returns (content, skipped_labels).
     """
     known_slugs = set(pages_by_slug)
@@ -1092,7 +1104,8 @@ def build_footer_template_part_content(footer, pages_by_slug):
     nav_block = ""
     if link_blocks:
         nav_block = (
-            '<!-- wp:navigation {"layout":{"type":"flex","justifyContent":"center"},"overlayMenu":"never"} -->\n'
+            '<!-- wp:navigation {"align":"wide","layout":{"type":"flex","justifyContent":"center"},'
+            '"overlayMenu":"never"} -->\n'
             + "\n".join(link_blocks)
             + "\n<!-- /wp:navigation -->\n"
         )
@@ -1106,8 +1119,10 @@ def build_footer_template_part_content(footer, pages_by_slug):
             for s in social_links
         )
         social_block = (
-            '<!-- wp:social-links {"className":"is-style-logos-only"} -->\n'
-            '<ul class="wp-block-social-links is-style-logos-only">\n'
+            '<!-- wp:social-links {"className":"is-style-logos-only",'
+            '"layout":{"type":"flex","justifyContent":"center"}} -->\n'
+            '<ul class="wp-block-social-links is-style-logos-only is-content-justification-center '
+            'is-layout-flex wp-block-social-links-is-layout-flex">\n'
             f"{items}\n"
             "</ul>\n"
             "<!-- /wp:social-links -->\n"
@@ -1128,10 +1143,26 @@ def build_footer_template_part_content(footer, pages_by_slug):
             "<!-- /wp:paragraph -->\n"
         )
 
+    footer_bg_slug = None
+    if _BRAND and (_BRAND.get("colors") or {}).get("footer_background"):
+        footer_bg_slug = "footer-background"
+    outer_attrs = '"align":"full","layout":{"type":"constrained"}'
+    outer_classes = "wp-block-group alignfull"
+    outer_style = {"spacing": {"padding": {"top": "var:preset|spacing|50", "bottom": "var:preset|spacing|50"}}}
+    if footer_bg_slug:
+        outer_attrs += f',"backgroundColor":"{footer_bg_slug}"'
+        outer_classes += f" has-{footer_bg_slug}-background-color has-background"
+    outer_attrs += ',"style":' + json.dumps(outer_style, separators=(",", ":"))
+    outer_style_css = "padding-top:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--50)"
+
     content = (
-        '<!-- wp:group {"style":{"spacing":{"blockGap":"1rem"}},"layout":{"type":"constrained"}} -->\n'
-        '<div class="wp-block-group">\n'
+        f'<!-- wp:group {{{outer_attrs}}} -->\n'
+        f'<div class="{outer_classes}" style="{outer_style_css}">\n'
+        '<!-- wp:group {"align":"wide","style":{"spacing":{"blockGap":"1.5rem"}},"layout":{"type":"constrained"}} -->\n'
+        '<div class="wp-block-group alignwide">\n'
         f"{nav_block}{social_block}{copyright_block}"
+        "</div>\n"
+        "<!-- /wp:group -->\n"
         "</div>\n"
         "<!-- /wp:group -->"
     )
@@ -1607,6 +1638,7 @@ def _derive_brand_palette_and_fonts(brand):
     add_color("primary", "Primary (Button)", colors.get("button_background"))
     add_color("primary-text", "Primary Button Text", colors.get("button_text"))
     add_color("link", "Link", colors.get("link"))
+    add_color("footer-background", "Footer Background", colors.get("footer_background"))
 
     role_names = {
         "HeadingAlpha": "Heading",
