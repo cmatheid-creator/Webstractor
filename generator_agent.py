@@ -197,6 +197,25 @@ def block_to_gutenberg(block):
             're-hosted media-library copy after import. -->'
         )
 
+    if t == "media_text":
+        # Same original-site-URL caveat as the plain "image" block --
+        # see its comment above.
+        src = xml_escape(block["src"])
+        alt = xml_escape(block.get("alt", ""))
+        content_blocks = "\n\n".join(
+            block_to_gutenberg(b) for b in block.get("content", [])
+        )
+        return (
+            '<!-- wp:media-text {"align":"wide","mediaType":"image"} -->\n'
+            '<div class="wp-block-media-text alignwide is-stacked-on-mobile">'
+            f'<figure class="wp-block-media-text__media"><img src="{src}" alt="{alt}"/></figure>'
+            f'<div class="wp-block-media-text__content">\n{content_blocks}\n</div>'
+            '</div>\n'
+            '<!-- /wp:media-text -->\n'
+            '<!-- QA FLAG: image still points at the original site -- swap to the '
+            're-hosted media-library copy after import. -->'
+        )
+
     if t == "faq_raw_unverified":
         note = html.escape(block.get("note", ""))
         parts = [f'<!-- QA FLAG: {note} -->']
@@ -246,11 +265,14 @@ def build_item_xml(page, post_id, parent_post_id=0):
 
 def collect_unique_images(pages):
     """Dedupe image blocks across all pages by URL (the same logo/icon
-    typically repeats on every page) and return {url: alt} pairs."""
+    typically repeats on every page) and return {url: alt} pairs. Covers
+    both plain "image" blocks and the image half of a "media_text"
+    side-by-side pair -- both carry a real image that needs its own WXR
+    attachment item."""
     images = {}
     for page in pages:
         for block in page["blocks"]:
-            if block["type"] == "image" and block["src"] not in images:
+            if block["type"] in ("image", "media_text") and block["src"] not in images:
                 images[block["src"]] = block.get("alt", "")
     return images
 
@@ -885,7 +907,8 @@ def build_qa_report(data, brand=None):
         return sum(1 for p in pages for b in p["blocks"] if b["type"] == block_type)
 
     forms_count = count_blocks("forms_detected")
-    image_instances = count_blocks("image")
+    image_instances = count_blocks("image") + count_blocks("media_text")
+    media_text_count = count_blocks("media_text")
     importable_images, non_importable_images = partition_images_by_importability(
         collect_unique_images(pages)
     )
@@ -942,6 +965,14 @@ def build_qa_report(data, brand=None):
             "page still reference the *original* site's URL, though — swap those to the new "
             "media-library copies before decommissioning the old site."
         )
+        if media_text_count:
+            lines.append(
+                f"- **Side-by-side layout preserved** ({media_text_count} section(s)): the "
+                "original site's two-column image+text sections (detected from its real Grid/"
+                "GridCell markup) are generated as WordPress Media & Text blocks instead of a "
+                "plain stacked image and paragraph, matching the original layout rather than "
+                "flattening it."
+            )
         if non_importable_images:
             lines.append(
                 f"- **{len(non_importable_images)} image(s) can't be auto-imported into the "

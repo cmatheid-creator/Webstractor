@@ -84,9 +84,123 @@ MIN_CONTENT_IMAGE_SIZE = 24  # px; filters tracking pixels and tiny UI icons
 CHROME_SELECTOR = 'nav, [data-ux="Header"], [role="contentinfo"], [data-aid="FOOTER_COOKIE_BANNER_RENDERED"]'
 
 
+def mark_media_text_pairs(page):
+    """Tags DOM elements that form a GoDaddy Website Builder side-by-side
+    image+text section, so extract_blocks() can group them into one
+    "media_text" block (rendered as a real side-by-side WordPress Media
+    & Text block) instead of extracting the image and text as separate,
+    stacked blocks the way everything else on the page is handled.
+
+    Confirmed via the live site's actual markup: a two-column layout is
+    a <div data-ux="Grid"> with exactly two direct <div data-ux=
+    "GridCell"> children -- one holding an <img> and little else, the
+    other holding the real text content (a heading/paragraphs/list).
+    This pattern is also used for other Grid layouts (e.g. wrapping a
+    single column, or multi-column text-only sections), so it's only
+    treated as an image+text pair when exactly one of the two cells is
+    image-dominant and the other is clearly text-dominant -- not just
+    "has a Grid with two GridCells".
+
+    Marks the <img> with data-migration-media-text-image="<n>" and the
+    text cell with data-migration-media-text-content="<n>" (DOM
+    attributes, not Python-side element handles -- re-querying the same
+    DOM node later, e.g. via extract_blocks()'s broader selector, would
+    return a different ElementHandle object that doesn't compare equal
+    to this pass's handles, so tagging the DOM itself is what makes the
+    grouping visible to the later pass).
+    """
+    return page.evaluate(
+        """() => {
+            const grids = document.querySelectorAll('[data-ux="Grid"]');
+            let pairCount = 0;
+            for (const grid of grids) {
+                const cells = Array.from(grid.children).filter(
+                    c => c.matches('[data-ux="GridCell"]')
+                );
+                if (cells.length !== 2) continue;
+
+                let imgCell = null, textCell = null;
+                for (const cell of cells) {
+                    const img = cell.querySelector('img');
+                    const textLen = (cell.textContent || '').trim().length;
+                    if (img && textLen < 40) imgCell = cell;
+                    else if (textLen >= 40) textCell = cell;
+                }
+                if (!imgCell || !textCell) continue;
+
+                const img = imgCell.querySelector('img');
+                if (!img) continue;
+                img.setAttribute('data-migration-media-text-image', String(pairCount));
+                textCell.setAttribute('data-migration-media-text-content', String(pairCount));
+                pairCount++;
+            }
+            return pairCount;
+        }"""
+    )
+
+
+def resolve_image_src(el, page_url, seen_image_urls):
+    """Shared by the normal per-image extraction and the media_text
+    pair extraction below, so both apply the exact same lazy-load/
+    size-filter/dedup rules. Returns (abs_src, alt) or None if this
+    image shouldn't be extracted at all."""
+    # GoDaddy Website Builder lazy-loads below-the-fold images: src
+    # holds a 1x1 transparent GIF placeholder until the image actually
+    # scrolls into view (which headless crawling never triggers), and
+    # the real URL sits in data-srclazy. naturalWidth/Height can't be
+    # used to size-filter these -- the placeholder is the only thing
+    # ever loaded into the element, so it always reads as 1x1
+    # regardless of what the real image is.
+    lazy_src = el.get_attribute("data-srclazy")
+    if lazy_src:
+        src = lazy_src
+    else:
+        src = el.get_attribute("src")
+        if not src:
+            return None
+        dims = el.evaluate("e => ({w: e.naturalWidth, h: e.naturalHeight})")
+        if dims["w"] < MIN_CONTENT_IMAGE_SIZE or dims["h"] < MIN_CONTENT_IMAGE_SIZE:
+            return None  # likely a tracking pixel or decorative icon
+
+    abs_src = urljoin(page_url, src)
+    if abs_src in seen_image_urls:
+        return None  # e.g. duplicate desktop/mobile logo markup
+    seen_image_urls.add(abs_src)
+    return abs_src, (el.get_attribute("alt") or "")
+
+
+def extract_element_content(container):
+    """Headings/paragraphs/lists inside one element, in document order --
+    the same block types and rules extract_blocks() applies at the page
+    level, scoped to a single container. Used to pull the text side of a
+    detected media_text pair (see mark_media_text_pairs()) into that
+    block's own "content" list."""
+    content = []
+    for el in container.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol"):
+        tag = el.evaluate("e => e.tagName.toLowerCase()")
+        text = element_text(el)
+        if not text:
+            continue
+        if tag.startswith("h"):
+            content.append({"type": "heading", "level": int(tag[1]), "text": text})
+        elif tag == "p":
+            content.append({"type": "paragraph", "text": text})
+        elif tag in ("ul", "ol"):
+            items = [
+                element_text(li)
+                for li in el.query_selector_all("li")
+                if element_text(li)
+            ]
+            if items:
+                content.append({"type": "list", "items": items})
+    return content
+
+
 def extract_blocks(page, page_url):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
+
+    mark_media_text_pairs(page)
 
     # Headings + paragraphs + lists + images, in document order. Images
     # used to be collected in a separate pass at the end of the function
@@ -101,37 +215,44 @@ def extract_blocks(page, page_url):
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
             continue  # inside the header, footer, or a nav -- not page content
 
+        # Anything inside a detected side-by-side text column is pulled
+        # in as part of that media_text block (below, when we hit its
+        # paired image) rather than extracted again here as a separate,
+        # stacked block.
+        if el.evaluate("e => !!e.closest('[data-migration-media-text-content]')"):
+            continue
+
         tag = el.evaluate("e => e.tagName.toLowerCase()")
 
         if tag == "img":
-            # GoDaddy Website Builder lazy-loads below-the-fold images:
-            # src holds a 1x1 transparent GIF placeholder until the
-            # image actually scrolls into view (which headless crawling
-            # never triggers), and the real URL sits in data-srclazy.
-            # naturalWidth/Height can't be used to size-filter these --
-            # the placeholder is the only thing ever loaded into the
-            # element, so it always reads as 1x1 regardless of what the
-            # real image is.
-            lazy_src = el.get_attribute("data-srclazy")
-            if lazy_src:
-                src = lazy_src
-            else:
-                src = el.get_attribute("src")
-                if not src:
+            pair_id = el.get_attribute("data-migration-media-text-image")
+            if pair_id is not None:
+                resolved = resolve_image_src(el, page_url, seen_image_urls)
+                if resolved is None:
                     continue
-                dims = el.evaluate("e => ({w: e.naturalWidth, h: e.naturalHeight})")
-                if dims["w"] < MIN_CONTENT_IMAGE_SIZE or dims["h"] < MIN_CONTENT_IMAGE_SIZE:
-                    continue  # likely a tracking pixel or decorative icon
+                abs_src, alt = resolved
+                text_cell = page.query_selector(
+                    f'[data-migration-media-text-content="{pair_id}"]'
+                )
+                content = extract_element_content(text_cell) if text_cell else []
+                if content:
+                    blocks.append({
+                        "type": "media_text",
+                        "src": abs_src,
+                        "alt": alt,
+                        "content": content,
+                    })
+                else:
+                    # Text side had nothing extractable after all --
+                    # fall back to a plain image rather than losing it.
+                    blocks.append({"type": "image", "src": abs_src, "alt": alt})
+                continue
 
-            abs_src = urljoin(page_url, src)
-            if abs_src in seen_image_urls:
-                continue  # e.g. duplicate desktop/mobile logo markup
-            seen_image_urls.add(abs_src)
-            blocks.append({
-                "type": "image",
-                "src": abs_src,
-                "alt": el.get_attribute("alt") or "",
-            })
+            resolved = resolve_image_src(el, page_url, seen_image_urls)
+            if resolved is None:
+                continue
+            abs_src, alt = resolved
+            blocks.append({"type": "image", "src": abs_src, "alt": alt})
             continue
 
         text = element_text(el)
