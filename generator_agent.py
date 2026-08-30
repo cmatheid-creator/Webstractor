@@ -752,7 +752,7 @@ def build_template_part_item_xml(post_id, slug, area, title, content):
   </item>"""
 
 
-def build_wxr(data):
+def build_wxr(data, brand=None):
     site = data["site"]
     navigation = data.get("navigation") or []
 
@@ -820,6 +820,11 @@ def build_wxr(data):
         items_xml.append(
             build_template_part_item_xml(40001, "footer", "footer", "Footer", footer_content)
         )
+
+    if brand:
+        global_styles_content = build_global_styles_content(brand)
+        if global_styles_content:
+            items_xml.append(build_global_styles_item_xml(40002, global_styles_content))
 
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
@@ -1009,10 +1014,14 @@ def build_qa_report(data, brand=None):
         colors = brand.get("colors", {})
         color_list = ", ".join(f"{k}: {v}" for k, v in colors.items() if v)
         lines.append(
-            f"- **Brand tokens extracted**: {len(brand.get('typography', {}))} typography role(s), "
-            f"colors ({color_list or 'none found'}). Included as `{OUT_THEME}` -- a WordPress "
-            "block-theme color palette and font list, ready to drop into a block theme's "
-            "theme.json (or use as a reference when configuring Site Editor colors/fonts by hand)."
+            f"- **Brand tokens applied automatically**: {len(brand.get('typography', {}))} "
+            f"typography role(s), colors ({color_list or 'none found'}). The WXR file includes a "
+            "\"Custom Styles\" entry (a real WordPress `wp_global_styles` post -- the same object "
+            "the Site Editor's own Styles panel creates when a person sets colors/fonts by hand) "
+            "that applies the extracted background, text, link, and button colors plus the body "
+            "font sitewide on import -- no manual Site Editor configuration needed. Also included "
+            f"as `{OUT_THEME}`, a standalone theme.json fragment, for reference or for merging "
+            "into a theme's own theme.json directly."
         )
         if logo:
             lines.append(
@@ -1030,13 +1039,14 @@ def build_qa_report(data, brand=None):
     return "\n".join(lines) + "\n"
 
 
-def build_theme_json(brand):
-    """A WordPress block-theme theme.json fragment (settings.color.palette
-    and settings.typography.fontFamilies) built from brand_agent.py's
-    extracted tokens. Not a complete theme.json -- WP block themes need
-    more than colors/fonts to function -- this is the piece a human (or
-    a future Architecture Agent) merges into one, or uses as a reference
-    when setting the palette/fonts by hand in the Site Editor."""
+def _derive_brand_palette_and_fonts(brand):
+    """Shared by build_theme_json() (a standalone reference file) and
+    build_global_styles_content() (the WXR item that makes these tokens
+    actually apply on import) so the two never drift apart. Returns
+    (palette, font_families, body_font_slug) -- body_font_slug is the
+    slug of whichever font family carries the BodyAlpha role (falling
+    back to the first font family found, or None if brand.json had no
+    typography at all), used to set the sitewide base font."""
     colors = brand.get("colors", {})
     palette = []
 
@@ -1076,6 +1086,7 @@ def build_theme_json(brand):
             roles_by_family.setdefault(family, []).append(role)
 
     font_families = []
+    body_font_slug = None
     for family, roles in roles_by_family.items():
         best_role = min(
             roles,
@@ -1088,7 +1099,25 @@ def build_theme_json(brand):
             "fontFamily": family,
             "name": role_names.get(best_role, best_role),
         })
+        if "BodyAlpha" in roles:
+            body_font_slug = slug
 
+    if body_font_slug is None and font_families:
+        body_font_slug = font_families[0]["slug"]
+
+    return palette, font_families, body_font_slug
+
+
+def build_theme_json(brand):
+    """A WordPress block-theme theme.json fragment (settings.color.palette
+    and settings.typography.fontFamilies) built from brand_agent.py's
+    extracted tokens. Not a complete theme.json -- WP block themes need
+    more than colors/fonts to function -- this is the piece a human (or
+    a future Architecture Agent) merges into one, or uses as a reference
+    when setting the palette/fonts by hand in the Site Editor. See
+    build_global_styles_content() for the WXR item that actually applies
+    these on import, rather than just registering them as available."""
+    palette, font_families, _ = _derive_brand_palette_and_fonts(brand)
     theme = {
         "$schema": "https://schemas.wp.org/trunk/theme.json",
         "version": 2,
@@ -1098,6 +1127,95 @@ def build_theme_json(brand):
         },
     }
     return json.dumps(theme, indent=2) + "\n"
+
+
+def build_global_styles_content(brand):
+    """JSON content for a wp_global_styles post -- the same object
+    WordPress's own Site Editor > Styles panel creates and edits when a
+    person customizes colors/fonts by hand. Unlike build_theme_json()'s
+    output (a standalone reference file nothing applies automatically),
+    importing this WXR item makes the extracted palette and fonts the
+    site's live, active styles immediately -- no manual Site Editor
+    configuration needed.
+
+    "settings.color.palette"/"settings.typography.fontFamilies" only
+    register the tokens as available (e.g. in the color picker); the
+    "styles" section below is what actually paints them on -- background/
+    text/link/button colors and the base font -- referencing the
+    palette/font slugs via the standard "var:preset|..." token so they
+    stay in sync with the palette entries rather than duplicating literal
+    values. Returns None if brand has no usable colors or fonts, since an
+    empty override is worse than leaving the theme's own defaults alone.
+    """
+    palette = {c["slug"]: c for c in _derive_brand_palette_and_fonts(brand)[0]}
+    _, font_families, body_font_slug = _derive_brand_palette_and_fonts(brand)
+    if not palette and not font_families:
+        return None
+
+    styles = {}
+    color_styles = {}
+    if "background" in palette:
+        color_styles["background"] = "var:preset|color|background"
+    if "foreground" in palette:
+        color_styles["text"] = "var:preset|color|foreground"
+    if color_styles:
+        styles["color"] = color_styles
+
+    if body_font_slug:
+        styles["typography"] = {"fontFamily": f"var:preset|font-family|{body_font_slug}"}
+
+    elements = {}
+    if "link" in palette:
+        elements["link"] = {"color": {"text": "var:preset|color|link"}}
+    if "primary" in palette or "primary-text" in palette:
+        button_colors = {}
+        if "primary" in palette:
+            button_colors["background"] = "var:preset|color|primary"
+        if "primary-text" in palette:
+            button_colors["text"] = "var:preset|color|primary-text"
+        elements["button"] = {"color": button_colors}
+    if elements:
+        styles["elements"] = elements
+
+    global_styles = {
+        "version": 2,
+        "isGlobalStylesUserThemeJSON": True,
+        "settings": {
+            "color": {"palette": list(palette.values())},
+            "typography": {"fontFamilies": font_families},
+        },
+        "styles": styles,
+    }
+    return json.dumps(global_styles, separators=(",", ":"))
+
+
+def build_global_styles_item_xml(post_id, content):
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    slug = f"wp-global-styles-{THEME_SLUG}"
+    return f"""  <item>
+    <title>{xml_escape('Custom Styles')}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={post_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[{content}]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{post_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[{slug}]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[wp_global_styles]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
+    <category domain="wp_theme" nicename="{THEME_SLUG}"><![CDATA[{THEME_SLUG}]]></category>
+  </item>"""
 
 
 def main():
@@ -1114,7 +1232,7 @@ def main():
         pass
 
     with open(OUT_WXR, "w") as f:
-        f.write(build_wxr(data))
+        f.write(build_wxr(data, brand))
 
     with open(OUT_REDIRECTS, "w") as f:
         f.write(build_redirects_csv(data))
