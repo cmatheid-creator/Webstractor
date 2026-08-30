@@ -964,14 +964,21 @@ def build_qa_report(data, brand=None):
         )
         lines.append(
             "- **Reviewing the nav before go-live**: pages import as drafts by design (see "
-            "below), but WordPress's own draft-preview mode (the \"Preview\" link/button, URLs "
-            "with `?preview=true`) has been observed failing to render the Navigation block's "
-            "menu items at all -- confirmed on a real test import: the exact same page showed a "
-            "completely empty nav in preview but rendered correctly, submenus and all, the "
-            "moment it was published. This is a WordPress preview-mode limitation, not a defect "
-            "in this file -- don't take an empty-looking nav on a draft preview at face value. "
-            "To actually check it before the real go-live, temporarily publish the page, look, "
-            "then set it back to Draft."
+            "below) -- and WordPress's Navigation block correctly hides any menu link that "
+            "points to a page still in draft, the same way it would for any other unpublished "
+            "page. Confirmed with a full local WordPress + Twenty Twenty-Four reproduction: "
+            "with only one page published, the nav showed only that page's own branch (e.g. "
+            "just \"AI\" > \"AI Solutions\"); publishing every page made the complete nav -- all "
+            "top-level items, all category dropdowns, every child link -- render correctly in "
+            "both the header and footer. This is expected, correct WordPress behavior, not a "
+            "defect in this file. It also means a *sparse-looking* nav while reviewing in draft "
+            "isn't a red flag by itself -- it's just reflecting how much of the site is "
+            "published so far. To see the complete nav before committing to a real go-live, "
+            "temporarily publish all pages, review, then set them back to Draft if you're not "
+            "ready to launch. WordPress's own draft-preview mode (`?preview=true`) has also been "
+            "observed failing to render the Navigation block's menu items at all, even for "
+            "published targets -- don't trust a preview link's nav either; check a real "
+            "published URL."
         )
     if skipped_nav_labels:
         lines.append(
