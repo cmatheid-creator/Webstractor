@@ -615,10 +615,21 @@ def build_header_template_part_content(wp_navigation_post_id):
     so tagging the inner group too produced invalid, doubly-nested
     <header><header>...</header></header> markup, confirmed in a real
     test import's page source.
+
+    Carries the "has-global-padding" class -- confirmed in a real test
+    import's page source: without it, this flex row has no horizontal
+    padding of its own and stretches edge-to-edge across the full
+    browser width, so "justifyContent":"space-between" shoves the nav
+    out past the right edge of the viewport instead of keeping it
+    within the page's normal content margins. "has-global-padding" is a
+    real WordPress core utility class (confirmed present in this site's
+    own global-styles-inline-css) that applies the theme's configured
+    root padding -- the same mechanism the theme's own default header
+    and the page's main content area both already rely on.
     """
     return (
-        '<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
-        '<div class="wp-block-group">\n'
+        '<!-- wp:group {"className":"has-global-padding","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
+        '<div class="wp-block-group has-global-padding">\n'
         "<!-- wp:site-logo /-->\n"
         "<!-- wp:site-title /-->\n"
         f'<!-- wp:navigation {{"ref":{wp_navigation_post_id}}} /-->\n'
