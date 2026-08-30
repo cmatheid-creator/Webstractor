@@ -231,25 +231,40 @@ def extract_blocks(page, page_url):
         if tag == "img":
             pair_id = el.get_attribute("data-migration-media-text-image")
             if pair_id is not None:
-                resolved = resolve_image_src(el, page_url, seen_image_urls)
-                if resolved is None:
-                    continue
-                abs_src, alt = resolved
+                # Resolve the text side first and independently of the
+                # image. Confirmed as a real content-loss bug on a live
+                # crawl: an earlier version bailed out of this whole
+                # branch the moment resolve_image_src() returned None
+                # (e.g. this image has no data-srclazy fallback and its
+                # bare src failed to load/size-check), silently dropping
+                # its paired heading and paragraphs along with it -- text
+                # that a plain, ungrouped image+paragraph pair elsewhere
+                # on the same page would never have lost. Whatever
+                # happens to the image, the real text content the pair
+                # was tagged with is never thrown away.
                 text_cell = page.query_selector(
                     f'[data-migration-media-text-content="{pair_id}"]'
                 )
                 content = extract_element_content(text_cell) if text_cell else []
-                if content:
+                resolved = resolve_image_src(el, page_url, seen_image_urls)
+
+                if resolved is not None and content:
+                    abs_src, alt = resolved
                     blocks.append({
                         "type": "media_text",
                         "src": abs_src,
                         "alt": alt,
                         "content": content,
                     })
-                else:
+                elif resolved is not None:
                     # Text side had nothing extractable after all --
                     # fall back to a plain image rather than losing it.
+                    abs_src, alt = resolved
                     blocks.append({"type": "image", "src": abs_src, "alt": alt})
+                else:
+                    # Image didn't resolve -- keep the real text content
+                    # as normal top-level blocks instead of losing it too.
+                    blocks.extend(content)
                 continue
 
             resolved = resolve_image_src(el, page_url, seen_image_urls)
