@@ -72,7 +72,16 @@ MIN_CONTENT_IMAGE_SIZE = 24  # px; filters tracking pixels and tiny UI icons
 # same ~40-item nav list (twice -- once for the visible nav, once for
 # the mobile drawer) onto the front of every single one of the 37
 # extracted pages.
-CHROME_SELECTOR = 'nav, [data-ux="Header"], [role="contentinfo"]'
+#
+# The cookie-consent banner (data-aid="FOOTER_COOKIE_BANNER_RENDERED")
+# is a separate case: despite the "FOOTER_" name it's its own floating
+# widget elsewhere in the page, not nested inside the real
+# role="contentinfo" footer -- confirmed by inspecting the live markup
+# after its heading+paragraph ("This website uses cookies." / "We use
+# cookies to analyze website traffic...") turned up as extracted
+# content on every single page, sometimes in the middle of real content
+# rather than at the end.
+CHROME_SELECTOR = 'nav, [data-ux="Header"], [role="contentinfo"], [data-aid="FOOTER_COOKIE_BANNER_RENDERED"]'
 
 
 def extract_blocks(page, page_url):
