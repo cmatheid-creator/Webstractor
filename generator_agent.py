@@ -616,23 +616,33 @@ def build_header_template_part_content(wp_navigation_post_id):
     <header><header>...</header></header> markup, confirmed in a real
     test import's page source.
 
-    Carries the "has-global-padding" class -- confirmed in a real test
-    import's page source: without it, this flex row has no horizontal
-    padding of its own and stretches edge-to-edge across the full
-    browser width, so "justifyContent":"space-between" shoves the nav
-    out past the right edge of the viewport instead of keeping it
-    within the page's normal content margins. "has-global-padding" is a
+    Wrapped in an outer "constrained"-layout group with "has-global-
+    padding" -- confirmed in a real test import's rendered page: without
+    this, the inner flex row has the *entire* browser viewport to work
+    with (unlike the page's main content, which the theme already caps
+    to a centered, readable max-width), so on a wide screen
+    "justifyContent":"space-between" flings the logo and nav to opposite
+    edges of a much wider space than the rest of the page uses, leaving
+    a large empty gap in the middle and cramming the nav into a narrow
+    strip on the right. The outer group's "constrained" layout caps and
+    centers the header's content to the same width the theme already
+    uses for the page body, so the header lines up with everything
+    below it instead of spanning edge-to-edge. "has-global-padding" is a
     real WordPress core utility class (confirmed present in this site's
     own global-styles-inline-css) that applies the theme's configured
     root padding -- the same mechanism the theme's own default header
     and the page's main content area both already rely on.
     """
     return (
-        '<!-- wp:group {"className":"has-global-padding","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
-        '<div class="wp-block-group has-global-padding">\n'
+        '<!-- wp:group {"align":"full","className":"has-global-padding","layout":{"type":"constrained"}} -->\n'
+        '<div class="wp-block-group alignfull has-global-padding">\n'
+        '<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
+        '<div class="wp-block-group">\n'
         "<!-- wp:site-logo /-->\n"
         "<!-- wp:site-title /-->\n"
         f'<!-- wp:navigation {{"ref":{wp_navigation_post_id}}} /-->\n'
+        "</div>\n"
+        "<!-- /wp:group -->\n"
         "</div>\n"
         "<!-- /wp:group -->"
     )
