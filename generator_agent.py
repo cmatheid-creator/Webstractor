@@ -38,6 +38,13 @@ _BRAND = None
 # migrated page's real URL instead of leaving it pointed at the old site.
 _PAGES_BY_SLUG = None
 
+# Same rationale as _PAGES_BY_SLUG: set once by build_wxr(), read by
+# block_to_gutenberg()'s "post_feed" handler as a fallback thumbnail when
+# a post's own card image wasn't captured (that content loads via
+# client-side JS the crawler doesn't always see) -- keyed by slug against
+# the linked page's own real featured_image (og:image).
+_FEATURED_IMAGE_BY_SLUG = None
+
 
 # GoDaddy Website Builder can't do real nested nav menus, so some source
 # sites fake a sub-item look by prefixing the page <title> itself with a
@@ -197,10 +204,19 @@ def block_to_gutenberg(block):
                 extra_css += f';font-size:{hs["font_size"]}'
             if hs.get("font_weight"):
                 extra_css += f';font-weight:{hs["font_weight"]}'
+            # Real per-section vertical spacing, confirmed against the
+            # live site's own CSS (56px top+bottom padding per section):
+            # this generated page has no per-"section" wrapper the way
+            # the original site's markup does, so without an explicit
+            # margin here these divider headings -- the actual visual
+            # section boundaries -- were only getting WordPress's small
+            # default block spacing (~1.5em) between them, far tighter
+            # than the original site's rhythm.
             return (
-                '<!-- wp:group {"align":"wide","layout":{"type":"flex",'
+                '<!-- wp:group {"align":"wide","style":{"spacing":{"margin":'
+                '{"top":"56px","bottom":"56px"}}},"layout":{"type":"flex",'
                 '"justifyContent":"center","verticalAlignment":"center"}} -->\n'
-                '<div class="wp-block-group alignwide">\n'
+                '<div class="wp-block-group alignwide" style="margin-top:56px;margin-bottom:56px">\n'
                 '<!-- wp:separator {"className":"is-style-wide"} -->\n'
                 '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
                 '<!-- /wp:separator -->\n'
@@ -487,7 +503,14 @@ def block_to_gutenberg(block):
                 )
                 url_escaped = xml_escape(url) if url else None
 
-                image_src = post.get("image_src")
+                # The card's own thumbnail (loaded via client-side JS on
+                # the referring page -- see mark_post_feeds()) isn't
+                # always captured; fall back to the linked post's own
+                # real featured image (og:image) rather than showing no
+                # image at all.
+                image_src = post.get("image_src") or (
+                    _FEATURED_IMAGE_BY_SLUG.get(slug) if slug and _FEATURED_IMAGE_BY_SLUG else None
+                )
                 if image_src:
                     any_images = True
                     img_html = f'<img src="{xml_escape(image_src)}" alt=""/>'
@@ -511,7 +534,16 @@ def block_to_gutenberg(block):
                 heading = post.get("heading")
                 if heading:
                     text = html.escape(heading)
-                    inner = f'<a href="{url_escaped}">{text}</a>' if url_escaped else text
+                    # Confirmed against the live site: a card title link
+                    # has no underline (unlike a plain in-text link, e.g.
+                    # the footer's legal links, which do) -- WordPress's
+                    # own default styles underline every <a> with nothing
+                    # to say otherwise, so this needs an explicit override
+                    # rather than being left to inherit.
+                    inner = (
+                        f'<a href="{url_escaped}" style="text-decoration:none">{text}</a>'
+                        if url_escaped else text
+                    )
                     parts.append(
                         '<!-- wp:heading {"level":4} -->\n'
                         f'<h4 class="wp-block-heading">{inner}</h4>\n'
@@ -1041,20 +1073,17 @@ def build_header_template_part_content(wp_navigation_post_id):
         typography["fontWeight"] = nav_style["font_weight"]
     nav_attrs += ',"style":' + json.dumps({"typography": typography}, separators=(",", ":"))
 
-    # The logo's real rendered width (brand_agent.py's extract_logo()
-    # captures this from the live page's own getBoundingClientRect(), not
-    # its much-larger natural image dimensions) -- confirmed a real gap
-    # without this: core/site-logo's own default width rendered
-    # noticeably smaller than the original site's actual header logo.
-    logo_width = ((_BRAND or {}).get("logo") or {}).get("width")
-    logo_attrs = f' {{"width":{logo_width}}}' if logo_width else ""
-
+    # The logo's real size is applied via a global CSS override (see
+    # build_global_styles_content()) matching the live site's own
+    # height-constrained/auto-width sizing -- not a block attribute here,
+    # since core/site-logo's own "width" attribute only supports the
+    # opposite (fixed width, auto height).
     return (
         '<!-- wp:group {"align":"full","className":"has-global-padding","layout":{"type":"constrained"}} -->\n'
         '<div class="wp-block-group alignfull has-global-padding">\n'
         '<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
         '<div class="wp-block-group alignwide">\n'
-        f"<!-- wp:site-logo{logo_attrs} /-->\n"
+        "<!-- wp:site-logo /-->\n"
         f'<!-- wp:navigation {{{nav_attrs}}} /-->\n'
         "</div>\n"
         "<!-- /wp:group -->\n"
@@ -1278,6 +1307,19 @@ def build_wxr(data, brand=None):
 
     global _PAGES_BY_SLUG
     _PAGES_BY_SLUG = pages_by_slug
+
+    # A post_feed card's own thumbnail is only capturable when the crawler
+    # happens to see it (see mark_post_feeds() -- it's loaded via
+    # client-side JS on the *referring* page, not always present). Every
+    # post this widget links to is itself a crawled page, though, and
+    # crawler_agent.py's og:image extraction gives that page's own real
+    # featured image regardless -- a reliable fallback keyed by slug.
+    global _FEATURED_IMAGE_BY_SLUG
+    _FEATURED_IMAGE_BY_SLUG = {
+        page["slug"]: page["featured_image"]
+        for page in data["pages"]
+        if page.get("featured_image")
+    }
 
     parent_map = build_page_parent_map(navigation, set(pages_by_slug))
 
@@ -1756,6 +1798,21 @@ def build_global_styles_content(brand):
         elements["button"] = {"color": button_colors}
     if elements:
         styles["elements"] = elements
+
+    # The logo's real sizing mechanism, confirmed against the live site's
+    # own CSS: height-constrained with auto width (e.g. "height:88px;
+    # width:auto"), not width-constrained. core/site-logo's own "width"
+    # attribute only supports the opposite (fixed width, auto height) --
+    # close enough when the downloaded file's aspect ratio matches
+    # exactly, but a raw CSS override here is exact regardless of any
+    # small mismatch between the file WordPress actually downloaded and
+    # whatever crop the live site's own <img> happened to measure.
+    logo = brand.get("logo") or {}
+    if logo.get("height"):
+        styles["css"] = (
+            ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
+            "max-height:none!important;max-width:none!important}"
+        ) % logo["height"]
 
     global_styles = {
         "version": 2,

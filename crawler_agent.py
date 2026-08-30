@@ -842,6 +842,16 @@ def crawl(start_url, max_pages=100):
                         title = page.title()
                         meta_desc_el = page.query_selector("meta[name='description']")
                         meta_desc = meta_desc_el.get_attribute("content") if meta_desc_el else ""
+                        # og:image is a far more reliable "this page's real
+                        # featured image" signal than trying to guess one
+                        # from the DOM -- confirmed useful for post_feed
+                        # cards (see mark_post_feeds()), whose own
+                        # thumbnail is loaded via client-side JS the
+                        # crawler never sees, but which links to a post
+                        # page like this one that always carries its own
+                        # correct og:image regardless.
+                        og_image_el = page.query_selector('meta[property="og:image"]')
+                        og_image = og_image_el.get_attribute("content") if og_image_el else ""
                         extracted_paths.add(canonical_path)
                         # Record the canonical, query-stripped URL, not
                         # whichever query-string variant happened to be
@@ -855,6 +865,7 @@ def crawl(start_url, max_pages=100):
                             "slug": slugify(canonical_url, start_url),
                             "title": title,
                             "meta_description": meta_desc or "",
+                            "featured_image": og_image or "",
                             "type": "page",
                             "is_front_page": (canonical_url == start_url.rstrip("/")),
                             "blocks": blocks,
