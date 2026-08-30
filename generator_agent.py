@@ -624,23 +624,29 @@ def build_header_template_part_content(wp_navigation_post_id):
     "justifyContent":"space-between" flings the logo and nav to opposite
     edges of a much wider space than the rest of the page uses, leaving
     a large empty gap in the middle and cramming the nav into a narrow
-    strip on the right. The outer group's "constrained" layout caps and
-    centers the header's content to the same width the theme already
-    uses for the page body, so the header lines up with everything
-    below it instead of spanning edge-to-edge. "has-global-padding" is a
-    real WordPress core utility class (confirmed present in this site's
-    own global-styles-inline-css) that applies the theme's configured
-    root padding -- the same mechanism the theme's own default header
-    and the page's main content area both already rely on.
+    strip on the right. The outer group's "constrained" layout centers
+    the header, and the inner flex row is explicitly "align":"wide" --
+    the theme's *wide* content width (theme.json's --wide-size, e.g.
+    1280px), not the narrower default *reading* width ("--content-size",
+    e.g. 620px) a plain "constrained" child would otherwise inherit,
+    which is comfortable for body paragraph text but too narrow for a
+    logo plus an 8-item nav, causing exactly the same awkward wrapping
+    a too-wide header does. "has-global-padding" is a real WordPress
+    core utility class (confirmed present in this site's own global-
+    styles-inline-css) that applies the theme's configured root padding
+    -- the same mechanism the theme's own default header and the page's
+    main content area both already rely on.
     """
     return (
         '<!-- wp:group {"align":"full","className":"has-global-padding","layout":{"type":"constrained"}} -->\n'
         '<div class="wp-block-group alignfull has-global-padding">\n'
-        '<!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
-        '<div class="wp-block-group">\n'
+        '<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
+        '<div class="wp-block-group alignwide">\n'
         "<!-- wp:site-logo /-->\n"
         "<!-- wp:site-title /-->\n"
-        f'<!-- wp:navigation {{"ref":{wp_navigation_post_id}}} /-->\n'
+        f'<!-- wp:navigation {{"ref":{wp_navigation_post_id},"overlayMenu":"mobile",'
+        '"fontSize":"small","style":{"typography":{"textTransform":"uppercase",'
+        '"letterSpacing":"0.05em"}}} /-->\n'
         "</div>\n"
         "<!-- /wp:group -->\n"
         "</div>\n"
