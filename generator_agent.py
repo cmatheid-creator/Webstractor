@@ -872,6 +872,16 @@ def build_qa_report(data, brand=None):
     lines.append("")
     lines.append("## Items flagged for human review before go-live")
     lines.append("")
+    front_page = next((p for p in pages if p.get("is_front_page")), None)
+    if front_page:
+        lines.append(
+            f"- **Set the homepage** (one-time, unavoidable manual step): the front page "
+            f"imports as a normal page — titled \"{clean_title(front_page['title'])}\", slug "
+            f"`{front_page['slug']}` — like any other. Which page WordPress actually shows at "
+            f"`/` is a site option (Settings → Reading → \"Your homepage displays\" → set it to "
+            f"a static page → choose this one), not page content, so no WXR import can set it "
+            f"automatically. Skip this and `/` shows the default blog post listing instead."
+        )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
     if forms_count:
