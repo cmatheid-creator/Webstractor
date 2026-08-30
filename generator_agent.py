@@ -106,6 +106,35 @@ def block_to_gutenberg(block):
     if t == "heading":
         level = block.get("level", 2)
         text = html.escape(block["text"])
+
+        # Level-1 headings map to GoDaddy Website Builder's "SectionHeading"
+        # role (confirmed in the live site's own markup: a real <h1
+        # data-ux="SectionHeading"> even though it's semantically a
+        # section title, not the page's main heading -- GoDaddy promotes
+        # it via a data-promoted-from attribute). The original site
+        # flanks these with a horizontal rule on each side; centered
+        # heading blocks alone lose that treatment entirely, so it's
+        # rebuilt here with a flex group and two separators sized to
+        # fill the remaining space via an inline style -- core/separator
+        # has no "grow" attribute of its own to reach for.
+        if level == 1:
+            return (
+                '<!-- wp:group {"align":"wide","layout":{"type":"flex",'
+                '"justifyContent":"center","verticalAlignment":"center"}} -->\n'
+                '<div class="wp-block-group alignwide">\n'
+                '<!-- wp:separator {"className":"is-style-wide"} -->\n'
+                '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
+                '<!-- /wp:separator -->\n'
+                f'<!-- wp:heading {{"level":1,"textAlign":"center","style":{{"spacing":{{"margin":{{"top":"0","bottom":"0"}}}}}}}} -->\n'
+                f'<h1 class="wp-block-heading has-text-align-center" style="margin-top:0;margin-bottom:0">{text}</h1>\n'
+                '<!-- /wp:heading -->\n'
+                '<!-- wp:separator {"className":"is-style-wide"} -->\n'
+                '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
+                '<!-- /wp:separator -->\n'
+                '</div>\n'
+                '<!-- /wp:group -->'
+            )
+
         return (
             f'<!-- wp:heading {{"level":{level}}} -->\n'
             f'<h{level} class="wp-block-heading">{text}</h{level}>\n'
