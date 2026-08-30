@@ -1642,7 +1642,17 @@ def build_qa_report(data, brand=None):
                 "font files, so every role using one would otherwise silently fall back to its "
                 f"generic fallback (e.g. Georgia/serif). `php {OUT_APPLY_BRANDING}` (see above) "
                 "also writes a small must-use plugin that loads the real fonts from Google Fonts "
-                "on every page, sitewide."
+                "on every page, sitewide. Without file access to run that script, WordPress's "
+                "built-in Font Library (Appearance → Editor → Styles → Typography, WP 6.5+) is "
+                "the no-code alternative -- but confirmed a real gotcha there: **installing** a "
+                "font only adds it to the library, each individual weight/style face still needs "
+                "to be **activated** separately (checked on) before it actually loads. A font "
+                "showing e.g. \"1 of 8 active\" in the Fonts screen means only one weight is live "
+                "-- headings/nav using a different weight will silently fall back to the generic "
+                "font until every face that role needs is checked on too. Also survives a database "
+                "reset worse than the must-use-plugin route: Font Library's installed fonts are "
+                "database entries, wiped by a full reset, and need reinstalling+reactivating "
+                "afterward -- the must-use plugin is a file on disk that a DB reset doesn't touch."
             )
     lines.append("")
     lines.append("## What's in the attached files")

@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-08-30 23:31 UTC
+Generated: 2026-08-30 23:37 UTC
 
 ## Summary
 
@@ -22,7 +22,7 @@ Generated: 2026-08-30 23:31 UTC
 - **Low-confidence FAQ/accordion extraction** (1 page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.
 - **Brand tokens applied automatically**: 7 typography role(s), colors (background: #ffffff, text: #5e5e5e, button_background: #1d2b52, button_text: #fafafa, link: #1d2b52, footer_background: #f6f6f6). The WXR file includes a "Custom Styles" entry (a real WordPress `wp_global_styles` post -- the same object the Site Editor's own Styles panel creates when a person sets colors/fonts by hand) that applies the extracted background, text, link, and button colors plus the body font sitewide on import -- no manual Site Editor configuration needed. Also included as `theme.json`, a standalone theme.json fragment, for reference or for merging into a theme's own theme.json directly.
 - **Logo** found at https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=h:88,cg:true,m/qt=q:95 -- included in the WXR as a real media-library attachment (post_id 40004). Setting it as the site's active logo (the `site_logo` option/`custom_logo` theme mod) isn't something WXR can do on its own, though -- run `php apply_branding.php` once after importing (from the WordPress root) to finish the job.
-- **Brand fonts loaded for real**: `theme.json`/"Custom Styles" only *register* the extracted font-family names -- nothing else fetches the actual font files, so every role using one would otherwise silently fall back to its generic fallback (e.g. Georgia/serif). `php apply_branding.php` (see above) also writes a small must-use plugin that loads the real fonts from Google Fonts on every page, sitewide.
+- **Brand fonts loaded for real**: `theme.json`/"Custom Styles" only *register* the extracted font-family names -- nothing else fetches the actual font files, so every role using one would otherwise silently fall back to its generic fallback (e.g. Georgia/serif). `php apply_branding.php` (see above) also writes a small must-use plugin that loads the real fonts from Google Fonts on every page, sitewide. Without file access to run that script, WordPress's built-in Font Library (Appearance → Editor → Styles → Typography, WP 6.5+) is the no-code alternative -- but confirmed a real gotcha there: **installing** a font only adds it to the library, each individual weight/style face still needs to be **activated** separately (checked on) before it actually loads. A font showing e.g. "1 of 8 active" in the Fonts screen means only one weight is live -- headings/nav using a different weight will silently fall back to the generic font until every face that role needs is checked on too. Also survives a database reset worse than the must-use-plugin route: Font Library's installed fonts are database entries, wiped by a full reset, and need reinstalling+reactivating afterward -- the must-use plugin is a file on disk that a DB reset doesn't touch.
 
 ## What's in the attached files
 
