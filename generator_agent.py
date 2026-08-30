@@ -32,6 +32,12 @@ from xml.sax.saxutils import escape as xml_escape
 # already only ever called from within one build_wxr() run.
 _BRAND = None
 
+# Same rationale as _BRAND: set once by build_wxr() (right after it
+# assigns page post_ids), read by block_to_gutenberg() to resolve a
+# card_group's CTA link -- e.g. "/ai-strategy-1" -- to the matching
+# migrated page's real URL instead of leaving it pointed at the old site.
+_PAGES_BY_SLUG = None
+
 
 # GoDaddy Website Builder can't do real nested nav menus, so some source
 # sites fake a sub-item look by prefixing the page <title> itself with a
@@ -347,6 +353,107 @@ def block_to_gutenberg(block):
             're-hosted media-library copy after import. -->'
         )
 
+    if t == "card_group":
+        # GoDaddy Website Builder's "ContentCard" component: a row of
+        # equal cards, each with an image on top, a heading, a short
+        # paragraph, and a "Learn More" button -- confirmed via live
+        # markup (see crawler_agent.py's mark_content_cards()). Rendered
+        # as a real core/columns row so cards sit side by side instead of
+        # stacking as generic page content, which is what happened before
+        # this block type existed (three unrelated-looking heading/image/
+        # paragraph clusters, one after another, no CTA at all).
+        column_blocks = []
+        for card in block.get("cards", []):
+            parts = []
+
+            image = card.get("image")
+            if image:
+                src = xml_escape(image["src"])
+                alt = xml_escape(image.get("alt", ""))
+                parts.append(
+                    '<!-- wp:image {"sizeSlug":"large"} -->\n'
+                    f'<figure class="wp-block-image size-large"><img src="{src}" alt="{alt}"/></figure>\n'
+                    '<!-- /wp:image -->'
+                )
+
+            heading = card.get("heading")
+            if heading:
+                hs = _brand_role_style(card.get("heading_role"), _BRAND)
+                text = html.escape(heading)
+                if hs:
+                    attrs = '"level":4'
+                    classes = "wp-block-heading"
+                    css = []
+                    if hs.get("font_family_slug"):
+                        attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
+                        classes += f' has-{hs["font_family_slug"]}-font-family'
+                    if hs.get("text_color_slug"):
+                        attrs += f',"textColor":"{hs["text_color_slug"]}"'
+                        classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+                    if hs.get("font_size"):
+                        css.append(f'font-size:{hs["font_size"]}')
+                    if hs.get("font_weight"):
+                        css.append(f'font-weight:{hs["font_weight"]}')
+                    style_attr = f' style="{";".join(css)}"' if css else ""
+                    parts.append(
+                        f'<!-- wp:heading {{{attrs}}} -->\n'
+                        f'<h4 class="{classes}"{style_attr}>{text}</h4>\n'
+                        '<!-- /wp:heading -->'
+                    )
+                else:
+                    parts.append(
+                        '<!-- wp:heading {"level":4} -->\n'
+                        f'<h4 class="wp-block-heading">{text}</h4>\n'
+                        '<!-- /wp:heading -->'
+                    )
+
+            text = card.get("text")
+            if text:
+                parts.append(
+                    '<!-- wp:paragraph -->\n'
+                    f'<p>{html.escape(text)}</p>\n'
+                    '<!-- /wp:paragraph -->'
+                )
+
+            cta = card.get("cta")
+            if cta:
+                slug = href_to_slug(cta.get("href"))
+                url = (
+                    f"{NEW_BASE_URL}/{slug}/"
+                    if _PAGES_BY_SLUG and slug in _PAGES_BY_SLUG
+                    else cta.get("href")
+                )
+                label = html.escape(cta.get("label") or "Learn More")
+                url_escaped = xml_escape(url or "#")
+                parts.append(
+                    '<!-- wp:buttons -->\n'
+                    '<div class="wp-block-buttons">\n'
+                    '<!-- wp:button -->\n'
+                    f'<div class="wp-block-button"><a class="wp-block-button__link '
+                    f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
+                    '<!-- /wp:button -->\n'
+                    '</div>\n'
+                    '<!-- /wp:buttons -->'
+                )
+
+            column_content = "\n\n".join(parts)
+            column_blocks.append(
+                '<!-- wp:column -->\n'
+                f'<div class="wp-block-column">\n{column_content}\n</div>\n'
+                '<!-- /wp:column -->'
+            )
+
+        columns_content = "\n\n".join(column_blocks)
+        return (
+            '<!-- wp:columns {"align":"wide"} -->\n'
+            '<div class="wp-block-columns alignwide">\n'
+            f"{columns_content}\n"
+            '</div>\n'
+            '<!-- /wp:columns -->\n'
+            '<!-- QA FLAG: card images still point at the original site -- swap to the '
+            're-hosted media-library copy after import. -->'
+        )
+
     if t == "faq_raw_unverified":
         note = html.escape(block.get("note", ""))
         parts = [f'<!-- QA FLAG: {note} -->']
@@ -397,14 +504,19 @@ def build_item_xml(page, post_id, parent_post_id=0):
 def collect_unique_images(pages):
     """Dedupe image blocks across all pages by URL (the same logo/icon
     typically repeats on every page) and return {url: alt} pairs. Covers
-    both plain "image" blocks and the image half of a "media_text"
-    side-by-side pair -- both carry a real image that needs its own WXR
-    attachment item."""
+    plain "image" blocks, the image half of a "media_text" side-by-side
+    pair, and each card's image within a "card_group" -- all three carry
+    a real image that needs its own WXR attachment item."""
     images = {}
     for page in pages:
         for block in page["blocks"]:
             if block["type"] in ("image", "media_text") and block["src"] not in images:
                 images[block["src"]] = block.get("alt", "")
+            elif block["type"] == "card_group":
+                for card in block.get("cards", []):
+                    image = card.get("image")
+                    if image and image["src"] not in images:
+                        images[image["src"]] = image.get("alt", "")
     return images
 
 
@@ -1006,6 +1118,9 @@ def build_wxr(data, brand=None):
         pages_by_slug[page["slug"]] = post_id
         post_id += 1
 
+    global _PAGES_BY_SLUG
+    _PAGES_BY_SLUG = pages_by_slug
+
     parent_map = build_page_parent_map(navigation, set(pages_by_slug))
 
     items_xml = []
@@ -1122,7 +1237,17 @@ def build_qa_report(data, brand=None):
         return sum(1 for p in pages for b in p["blocks"] if b["type"] == block_type)
 
     forms_count = count_blocks("forms_detected")
-    image_instances = count_blocks("image") + count_blocks("media_text")
+    card_group_image_instances = sum(
+        1
+        for p in pages
+        for b in p["blocks"]
+        if b["type"] == "card_group"
+        for card in b.get("cards", [])
+        if card.get("image")
+    )
+    image_instances = (
+        count_blocks("image") + count_blocks("media_text") + card_group_image_instances
+    )
     media_text_count = count_blocks("media_text")
     importable_images, non_importable_images = partition_images_by_importability(
         collect_unique_images(pages)

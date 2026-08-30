@@ -139,6 +139,103 @@ def mark_media_text_pairs(page):
     )
 
 
+def mark_content_cards(page):
+    """Tags GoDaddy Website Builder "ContentCard" components (confirmed via
+    live markup: a <div data-ux="ContentCard"> holding a heading, an image,
+    a paragraph, and a "Learn More" button) so extract_blocks() can group
+    each row of them into one "card_group" block instead of extracting
+    each card's heading/image/paragraph as separate, stacked blocks
+    indistinguishable from ordinary page content.
+
+    Confirmed the hard way: a 3-card row ("AI Strategy" / "AI for Sales" /
+    "AI for Customer Service") was extracting as three unrelated
+    heading+image+paragraph clusters, with no signal that they belonged
+    side by side as cards, and silently dropping every card's CTA link
+    (the query selector driving normal extraction never matches <a>).
+
+    Also confirmed: each card's heading Block actually contains all of the
+    row's headings (e.g. the "AI Strategy" card's DOM literally also
+    contains hidden <h4>s for "AI for Sales" and "AI for Customer
+    Service"), with only the one belonging to that card visible -- inert
+    markup from whatever carousel/tab component GoDaddy builds this from.
+    That's harmless here since heading extraction already goes through
+    element_text() (Playwright's inner_text()), which returns "" for
+    non-visible elements, so only the one real heading per card is ever
+    picked up.
+
+    Groups cards by their nearest shared <div data-ux="Grid"> ancestor
+    (falling back to the immediate parent if a card somehow isn't inside
+    one), tagging each card with data-migration-card-group="<n>" and
+    data-migration-card-index="<i>" so extract_blocks() can pull the
+    whole row together the first time it encounters any element inside
+    any card belonging to that group.
+    """
+    return page.evaluate(
+        """() => {
+            const cards = document.querySelectorAll('[data-ux="ContentCard"]');
+            const groupIds = new Map();
+            let groupCounter = 0;
+            let count = 0;
+            for (const card of cards) {
+                const grid = card.closest('[data-ux="Grid"]') || card.parentElement;
+                let gid = groupIds.get(grid);
+                if (gid === undefined) {
+                    gid = groupCounter++;
+                    groupIds.set(grid, gid);
+                }
+                const idx = parseInt(
+                    grid.getAttribute('data-migration-card-next-index') || '0', 10
+                );
+                grid.setAttribute('data-migration-card-next-index', String(idx + 1));
+                card.setAttribute('data-migration-card-group', String(gid));
+                card.setAttribute('data-migration-card-index', String(idx));
+                count++;
+            }
+            return count;
+        }"""
+    )
+
+
+def extract_content_card(card, page_url, seen_image_urls):
+    """Pull one ContentCard's heading/image/text/CTA out into a dict (see
+    mark_content_cards()). Any piece that's missing or fails to resolve is
+    simply omitted rather than dropping the whole card."""
+    card_data = {}
+
+    for h in card.query_selector_all("h1, h2, h3, h4, h5, h6"):
+        text = element_text(h)
+        if text:
+            card_data["heading"] = text
+            role = h.get_attribute("data-typography")
+            if role:
+                card_data["heading_role"] = role
+            break
+
+    img_el = card.query_selector(
+        '[data-ux="ContentCardWrapperImage"] img'
+    ) or card.query_selector("img")
+    if img_el is not None:
+        resolved = resolve_image_src(img_el, page_url, seen_image_urls)
+        if resolved is not None:
+            abs_src, alt = resolved
+            card_data["image"] = {"src": abs_src, "alt": alt}
+
+    text_el = card.query_selector('[data-ux="ContentCardText"]')
+    if text_el is not None:
+        text = element_text(text_el)
+        if text:
+            card_data["text"] = text
+
+    cta_el = card.query_selector('[data-ux="ContentCardButton"]')
+    if cta_el is not None:
+        href = cta_el.get_attribute("href")
+        label = element_text(cta_el)
+        if href:
+            card_data["cta"] = {"href": urljoin(page_url, href), "label": label}
+
+    return card_data
+
+
 def resolve_image_src(el, page_url, seen_image_urls):
     """Shared by the normal per-image extraction and the media_text
     pair extraction below, so both apply the exact same lazy-load/
@@ -205,6 +302,7 @@ def extract_blocks(page, page_url):
     blocks = []
 
     mark_media_text_pairs(page)
+    mark_content_cards(page)
 
     # Headings + paragraphs + lists + images, in document order. Images
     # used to be collected in a separate pass at the end of the function
@@ -214,10 +312,36 @@ def extract_blocks(page, page_url):
     # same document-order query keeps each image roughly where it
     # belongs in the content.
     seen_image_urls = set()
+    emitted_card_groups = set()
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
             continue  # inside the header, footer, or a nav -- not page content
+
+        # Anything inside a detected ContentCard is pulled in as part of
+        # that card's group (below, the first time we hit any element
+        # belonging to any card in the group) rather than extracted again
+        # here as a separate, stacked heading/image/paragraph.
+        card_group_id = el.evaluate(
+            """e => {
+                const card = e.closest('[data-migration-card-group]');
+                return card ? card.getAttribute('data-migration-card-group') : null;
+            }"""
+        )
+        if card_group_id is not None:
+            if card_group_id not in emitted_card_groups:
+                emitted_card_groups.add(card_group_id)
+                cards = page.query_selector_all(
+                    f'[data-migration-card-group="{card_group_id}"]'
+                )
+                card_dicts = [
+                    extract_content_card(c, page_url, seen_image_urls)
+                    for c in cards
+                ]
+                card_dicts = [c for c in card_dicts if c]
+                if card_dicts:
+                    blocks.append({"type": "card_group", "cards": card_dicts})
+            continue
 
         # Anything inside a detected side-by-side text column is pulled
         # in as part of that media_text block (below, when we hit its
