@@ -109,6 +109,7 @@ OUT_WXR = "stratecon-migration.xml"
 OUT_REDIRECTS = "redirects.csv"
 OUT_QA = "qa_report.md"
 OUT_THEME = "theme.json"
+OUT_APPLY_BRANDING = "apply_branding.php"
 
 NEW_BASE_URL = "https://staging.stratecon-newsite.example"  # placeholder staging URL
 
@@ -856,15 +857,26 @@ def build_wp_navigation_item_xml(content, post_id):
 # wp_template_part posts only override a theme's own header/footer when
 # this taxonomy term matches the theme actually active on import -- if a
 # client site ends up on a different block theme, this (and the markup
-# below, which assumes TT4's block vocabulary: site-logo, site-title,
-# a flex group for the header) needs to change to match.
+# below, which assumes TT4's block vocabulary: site-logo, a flex group
+# for the header) needs to change to match.
 THEME_SLUG = "twentytwentyfour"
+
+# Reserved for the site logo attachment -- past every other fixed ID
+# range (wp_navigation at 30000, template parts/global styles/page
+# template at 40000-40003) so it can never collide.
+LOGO_ATTACHMENT_ID = 40004
 
 
 def build_header_template_part_content(wp_navigation_post_id):
-    """Gutenberg block markup for a header template part: logo, site
-    title, and the real migrated nav menu (referenced by ID, not
-    duplicated -- editing the Navigation block anywhere updates both).
+    """Gutenberg block markup for a header template part: logo and the
+    real migrated nav menu (referenced by ID, not duplicated -- editing
+    the Navigation block anywhere updates both).
+
+    No site-title block: the original site's header shows only the logo
+    image (its wordmark is baked into the graphic itself), confirmed
+    against the live site -- adding one back here would just print
+    whatever site title the target WordPress install happens to have
+    (e.g. a placeholder typed in at install time) next to the real logo.
 
     Imported as a wp_template_part with post_name "header" plus the
     wp_theme taxonomy term above, this transparently replaces the
@@ -927,7 +939,6 @@ def build_header_template_part_content(wp_navigation_post_id):
         '<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->\n'
         '<div class="wp-block-group alignwide">\n'
         "<!-- wp:site-logo /-->\n"
-        "<!-- wp:site-title /-->\n"
         f'<!-- wp:navigation {{{nav_attrs}}} /-->\n'
         "</div>\n"
         "<!-- /wp:group -->\n"
@@ -1184,6 +1195,17 @@ def build_wxr(data, brand=None):
 
     items_xml.append(build_page_template_item_xml(40003, build_page_template_content()))
 
+    # The site logo, at a fixed post_id (see LOGO_ATTACHMENT_ID) so
+    # build_apply_branding_php() can reference it directly without any
+    # fuzzy matching-by-URL after import. WXR has no mechanism to set the
+    # site_logo option/custom_logo theme mod itself -- that's what the
+    # generated apply_branding.php companion script is for.
+    logo = (brand or {}).get("logo") or {}
+    if logo.get("url") and canonical_attachment_url(logo["url"]):
+        items_xml.append(
+            build_attachment_item_xml(logo["url"], logo.get("alt", ""), LOGO_ATTACHMENT_ID)
+        )
+
     channel_title = xml_escape(site["title"])
     now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     term_block = f"\n{menu_term_xml}" if menu_term_xml else ""
@@ -1400,11 +1422,29 @@ def build_qa_report(data, brand=None):
             f"as `{OUT_THEME}`, a standalone theme.json fragment, for reference or for merging "
             "into a theme's own theme.json directly."
         )
-        if logo:
+        if logo and logo.get("url") and canonical_attachment_url(logo["url"]):
             lines.append(
-                f"- **Logo** found at {logo['url']} -- not set automatically (that's done via "
-                "Appearance → Editor → Site Identity in WordPress, not theme.json); download it "
-                "from the original site and upload it there."
+                f"- **Logo** found at {logo['url']} -- included in the WXR as a real media-"
+                f"library attachment (post_id {LOGO_ATTACHMENT_ID}). Setting it as the site's "
+                "active logo (the `site_logo` option/`custom_logo` theme mod) isn't something "
+                f"WXR can do on its own, though -- run `php {OUT_APPLY_BRANDING}` once after "
+                "importing (from the WordPress root) to finish the job."
+            )
+        elif logo:
+            lines.append(
+                f"- **Logo** found at {logo['url']} -- its URL has no filename/extension "
+                "WordPress's importer can download (see the image note above), so it couldn't "
+                "be included as a real attachment. Download it from the original site and set it "
+                "via Appearance → Editor → Site Identity."
+            )
+        if _google_fonts_href(brand):
+            lines.append(
+                f"- **Brand fonts loaded for real**: `theme.json`/\"Custom Styles\" only "
+                "*register* the extracted font-family names -- nothing else fetches the actual "
+                "font files, so every role using one would otherwise silently fall back to its "
+                f"generic fallback (e.g. Georgia/serif). `php {OUT_APPLY_BRANDING}` (see above) "
+                "also writes a small must-use plugin that loads the real fonts from Google Fonts "
+                "on every page, sitewide."
             )
     lines.append("")
     lines.append("## What's in the attached files")
@@ -1413,6 +1453,12 @@ def build_qa_report(data, brand=None):
     lines.append("- `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.")
     if brand:
         lines.append(f"- `{OUT_THEME}` — the extracted color palette and font list in WordPress's block-theme format.")
+        if build_apply_branding_php(brand):
+            lines.append(
+                f"- `{OUT_APPLY_BRANDING}` — run once after each fresh import "
+                f"(`php {OUT_APPLY_BRANDING}` from the WordPress root) to set the site logo and "
+                "load the real brand fonts; see the notes above."
+            )
     return "\n".join(lines) + "\n"
 
 
@@ -1595,6 +1641,124 @@ def build_global_styles_item_xml(post_id, content):
   </item>"""
 
 
+def _google_fonts_href(brand):
+    """A Google Fonts CSS2 stylesheet URL requesting every font family
+    brand.json found, at the actual weights its typography roles use --
+    not just weight 400. Returns None if brand has no typography.
+
+    WordPress's theme.json only registers a font-family's *name*
+    (settings.typography.fontFamilies) -- it never fetches or serves the
+    font file itself. Confirmed on a real test import: heading/nav text
+    got the "has-cabin-font-family"/"has-playfair-display-font-family"
+    classes exactly as intended, but rendered in Georgia/serif anyway --
+    every browser silently falls through to theme.json's own fallback
+    stack because "Cabin"/"Playfair Display" were never actually loaded
+    from anywhere. build_apply_branding_php() wires this URL into a
+    <link> via wp_head so the fonts genuinely load, not just get
+    referenced by class name.
+    """
+    _, font_families, _ = _derive_brand_palette_and_fonts(brand)
+    if not font_families:
+        return None
+
+    weights_by_family = {}
+    for info in brand.get("typography", {}).values():
+        family = info.get("font_family")
+        weight = info.get("font_weight")
+        if family and weight:
+            weights_by_family.setdefault(family, set()).add(str(weight))
+
+    family_params = []
+    for f in font_families:
+        primary_name = f["fontFamily"].split(",")[0].strip().strip("\"'")
+        name_param = primary_name.replace(" ", "+")
+        weights = sorted(weights_by_family.get(f["fontFamily"], {"400"}))
+        family_params.append(f"family={name_param}:wght@{';'.join(weights)}")
+
+    return "https://fonts.googleapis.com/css2?" + "&".join(family_params) + "&display=swap"
+
+
+def build_apply_branding_php(brand):
+    """A companion PHP script -- run once after each fresh WXR import,
+    the same way this project's other one-off setup scripts work --
+    that finishes what WXR itself can't: setting the site logo and
+    loading the real brand fonts. Both are WordPress *options*/theme
+    mods (site_logo, custom_logo) or a wp_head-enqueued stylesheet, not
+    posts or terms, so there's no WXR item that can carry them; the
+    generated WXR gets the logo file into the media library as a normal
+    attachment (see LOGO_ATTACHMENT_ID) and the font CSS2 URL is
+    computed here, but something still has to flip those switches after
+    import. Written to run from the WordPress root (next to wp-load.php)
+    via `php apply_branding.php` -- confirmed against a real local
+    WordPress install.
+
+    Returns None if brand has neither a usable logo nor any typography,
+    since there'd be nothing for the script to do.
+    """
+    logo = (brand or {}).get("logo") or {}
+    has_logo = bool(logo.get("url") and canonical_attachment_url(logo["url"]))
+    fonts_href = _google_fonts_href(brand or {})
+
+    if not has_logo and not fonts_href:
+        return None
+
+    parts = [
+        "<?php\n"
+        "// Run once after each fresh WXR import: php apply_branding.php\n"
+        "// (from the WordPress root, next to wp-load.php). Finishes what\n"
+        "// WXR itself has no mechanism for -- the site logo and real\n"
+        "// brand fonts are WordPress options/theme mods and a wp_head\n"
+        "// stylesheet link, not posts or terms.\n"
+        "require_once(__DIR__ . '/wp-load.php');\n"
+    ]
+
+    if has_logo:
+        alt = logo.get("alt", "").replace("'", "\\'")
+        parts.append(
+            f"\n"
+            f"// Site logo -- the file itself already came in as attachment\n"
+            f"// post_id {LOGO_ATTACHMENT_ID} via the WXR import.\n"
+            f"$logo_id = {LOGO_ATTACHMENT_ID};\n"
+            f"if (get_post($logo_id)) {{\n"
+            f"    update_option('site_logo', $logo_id);       // block themes' core/site-logo\n"
+            f"    set_theme_mod('custom_logo', $logo_id);     // classic-theme fallback\n"
+            f"    echo \"Site logo set (attachment {LOGO_ATTACHMENT_ID}).\\n\";\n"
+            f"}} else {{\n"
+            f"    echo \"Attachment {LOGO_ATTACHMENT_ID} not found -- import the WXR file first"
+            f" (with 'Download and import file attachments' checked) before running this"
+            f" script.\\n\";\n"
+            f"}}\n"
+        )
+
+    if fonts_href:
+        fonts_href_escaped = fonts_href.replace("'", "\\'")
+        parts.append(
+            f"\n"
+            f"// Real brand fonts -- theme.json/wp_global_styles only *register*\n"
+            f"// font-family names; nothing else loads the actual font files, so\n"
+            f"// every role using one silently falls back to its generic fallback\n"
+            f"// (e.g. Georgia/serif) without this. Written as a must-use plugin\n"
+            f"// so it keeps loading on every future request, not just this run.\n"
+            f"$mu_dir = WPMU_PLUGIN_DIR;\n"
+            f"if (!file_exists($mu_dir)) {{\n"
+            f"    wp_mkdir_p($mu_dir);\n"
+            f"}}\n"
+            f"$mu_plugin = <<<'PHP'\n"
+            f"<?php\n"
+            f"/* Plugin Name: Migration Brand Fonts (auto-generated) */\n"
+            f"add_action('wp_head', function () {{\n"
+            f"    echo '<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">' . PHP_EOL;\n"
+            f"    echo '<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>' . PHP_EOL;\n"
+            f"    echo '<link rel=\"stylesheet\" href=\"{fonts_href_escaped}\">' . PHP_EOL;\n"
+            f"}}, 1);\n"
+            f"PHP;\n"
+            f"file_put_contents($mu_dir . '/migration-brand-fonts.php', $mu_plugin);\n"
+            f"echo \"Brand fonts wired up via a must-use plugin (\" . $mu_dir . \"/migration-brand-fonts.php).\\n\";\n"
+        )
+
+    return "".join(parts)
+
+
 def main():
     with open(SRC) as f:
         data = json.load(f)
@@ -1622,6 +1786,12 @@ def main():
         with open(OUT_THEME, "w") as f:
             f.write(build_theme_json(brand))
         outputs.append(OUT_THEME)
+
+        apply_branding_php = build_apply_branding_php(brand)
+        if apply_branding_php:
+            with open(OUT_APPLY_BRANDING, "w") as f:
+                f.write(apply_branding_php)
+            outputs.append(OUT_APPLY_BRANDING)
     else:
         print(f"({SRC_BRAND} not found -- skipping {OUT_THEME}; run brand_agent.py first to include it)")
 

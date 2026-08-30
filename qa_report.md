@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-08-30 13:58 UTC
+Generated: 2026-08-30 14:10 UTC
 
 ## Summary
 
@@ -21,10 +21,12 @@ Generated: 2026-08-30 13:58 UTC
 - **Reviewing the nav before go-live**: pages import as drafts by design (see below) -- and WordPress's Navigation block correctly hides any menu link that points to a page still in draft, the same way it would for any other unpublished page. Confirmed with a full local WordPress + Twenty Twenty-Four reproduction: with only one page published, the nav showed only that page's own branch (e.g. just "AI" > "AI Solutions"); publishing every page made the complete nav -- all top-level items, all category dropdowns, every child link -- render correctly in both the header and footer. This is expected, correct WordPress behavior, not a defect in this file. It also means a *sparse-looking* nav while reviewing in draft isn't a red flag by itself -- it's just reflecting how much of the site is published so far. To see the complete nav before committing to a real go-live, temporarily publish all pages, review, then set them back to Draft if you're not ready to launch. WordPress's own draft-preview mode (`?preview=true`) has also been observed failing to render the Navigation block's menu items at all, even for published targets -- don't trust a preview link's nav either; check a real published URL.
 - **Low-confidence FAQ/accordion extraction** (1 page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.
 - **Brand tokens applied automatically**: 7 typography role(s), colors (background: #ffffff, text: #5e5e5e, button_background: #1d2b52, button_text: #fafafa, link: #1d2b52). The WXR file includes a "Custom Styles" entry (a real WordPress `wp_global_styles` post -- the same object the Site Editor's own Styles panel creates when a person sets colors/fonts by hand) that applies the extracted background, text, link, and button colors plus the body font sitewide on import -- no manual Site Editor configuration needed. Also included as `theme.json`, a standalone theme.json fragment, for reference or for merging into a theme's own theme.json directly.
-- **Logo** found at https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=h:88,cg:true,m/qt=q:95 -- not set automatically (that's done via Appearance → Editor → Site Identity in WordPress, not theme.json); download it from the original site and upload it there.
+- **Logo** found at https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=h:88,cg:true,m/qt=q:95 -- included in the WXR as a real media-library attachment (post_id 40004). Setting it as the site's active logo (the `site_logo` option/`custom_logo` theme mod) isn't something WXR can do on its own, though -- run `php apply_branding.php` once after importing (from the WordPress root) to finish the job.
+- **Brand fonts loaded for real**: `theme.json`/"Custom Styles" only *register* the extracted font-family names -- nothing else fetches the actual font files, so every role using one would otherwise silently fall back to its generic fallback (e.g. Georgia/serif). `php apply_branding.php` (see above) also writes a small must-use plugin that loads the real fonts from Google Fonts on every page, sitewide.
 
 ## What's in the attached files
 
 - `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.
 - `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.
 - `theme.json` — the extracted color palette and font list in WordPress's block-theme format.
+- `apply_branding.php` — run once after each fresh import (`php apply_branding.php` from the WordPress root) to set the site logo and load the real brand fonts; see the notes above.
