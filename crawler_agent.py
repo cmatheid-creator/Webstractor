@@ -182,7 +182,11 @@ def extract_element_content(container):
         if not text:
             continue
         if tag.startswith("h"):
-            content.append({"type": "heading", "level": int(tag[1]), "text": text})
+            heading = {"type": "heading", "level": int(tag[1]), "text": text}
+            role = el.get_attribute("data-typography")
+            if role:
+                heading["typography_role"] = role
+            content.append(heading)
         elif tag == "p":
             content.append({"type": "paragraph", "text": text})
         elif tag in ("ul", "ol"):
@@ -260,7 +264,11 @@ def extract_blocks(page, page_url):
             continue
 
         if tag.startswith("h"):
-            blocks.append({"type": "heading", "level": int(tag[1]), "text": text})
+            heading = {"type": "heading", "level": int(tag[1]), "text": text}
+            role = el.get_attribute("data-typography")
+            if role:
+                heading["typography_role"] = role
+            blocks.append(heading)
         elif tag == "p":
             blocks.append({"type": "paragraph", "text": text})
         elif tag in ("ul", "ol"):

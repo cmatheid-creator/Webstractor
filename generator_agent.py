@@ -25,6 +25,14 @@ from datetime import datetime, timezone
 from urllib.parse import urlparse
 from xml.sax.saxutils import escape as xml_escape
 
+# Set once by build_wxr() and read by block_to_gutenberg() and
+# build_header_template_part_content() -- module-level rather than
+# threaded as a parameter through build_item_xml()/every block builder,
+# since only a couple of leaf functions actually need it and both are
+# already only ever called from within one build_wxr() run.
+_BRAND = None
+
+
 # GoDaddy Website Builder can't do real nested nav menus, so some source
 # sites fake a sub-item look by prefixing the page <title> itself with a
 # dash (e.g. "- AI Strategy" under an "AI" category). The real WP site
@@ -99,6 +107,51 @@ OUT_THEME = "theme.json"
 NEW_BASE_URL = "https://staging.stratecon-newsite.example"  # placeholder staging URL
 
 
+def _brand_role_style(role, brand):
+    """Look up one of brand_agent.py's extracted typography roles (e.g.
+    "HeadingBeta", "NavAlpha") and resolve its font/color against the
+    same palette and font-family slugs the brand's tokens were
+    registered under (see _derive_brand_palette_and_fonts()) -- so a
+    heading or the nav can reference the theme's own registered
+    "playfair-display"/"link" entries instead of duplicating literal
+    values, while still getting the *real* extracted size and weight
+    the generic WordPress defaults don't know about.
+
+    This is what closes a real visual gap, not a cosmetic one: brand.json
+    already captures each role's actual font/size/weight/color from the
+    live site's computed styles, but nothing was applying it -- a
+    section heading rendered at WordPress's generic (much larger)
+    default size, and the nav rendered in the body's muted gray instead
+    of the site's actual navy nav color.
+
+    Returns None if brand has no typography data for this role (brand.json
+    is optional -- not every run has one). Otherwise a dict with
+    font_family_slug/text_color_slug (None if the role's actual value
+    doesn't match any registered palette/font entry) and the role's
+    font_size/font_weight straight from brand.json.
+    """
+    if not brand:
+        return None
+    spec = (brand.get("typography") or {}).get(role)
+    if not spec:
+        return None
+    palette, font_families, _ = _derive_brand_palette_and_fonts(brand)
+    font_family_slug = next(
+        (f["slug"] for f in font_families if f["fontFamily"] == spec.get("font_family")),
+        None,
+    )
+    text_color_slug = next(
+        (c["slug"] for c in palette if c["color"].lower() == (spec.get("color") or "").lower()),
+        None,
+    )
+    return {
+        "font_family_slug": font_family_slug,
+        "text_color_slug": text_color_slug,
+        "font_size": spec.get("font_size"),
+        "font_weight": spec.get("font_weight"),
+    }
+
+
 def block_to_gutenberg(block):
     """Turn one structured content block into native Gutenberg block markup."""
     t = block["type"]
@@ -118,6 +171,25 @@ def block_to_gutenberg(block):
         # fill the remaining space via an inline style -- core/separator
         # has no "grow" attribute of its own to reach for.
         if level == 1:
+            # SectionHeading is confirmed (structurally, not just by
+            # convention) to always be brand.json's "HeadingBeta" role --
+            # applying its real font/size/weight/color here is what fixes
+            # this heading rendering at WordPress's generic (much larger)
+            # default size instead of the original site's actual one.
+            hs = _brand_role_style("HeadingBeta", _BRAND) or {}
+            extra_attrs = ""
+            extra_classes = ""
+            extra_css = "margin-top:0;margin-bottom:0"
+            if hs.get("font_family_slug"):
+                extra_attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
+                extra_classes += f' has-{hs["font_family_slug"]}-font-family'
+            if hs.get("text_color_slug"):
+                extra_attrs += f',"textColor":"{hs["text_color_slug"]}"'
+                extra_classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+            if hs.get("font_size"):
+                extra_css += f';font-size:{hs["font_size"]}'
+            if hs.get("font_weight"):
+                extra_css += f';font-weight:{hs["font_weight"]}'
             return (
                 '<!-- wp:group {"align":"wide","layout":{"type":"flex",'
                 '"justifyContent":"center","verticalAlignment":"center"}} -->\n'
@@ -125,14 +197,44 @@ def block_to_gutenberg(block):
                 '<!-- wp:separator {"className":"is-style-wide"} -->\n'
                 '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
                 '<!-- /wp:separator -->\n'
-                f'<!-- wp:heading {{"level":1,"textAlign":"center","style":{{"spacing":{{"margin":{{"top":"0","bottom":"0"}}}}}}}} -->\n'
-                f'<h1 class="wp-block-heading has-text-align-center" style="margin-top:0;margin-bottom:0">{text}</h1>\n'
+                f'<!-- wp:heading {{"level":1,"textAlign":"center","style":{{"spacing":{{"margin":'
+                f'{{"top":"0","bottom":"0"}}}}}}{extra_attrs}}} -->\n'
+                f'<h1 class="wp-block-heading has-text-align-center{extra_classes}" '
+                f'style="{extra_css}">{text}</h1>\n'
                 '<!-- /wp:heading -->\n'
                 '<!-- wp:separator {"className":"is-style-wide"} -->\n'
                 '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
                 '<!-- /wp:separator -->\n'
                 '</div>\n'
                 '<!-- /wp:group -->'
+            )
+
+        # Other heading levels: apply the real per-role font/size/weight/
+        # color when the crawler captured which GoDaddy typography role
+        # this specific heading used (data-typography) -- not just a
+        # WordPress generic default. Older structured_content.json files
+        # predate this field and simply won't have it; falls back to the
+        # generic heading below exactly as before.
+        hs = _brand_role_style(block.get("typography_role"), _BRAND)
+        if hs:
+            attrs = f'"level":{level}'
+            classes = "wp-block-heading"
+            css = []
+            if hs.get("font_family_slug"):
+                attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
+                classes += f' has-{hs["font_family_slug"]}-font-family'
+            if hs.get("text_color_slug"):
+                attrs += f',"textColor":"{hs["text_color_slug"]}"'
+                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+            if hs.get("font_size"):
+                css.append(f'font-size:{hs["font_size"]}')
+            if hs.get("font_weight"):
+                css.append(f'font-weight:{hs["font_weight"]}')
+            style_attr = f' style="{";".join(css)}"' if css else ""
+            return (
+                f'<!-- wp:heading {{{attrs}}} -->\n'
+                f'<h{level} class="{classes}"{style_attr}>{text}</h{level}>\n'
+                f'<!-- /wp:heading -->'
             )
 
         return (
@@ -688,6 +790,25 @@ def build_header_template_part_content(wp_navigation_post_id):
     -- the same mechanism the theme's own default header and the page's
     main content area both already rely on.
     """
+    # The nav's real per-role style (NavAlpha) -- confirmed in a real
+    # test import: without this, the nav inherits the header's/body's
+    # muted text color and whatever generic size the "small" preset
+    # happens to be, rendering visibly smaller and the wrong color
+    # compared to the original site's actual (usually bolder, brand-
+    # colored) nav treatment.
+    nav_style = _brand_role_style("NavAlpha", _BRAND) or {}
+    nav_attrs = f'"ref":{wp_navigation_post_id},"overlayMenu":"mobile"'
+    typography = {"textTransform": "uppercase", "letterSpacing": "0.05em"}
+    if nav_style.get("font_family_slug"):
+        nav_attrs += f',"fontFamily":"{nav_style["font_family_slug"]}"'
+    if nav_style.get("text_color_slug"):
+        nav_attrs += f',"textColor":"{nav_style["text_color_slug"]}"'
+    if nav_style.get("font_size"):
+        typography["fontSize"] = nav_style["font_size"]
+    if nav_style.get("font_weight"):
+        typography["fontWeight"] = nav_style["font_weight"]
+    nav_attrs += ',"style":' + json.dumps({"typography": typography}, separators=(",", ":"))
+
     return (
         '<!-- wp:group {"align":"full","className":"has-global-padding","layout":{"type":"constrained"}} -->\n'
         '<div class="wp-block-group alignfull has-global-padding">\n'
@@ -695,9 +816,7 @@ def build_header_template_part_content(wp_navigation_post_id):
         '<div class="wp-block-group alignwide">\n'
         "<!-- wp:site-logo /-->\n"
         "<!-- wp:site-title /-->\n"
-        f'<!-- wp:navigation {{"ref":{wp_navigation_post_id},"overlayMenu":"mobile",'
-        '"fontSize":"small","style":{"typography":{"textTransform":"uppercase",'
-        '"letterSpacing":"0.05em"}}} /-->\n'
+        f'<!-- wp:navigation {{{nav_attrs}}} /-->\n'
         "</div>\n"
         "<!-- /wp:group -->\n"
         "</div>\n"
@@ -810,6 +929,9 @@ def build_template_part_item_xml(post_id, slug, area, title, content):
 
 
 def build_wxr(data, brand=None):
+    global _BRAND
+    _BRAND = brand
+
     site = data["site"]
     navigation = data.get("navigation") or []
 
