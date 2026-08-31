@@ -446,9 +446,17 @@ def block_to_gutenberg(block):
                 )
                 label = html.escape(cta.get("label") or "Learn More")
                 url_escaped = xml_escape(url or "#")
+                # margin-top:auto pins the button to the bottom of the
+                # column regardless of how many lines the paragraph above
+                # it wraps to -- confirmed a real gap without this: cards
+                # with a shorter description had their button riding
+                # noticeably higher than a neighboring card's, since
+                # nothing tied the button's position to the column's own
+                # bottom edge rather than wherever the text above happened
+                # to end.
                 parts.append(
                     '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->\n'
-                    '<div class="wp-block-buttons">\n'
+                    '<div class="wp-block-buttons" style="margin-top:auto">\n'
                     '<!-- wp:button -->\n'
                     f'<div class="wp-block-button"><a class="wp-block-button__link '
                     f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
@@ -457,10 +465,21 @@ def block_to_gutenberg(block):
                     '<!-- /wp:buttons -->'
                 )
 
+            # Both style="display:flex..." (so margin-top:auto above has a
+            # flex container to push against) and an explicit width are
+            # needed here, not just the parent wp:columns block's own
+            # layout -- confirmed a real gap without the explicit width:
+            # a trailing row with fewer cards than earlier rows (e.g. 7
+            # cards in rows of 3 leaves a lone card in the last row) has
+            # its column(s) stretch to fill the *whole* row instead of
+            # staying the same width as every other card, since a plain
+            # wp:column's width is otherwise just an equal share of
+            # however many siblings happen to be in that specific row.
             column_content = "\n\n".join(parts)
             column_blocks.append(
-                '<!-- wp:column -->\n'
-                f'<div class="wp-block-column">\n{column_content}\n</div>\n'
+                '<!-- wp:column {"width":"33.33%"} -->\n'
+                '<div class="wp-block-column" style="flex-basis:33.33%;display:flex;'
+                f'flex-direction:column">\n{column_content}\n</div>\n'
                 '<!-- /wp:column -->'
             )
 
@@ -544,11 +563,33 @@ def block_to_gutenberg(block):
                         f'<a href="{url_escaped}" style="text-decoration:none">{text}</a>'
                         if url_escaped else text
                     )
-                    parts.append(
-                        '<!-- wp:heading {"level":4} -->\n'
-                        f'<h4 class="wp-block-heading">{inner}</h4>\n'
-                        '<!-- /wp:heading -->'
-                    )
+                    hs = _brand_role_style(post.get("heading_role"), _BRAND)
+                    if hs:
+                        attrs = '"level":4'
+                        classes = "wp-block-heading"
+                        css = []
+                        if hs.get("font_family_slug"):
+                            attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
+                            classes += f' has-{hs["font_family_slug"]}-font-family'
+                        if hs.get("text_color_slug"):
+                            attrs += f',"textColor":"{hs["text_color_slug"]}"'
+                            classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+                        if hs.get("font_size"):
+                            css.append(f'font-size:{hs["font_size"]}')
+                        if hs.get("font_weight"):
+                            css.append(f'font-weight:{hs["font_weight"]}')
+                        style_attr = f' style="{";".join(css)}"' if css else ""
+                        parts.append(
+                            f'<!-- wp:heading {{{attrs}}} -->\n'
+                            f'<h4 class="{classes}"{style_attr}>{inner}</h4>\n'
+                            '<!-- /wp:heading -->'
+                        )
+                    else:
+                        parts.append(
+                            '<!-- wp:heading {"level":4} -->\n'
+                            f'<h4 class="wp-block-heading">{inner}</h4>\n'
+                            '<!-- /wp:heading -->'
+                        )
 
                 excerpt = post.get("excerpt")
                 if excerpt:
@@ -559,16 +600,27 @@ def block_to_gutenberg(block):
                     )
 
                 if url_escaped:
+                    # margin-top:auto -- same reasoning as card_group's
+                    # button: pins "Continue Reading" to the bottom of the
+                    # column regardless of how long this particular post's
+                    # excerpt happens to be, instead of it landing right
+                    # after wherever the text above it ends.
                     parts.append(
                         '<!-- wp:paragraph -->\n'
-                        f'<p><a href="{url_escaped}">Continue Reading</a></p>\n'
+                        f'<p style="margin-top:auto"><a href="{url_escaped}">Continue Reading</a></p>\n'
                         '<!-- /wp:paragraph -->'
                     )
 
+                # Explicit width + flex column, same reasoning as
+                # card_group: without it, a trailing row with fewer posts
+                # than a full row of 3 (7 posts = rows of 3, 3, 1) has its
+                # last column stretch to the full row width instead of
+                # staying the same size as every other card.
                 column_content = "\n\n".join(parts)
                 column_blocks.append(
-                    '<!-- wp:column -->\n'
-                    f'<div class="wp-block-column">\n{column_content}\n</div>\n'
+                    '<!-- wp:column {"width":"33.33%"} -->\n'
+                    '<div class="wp-block-column" style="flex-basis:33.33%;display:flex;'
+                    f'flex-direction:column">\n{column_content}\n</div>\n'
                     '<!-- /wp:column -->'
                 )
 

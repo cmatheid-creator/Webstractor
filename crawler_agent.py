@@ -341,6 +341,9 @@ def extract_post_feed_card(cell, page_url, seen_image_urls):
         text = element_text(heading_el)
         if text:
             card_data["heading"] = text
+            role = heading_el.get_attribute("data-typography")
+            if role:
+                card_data["heading_role"] = role
 
     excerpt_el = cell.query_selector('p[data-aid="RSS_FEED_POST_CONTENT_RENDERED"]')
     if excerpt_el is not None:
