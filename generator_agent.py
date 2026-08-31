@@ -453,10 +453,15 @@ def block_to_gutenberg(block):
                 # noticeably higher than a neighboring card's, since
                 # nothing tied the button's position to the column's own
                 # bottom edge rather than wherever the text above happened
-                # to end.
+                # to end. padding-top adds a fixed minimum gap on top of
+                # that auto push -- without it, the tallest card's own
+                # text (the one that sets the row's height) butts right up
+                # against its own button, since auto-push has nothing left
+                # to push through for that card specifically. Confirmed on
+                # a real test import.
                 parts.append(
                     '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->\n'
-                    '<div class="wp-block-buttons" style="margin-top:auto">\n'
+                    '<div class="wp-block-buttons" style="margin-top:auto;padding-top:1.5rem">\n'
                     '<!-- wp:button -->\n'
                     f'<div class="wp-block-button"><a class="wp-block-button__link '
                     f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
@@ -535,9 +540,14 @@ def block_to_gutenberg(block):
                     img_html = f'<img src="{xml_escape(image_src)}" alt=""/>'
                     if url_escaped:
                         img_html = f'<a href="{url_escaped}">{img_html}</a>'
+                    # "post-feed-thumbnail" is a hook for the hover-shadow
+                    # CSS in build_global_styles_content() -- scoped to just
+                    # these card thumbnails rather than every wp:image on
+                    # the site, matching the live site's own hover treatment
+                    # on its "AI Insights" blog cards specifically.
                     parts.append(
-                        '<!-- wp:image {"sizeSlug":"large"} -->\n'
-                        f'<figure class="wp-block-image size-large">{img_html}</figure>\n'
+                        '<!-- wp:image {"sizeSlug":"large","className":"post-feed-thumbnail"} -->\n'
+                        f'<figure class="wp-block-image size-large post-feed-thumbnail">{img_html}</figure>\n'
                         '<!-- /wp:image -->'
                     )
 
@@ -1831,6 +1841,27 @@ def build_theme_json(brand):
     return json.dumps(theme, indent=2) + "\n"
 
 
+def _darken_hex(hex_color, factor=0.82):
+    """A simple RGB-scaled darker shade of a "#rrggbb" color, for a
+    button hover state -- brand.json/getComputedStyle() has no way to
+    capture a live site's actual :hover color (that only exists on
+    mouseover, which a static crawl never triggers), so this derives a
+    plausible one from the button's own resting color instead of
+    leaving hover unstyled. Returns the input unchanged if it isn't a
+    recognizable "#rrggbb" hex string.
+    """
+    if not hex_color or not re.fullmatch(r"#[0-9a-fA-F]{6}", hex_color):
+        return hex_color
+    r = int(hex_color[1:3], 16)
+    g = int(hex_color[3:5], 16)
+    b = int(hex_color[5:7], 16)
+    return "#%02x%02x%02x" % (
+        max(0, min(255, round(r * factor))),
+        max(0, min(255, round(g * factor))),
+        max(0, min(255, round(b * factor))),
+    )
+
+
 def build_global_styles_content(brand):
     """JSON content for a wp_global_styles post -- the same object
     WordPress's own Site Editor > Styles panel creates and edits when a
@@ -1875,7 +1906,17 @@ def build_global_styles_content(brand):
             button_colors["background"] = "var:preset|color|primary"
         if "primary-text" in palette:
             button_colors["text"] = "var:preset|color|primary-text"
-        elements["button"] = {"color": button_colors}
+        button_el = {"color": button_colors}
+        # The live site's buttons visibly change color on hover; a plain
+        # WordPress button with no explicit hover style just sits static.
+        # No live :hover color to copy (see _darken_hex()'s docstring),
+        # so this darkens the button's own resting background instead of
+        # leaving hover unstyled.
+        if "primary" in palette:
+            hover_bg = _darken_hex(palette["primary"]["color"])
+            if hover_bg != palette["primary"]["color"]:
+                button_el[":hover"] = {"color": {"background": hover_bg}}
+        elements["button"] = button_el
     if elements:
         styles["elements"] = elements
 
@@ -1888,11 +1929,27 @@ def build_global_styles_content(brand):
     # small mismatch between the file WordPress actually downloaded and
     # whatever crop the live site's own <img> happened to measure.
     logo = brand.get("logo") or {}
+    css_rules = []
     if logo.get("height"):
-        styles["css"] = (
-            ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
-            "max-height:none!important;max-width:none!important}"
-        ) % logo["height"]
+        css_rules.append(
+            (
+                ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
+                "max-height:none!important;max-width:none!important}"
+            ) % logo["height"]
+        )
+
+    # A drop-shadow behind each "AI Insights" blog card thumbnail on
+    # hover, matching the live site's own hover treatment there (see the
+    # "post-feed-thumbnail" class added in block_to_gutenberg()'s
+    # post_feed renderer). Scoped to that class rather than every image
+    # on the site, since ordinary content images don't get this
+    # treatment on the live site.
+    css_rules.append(
+        ".post-feed-thumbnail img{transition:box-shadow 0.2s ease}"
+        ".post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}"
+    )
+    if css_rules:
+        styles["css"] = "".join(css_rules)
 
     global_styles = {
         "version": 2,
