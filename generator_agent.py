@@ -1218,9 +1218,26 @@ def build_footer_template_part_content(footer, pages_by_slug):
 
     copyright_block = ""
     if copyright_html:
+        # core/paragraph's "align" attribute is overloaded -- it can hold
+        # EITHER a text-alignment value ("center", rendered as a
+        # has-text-align-center class) OR a layout-width value ("wide"/
+        # "full", rendered as an alignwide/alignfull class), never both.
+        # Wrapping the paragraph in its own extra "align":"wide" group
+        # (an earlier attempt at this fix) doesn't work either: confirmed
+        # via a real test import's computed layout that the WRAPPER group
+        # does become 1232px wide, but the plain paragraph inside it is
+        # still just an unmarked child of an ".is-layout-constrained"
+        # group, so WordPress's generic nested-layout CSS rule clamps it
+        # right back down to the theme's narrow *content* width (620px)
+        # -- only a child actually carrying the "alignwide" class of its
+        # own escapes that rule (the same reason nav_block above declares
+        # "align":"wide" on itself rather than relying on its parent).
+        # So: give the paragraph "alignwide" directly, and do the
+        # centering with an inline style instead, since the "align"
+        # attribute is already spoken for.
         copyright_block = (
-            '<!-- wp:paragraph {"align":"center","fontSize":"small"} -->\n'
-            f'<p class="has-text-align-center has-small-font-size">{copyright_html}</p>\n'
+            '<!-- wp:paragraph {"align":"wide","fontSize":"small"} -->\n'
+            f'<p class="alignwide has-small-font-size" style="text-align:center">{copyright_html}</p>\n'
             "<!-- /wp:paragraph -->\n"
         )
 
@@ -1281,10 +1298,11 @@ def build_template_part_item_xml(post_id, slug, area, title, content):
 
 def build_page_template_content():
     """Override for the target theme's default "page" template --
-    same overall structure (header template part, a small top spacer,
-    the real post content, footer template part) but without the
-    wp:post-title and wp:post-featured-image blocks Twenty Twenty-
-    Four's own page.html always includes.
+    same overall structure (header template part, the real post
+    content, footer template part) but without the wp:post-title and
+    wp:post-featured-image blocks Twenty Twenty-Four's own page.html
+    always includes, and with no added spacer between the header and
+    the content.
 
     WordPress's generic page template shows the post's title
     prominently above its content on every page -- reasonable for a
@@ -1294,18 +1312,18 @@ def build_page_template_content():
     own in-content heading, which the original site never did. No
     featured images are set on any imported page either, so that block
     would only ever render empty space; dropped for the same reason.
+
+    No wp:spacer between the header and wp:post-content either -- the
+    live site's first headline sits right under the nav bar with no
+    extra gap, but an explicit spacer here stacked on top of the
+    header's own bottom padding and the content's default block gap,
+    confirmed on a real test import to visibly widen that gap versus
+    the live site.
     """
     return (
         '<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->\n\n'
         '<!-- wp:group {"tagName":"main"} -->\n'
         '<main class="wp-block-group">\n'
-        '<!-- wp:group {"layout":{"type":"constrained"}} -->\n'
-        '<div class="wp-block-group">\n'
-        '<!-- wp:spacer {"height":"var:preset|spacing|50"} -->\n'
-        '<div style="height:var(--wp--preset--spacing--50)" aria-hidden="true" class="wp-block-spacer"></div>\n'
-        '<!-- /wp:spacer -->\n'
-        '</div>\n'
-        '<!-- /wp:group -->\n\n'
         '<!-- wp:post-content {"lock":{"move":false,"remove":true},"layout":{"type":"constrained"}} /-->\n'
         '</main>\n'
         '<!-- /wp:group -->\n\n'

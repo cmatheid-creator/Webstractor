@@ -770,9 +770,14 @@ def extract_footer(page):
                 // The copyright line and the trailing "| Privacy Policy |
                 // Terms of Service" links share one text node -- clone the
                 // block and strip the <a> tags to isolate just the prose.
+                // Removing N anchors leaves N leftover "|" separators behind
+                // (one preceded each removed link) -- a single non-global
+                // trailing-pipe strip only ate the last one, leaving one
+                // behind to collide with the "|" the generator prepends to
+                // each legal link it re-adds. Strip all of them.
                 const clone = copyrightBlock.cloneNode(true);
                 clone.querySelectorAll('a').forEach(a => a.remove());
-                copyright_text = clone.textContent.replace(/\\|\\s*$/, '').trim();
+                copyright_text = clone.textContent.replace(/(\\|\\s*)+$/, '').trim();
             }
 
             return { links, social_links, legal_links, copyright_text };
