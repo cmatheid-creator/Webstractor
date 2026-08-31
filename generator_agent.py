@@ -110,6 +110,35 @@ def canonical_attachment_url(url):
     return None
 
 
+def display_image_url(url):
+    """The URL to actually embed in an <img src> for a re-hostable image
+    -- canonical_attachment_url(url) when there is one, else the raw url
+    unchanged (e.g. a stock-photo URL with no extension to truncate at,
+    which never gets a WXR attachment item at all -- see
+    canonical_attachment_url()'s docstring).
+
+    Using anything other than the exact same URL string that ends up as
+    the image's wp:attachment_url/guid creates real, confirmed problems:
+    the SAME logical photo commonly appears across this site at several
+    different GoDaddy CDN transform-suffixed URLs (a card thumbnail's
+    resized crop, a blog post's full-size body copy, ...), and
+    collect_unique_images() already collapses all of those down to one
+    attachment item keyed by this same canonical URL. If the <img src>
+    actually embedded in content still used the original, differently-
+    suffixed URL, it would never literally match the one URL WordPress
+    downloaded and is rewriting occurrences of -- confirmed on a real
+    test import that the plain string-match rewrite this project relies
+    on (see collect_unique_images()) only fires for an occurrence whose
+    src is byte-for-byte identical to the downloaded URL. Every image-
+    emitting block type uses this rather than embedding block/card/post
+    data's own raw src, so every occurrence of the same photo -- however
+    it was originally suffixed -- reliably resolves to the one real
+    attachment WordPress actually created for it, not 2-3 duplicate
+    downloads of which only some get rewritten.
+    """
+    return canonical_attachment_url(url) or url
+
+
 SRC = "structured_content.json"
 SRC_BRAND = "brand.json"
 OUT_WXR = "stratecon-migration.xml"
@@ -267,11 +296,62 @@ def block_to_gutenberg(block):
         )
 
     if t == "paragraph":
-        text = html.escape(block["text"])
+        # crawler_agent.py's element_inline_html() already produces a
+        # small safe HTML fragment (bold/italic/links preserved, every
+        # other tag/attribute stripped) -- not plain text, so this
+        # doesn't re-escape it the way the heading branches above do for
+        # their own plain-text "text" field.
+        text = block["text"]
+        hs = _brand_role_style(block.get("typography_role"), _BRAND)
+        if hs:
+            attrs = ""
+            classes = ""
+            css = []
+            if hs.get("font_family_slug"):
+                attrs += f'"fontFamily":"{hs["font_family_slug"]}"'
+                classes += f' has-{hs["font_family_slug"]}-font-family'
+            if hs.get("text_color_slug"):
+                attrs += (',' if attrs else '') + f'"textColor":"{hs["text_color_slug"]}"'
+                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+            if hs.get("font_size"):
+                css.append(f'font-size:{hs["font_size"]}')
+            if hs.get("font_weight"):
+                css.append(f'font-weight:{hs["font_weight"]}')
+            style_attr = f' style="{";".join(css)}"' if css else ""
+            attrs_block = f' {{{attrs}}}' if attrs else ""
+            return (
+                f'<!-- wp:paragraph{attrs_block} -->\n'
+                f'<p class="{classes.strip()}"{style_attr}>{text}</p>\n'
+                '<!-- /wp:paragraph -->'
+            )
         return f'<!-- wp:paragraph -->\n<p>{text}</p>\n<!-- /wp:paragraph -->'
 
     if t == "list":
-        items = "".join(f"<li>{html.escape(i)}</li>" for i in block["items"])
+        # Same inline-HTML contract as "paragraph" above -- each item is
+        # already a safe fragment, not plain text.
+        items = "".join(f"<li>{i}</li>" for i in block["items"])
+        hs = _brand_role_style(block.get("typography_role"), _BRAND)
+        if hs:
+            attrs = ""
+            classes = "wp-block-list"
+            css = []
+            if hs.get("font_family_slug"):
+                attrs += f'"fontFamily":"{hs["font_family_slug"]}"'
+                classes += f' has-{hs["font_family_slug"]}-font-family'
+            if hs.get("text_color_slug"):
+                attrs += (',' if attrs else '') + f'"textColor":"{hs["text_color_slug"]}"'
+                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
+            if hs.get("font_size"):
+                css.append(f'font-size:{hs["font_size"]}')
+            if hs.get("font_weight"):
+                css.append(f'font-weight:{hs["font_weight"]}')
+            style_attr = f' style="{";".join(css)}"' if css else ""
+            attrs_block = f' {{{attrs}}}' if attrs else ""
+            return (
+                f'<!-- wp:list{attrs_block} -->\n'
+                f'<ul class="{classes}"{style_attr}>{items}</ul>\n'
+                '<!-- /wp:list -->'
+            )
         return (
             '<!-- wp:list -->\n'
             f'<ul class="wp-block-list">{items}</ul>\n'
@@ -341,7 +421,7 @@ def block_to_gutenberg(block):
         # depends on WordPress's own filename-collision handling at
         # import time), so this is flagged for a manual swap once the
         # real media-library copy exists after import.
-        src = xml_escape(block["src"])
+        src = xml_escape(display_image_url(block["src"]))
         alt = xml_escape(block.get("alt", ""))
         return (
             '<!-- wp:image -->\n'
@@ -354,7 +434,7 @@ def block_to_gutenberg(block):
     if t == "media_text":
         # Same original-site-URL caveat as the plain "image" block --
         # see its comment above.
-        src = xml_escape(block["src"])
+        src = xml_escape(display_image_url(block["src"]))
         alt = xml_escape(block.get("alt", ""))
         content_blocks = "\n\n".join(
             block_to_gutenberg(b) for b in block.get("content", [])
@@ -385,7 +465,7 @@ def block_to_gutenberg(block):
 
             image = card.get("image")
             if image:
-                src = xml_escape(image["src"])
+                src = xml_escape(display_image_url(image["src"]))
                 alt = xml_escape(image.get("alt", ""))
                 parts.append(
                     '<!-- wp:image {"sizeSlug":"large"} -->\n'
@@ -489,9 +569,15 @@ def block_to_gutenberg(block):
             )
 
         columns_content = "\n\n".join(column_blocks)
+        # Explicit blockGap -- confirmed against the live site's own card
+        # row: its gutters between cards are noticeably wider than
+        # WordPress's small default column gap, which (combined with each
+        # column's explicit "33.33%" width leaving it almost no slack)
+        # made columns here read as wider than the live site's and wrap
+        # its paragraph text differently/less evenly.
         return (
-            '<!-- wp:columns {"align":"wide"} -->\n'
-            '<div class="wp-block-columns alignwide">\n'
+            '<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":"2.5rem"}}} -->\n'
+            '<div class="wp-block-columns alignwide" style="column-gap:2.5rem">\n'
             f"{columns_content}\n"
             '</div>\n'
             '<!-- /wp:columns -->\n'
@@ -537,7 +623,7 @@ def block_to_gutenberg(block):
                 )
                 if image_src:
                     any_images = True
-                    img_html = f'<img src="{xml_escape(image_src)}" alt=""/>'
+                    img_html = f'<img src="{xml_escape(display_image_url(image_src))}" alt=""/>'
                     if url_escaped:
                         img_html = f'<a href="{url_escaped}">{img_html}</a>'
                     # "post-feed-thumbnail" is a hook for the hover-shadow
@@ -635,9 +721,10 @@ def block_to_gutenberg(block):
                 )
 
             columns_content = "\n\n".join(column_blocks)
+            # Same blockGap fix as card_group's row -- see its comment.
             row_blocks.append(
-                '<!-- wp:columns {"align":"wide"} -->\n'
-                '<div class="wp-block-columns alignwide">\n'
+                '<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":"2.5rem"}}} -->\n'
+                '<div class="wp-block-columns alignwide" style="column-gap:2.5rem">\n'
                 f"{columns_content}\n"
                 '</div>\n'
                 '<!-- /wp:columns -->'
@@ -699,27 +786,46 @@ def build_item_xml(page, post_id, parent_post_id=0):
 
 
 def collect_unique_images(pages):
-    """Dedupe image blocks across all pages by URL (the same logo/icon
-    typically repeats on every page) and return {url: alt} pairs. Covers
-    plain "image" blocks, the image half of a "media_text" side-by-side
-    pair, each card's image within a "card_group", and each post's
-    thumbnail within a "post_feed" -- all four carry a real image that
-    needs its own WXR attachment item."""
+    """Dedupe image blocks across all pages and return {canonical_url:
+    alt} pairs, one entry per real underlying photo. Covers plain
+    "image" blocks, the image half of a "media_text" side-by-side pair,
+    each card's image within a "card_group", and each post's thumbnail
+    within a "post_feed" -- all four carry a real image that needs its
+    own WXR attachment item.
+
+    Dedupes by display_image_url(url), not the raw url -- the same
+    logical photo commonly shows up at several different GoDaddy CDN
+    transform-suffixed URLs across the site (e.g. a card thumbnail's
+    resized crop vs. that same post's own full-size body copy), and
+    deduping by the raw string missed that, confirmed on a real test
+    import: it produced 2-3 separate WXR attachment items -- and 2-3
+    separate downloads -- for what was really one photo. Every image-
+    emitting block in block_to_gutenberg() embeds the same canonical URL
+    via display_image_url(), so this dict's keys are exactly the src
+    strings that show up in content -- one real attachment per photo,
+    reliably matched.
+    """
     images = {}
     for page in pages:
         for block in page["blocks"]:
-            if block["type"] in ("image", "media_text") and block["src"] not in images:
-                images[block["src"]] = block.get("alt", "")
+            if block["type"] in ("image", "media_text"):
+                url = display_image_url(block["src"])
+                if url not in images:
+                    images[url] = block.get("alt", "")
             elif block["type"] == "card_group":
                 for card in block.get("cards", []):
                     image = card.get("image")
-                    if image and image["src"] not in images:
-                        images[image["src"]] = image.get("alt", "")
+                    if image:
+                        url = display_image_url(image["src"])
+                        if url not in images:
+                            images[url] = image.get("alt", "")
             elif block["type"] == "post_feed":
                 for post in block.get("posts", []):
                     image_src = post.get("image_src")
-                    if image_src and image_src not in images:
-                        images[image_src] = ""
+                    if image_src:
+                        url = display_image_url(image_src)
+                        if url not in images:
+                            images[url] = ""
     return images
 
 
@@ -1462,6 +1568,14 @@ def build_wxr(data, brand=None):
         if global_styles_content:
             items_xml.append(build_global_styles_item_xml(40002, global_styles_content))
 
+        # A second, independent copy of the same CSS rules via WordPress's
+        # Additional CSS mechanism -- see build_custom_css_content()'s
+        # docstring for why relying on wp_global_styles alone isn't
+        # reliable enough for rules this visible to silently drop.
+        custom_css_content = build_custom_css_content(brand)
+        if custom_css_content:
+            items_xml.append(build_custom_css_item_xml(40005, custom_css_content))
+
     items_xml.append(build_page_template_item_xml(40003, build_page_template_content()))
 
     # The site logo, at a fixed post_id (see LOGO_ATTACHMENT_ID) so
@@ -1862,6 +1976,98 @@ def _darken_hex(hex_color, factor=0.82):
     )
 
 
+def _extra_css_rules(brand):
+    """Raw CSS rules -- logo height/width override, button hover, blog
+    card thumbnail hover -- shared between build_global_styles_content()
+    (its "styles.css" field) and build_custom_css_content() (a fully
+    separate WordPress "Additional CSS" post). Kept as one shared list
+    so the two don't drift out of sync, but written to WordPress as two
+    independent copies -- see build_custom_css_content()'s docstring for
+    why relying on wp_global_styles alone isn't reliable enough for
+    rules this important to drop silently."""
+    rules = []
+
+    # The logo's real sizing mechanism, confirmed against the live site's
+    # own CSS: height-constrained with auto width (e.g. "height:88px;
+    # width:auto"), not width-constrained. core/site-logo's own "width"
+    # attribute only supports the opposite (fixed width, auto height) --
+    # close enough when the downloaded file's aspect ratio matches
+    # exactly, but a raw CSS override here is exact regardless of any
+    # small mismatch between the file WordPress actually downloaded and
+    # whatever crop the live site's own <img> happened to measure.
+    logo = (brand or {}).get("logo") or {}
+    if logo.get("height"):
+        rules.append(
+            (
+                ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
+                "max-height:none!important;max-width:none!important}"
+            ) % logo["height"]
+        )
+
+    # The live site's buttons visibly change color on hover; a plain
+    # WordPress button with no explicit hover style just sits static.
+    # No live :hover color to copy (see _darken_hex()'s docstring), so
+    # this darkens the button's own resting background instead of
+    # leaving hover unstyled. Duplicates build_global_styles_content()'s
+    # elements.button:hover as a raw rule -- see _extra_css_rules()'s
+    # own docstring for why.
+    palette = {c["slug"]: c for c in _derive_brand_palette_and_fonts(brand)[0]} if brand else {}
+    if "primary" in palette:
+        hover_bg = _darken_hex(palette["primary"]["color"])
+        if hover_bg != palette["primary"]["color"]:
+            rules.append(
+                ".wp-element-button:hover,.wp-block-button__link:hover{"
+                f"background-color:{hover_bg}!important}}"
+            )
+
+    # A drop-shadow behind each "AI Insights" blog card thumbnail on
+    # hover, matching the live site's own hover treatment there (see the
+    # "post-feed-thumbnail" class added in block_to_gutenberg()'s
+    # post_feed renderer). Scoped to that class rather than every image
+    # on the site, since ordinary content images don't get this
+    # treatment on the live site.
+    rules.append(
+        ".post-feed-thumbnail img{transition:box-shadow 0.2s ease}"
+        ".post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}"
+    )
+    return rules
+
+
+def build_custom_css_content(brand):
+    """Raw CSS for a WordPress "custom_css" post -- the same storage
+    Appearance > Customize > Additional CSS writes to, always output in
+    wp_head() via wp_custom_css_cb() regardless of the active theme's
+    block-editor state. This is a second, independent path to the same
+    rules build_global_styles_content() already carries in its
+    "styles.css" field, not a replacement for it.
+
+    That redundancy is deliberate: wp_global_styles is a *singleton*
+    custom post per theme (post_name "wp-global-styles-{theme}"), and
+    confirmed on this project's own header/footer template parts (a
+    real, previously-fixed bug) -- WordPress lazily creates a real row
+    for a theme's own global styles/template parts the moment a person
+    so much as opens Appearance > Editor and saves anything, even
+    something unrelated like the site logo. If that happens before a
+    WXR import runs, or if an earlier import's wp_global_styles row is
+    already sitting there, later re-imports are not guaranteed to
+    overwrite its content -- exactly the kind of silent, hard-to-diagnose
+    failure this project has already hit once for template parts, and
+    the reported symptom here (color/palette overrides visibly active,
+    but this "styles.css" field's own rules -- like the logo height cap
+    -- not taking effect) matches it. "custom_css" is a completely
+    separate post type with no relationship to wp_global_styles, so it
+    isn't exposed to that same collision/staleness risk.
+
+    Returns None if there are no rules to write (mirrors
+    build_global_styles_content()'s "empty override is worse than
+    nothing" reasoning).
+    """
+    rules = _extra_css_rules(brand)
+    if not rules:
+        return None
+    return "".join(rules)
+
+
 def build_global_styles_content(brand):
     """JSON content for a wp_global_styles post -- the same object
     WordPress's own Site Editor > Styles panel creates and edits when a
@@ -1920,34 +2126,7 @@ def build_global_styles_content(brand):
     if elements:
         styles["elements"] = elements
 
-    # The logo's real sizing mechanism, confirmed against the live site's
-    # own CSS: height-constrained with auto width (e.g. "height:88px;
-    # width:auto"), not width-constrained. core/site-logo's own "width"
-    # attribute only supports the opposite (fixed width, auto height) --
-    # close enough when the downloaded file's aspect ratio matches
-    # exactly, but a raw CSS override here is exact regardless of any
-    # small mismatch between the file WordPress actually downloaded and
-    # whatever crop the live site's own <img> happened to measure.
-    logo = brand.get("logo") or {}
-    css_rules = []
-    if logo.get("height"):
-        css_rules.append(
-            (
-                ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
-                "max-height:none!important;max-width:none!important}"
-            ) % logo["height"]
-        )
-
-    # A drop-shadow behind each "AI Insights" blog card thumbnail on
-    # hover, matching the live site's own hover treatment there (see the
-    # "post-feed-thumbnail" class added in block_to_gutenberg()'s
-    # post_feed renderer). Scoped to that class rather than every image
-    # on the site, since ordinary content images don't get this
-    # treatment on the live site.
-    css_rules.append(
-        ".post-feed-thumbnail img{transition:box-shadow 0.2s ease}"
-        ".post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}"
-    )
+    css_rules = _extra_css_rules(brand)
     if css_rules:
         styles["css"] = "".join(css_rules)
 
@@ -1989,6 +2168,39 @@ def build_global_styles_item_xml(post_id, content):
     <wp:post_password><![CDATA[]]></wp:post_password>
     <wp:is_sticky>0</wp:is_sticky>
     <category domain="wp_theme" nicename="{THEME_SLUG}"><![CDATA[{THEME_SLUG}]]></category>
+  </item>"""
+
+
+def build_custom_css_item_xml(post_id, css):
+    """A WXR item for the "custom_css" post type -- WordPress's Additional
+    CSS storage (see build_custom_css_content()'s docstring for why this
+    exists as a second, independent copy of the same rules). Its
+    post_name has to be exactly the target theme's stylesheet slug --
+    that's the literal lookup key wp_get_custom_css() uses to find it,
+    not just a label like the other post types here use their slugs for."""
+    pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return f"""  <item>
+    <title>{xml_escape(THEME_SLUG)}</title>
+    <link>{NEW_BASE_URL}/</link>
+    <pubDate>{pub_date}</pubDate>
+    <dc:creator><![CDATA[migration-agent]]></dc:creator>
+    <guid isPermaLink="false">{NEW_BASE_URL}/?p={post_id}</guid>
+    <description></description>
+    <content:encoded><![CDATA[{css}]]></content:encoded>
+    <excerpt:encoded><![CDATA[]]></excerpt:encoded>
+    <wp:post_id>{post_id}</wp:post_id>
+    <wp:post_date><![CDATA[{post_date}]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[{post_date}]]></wp:post_date_gmt>
+    <wp:comment_status><![CDATA[closed]]></wp:comment_status>
+    <wp:ping_status><![CDATA[closed]]></wp:ping_status>
+    <wp:post_name><![CDATA[{THEME_SLUG}]]></wp:post_name>
+    <wp:status><![CDATA[publish]]></wp:status>
+    <wp:post_parent>0</wp:post_parent>
+    <wp:menu_order>0</wp:menu_order>
+    <wp:post_type><![CDATA[custom_css]]></wp:post_type>
+    <wp:post_password><![CDATA[]]></wp:post_password>
+    <wp:is_sticky>0</wp:is_sticky>
   </item>"""
 
 

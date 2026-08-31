@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-08-31 02:17 UTC
+Generated: 2026-08-31 02:45 UTC
 
 ## Summary
 
@@ -11,7 +11,7 @@ Generated: 2026-08-31 02:17 UTC
 
 - **Set the homepage** (one-time, unavoidable manual step): the front page imports as a normal page — titled "Trusted Technology Advisers | Cybersecurity Solutions", slug `home` — like any other. Which page WordPress actually shows at `/` is a site option (Settings → Reading → "Your homepage displays" → set it to a static page → choose this one), not page content, so no WXR import can set it automatically. Skip this and `/` shows the default blog post listing instead.
 - **Forms detected** (20 page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.
-- **Images** (110 unique, 112 placements across the crawled pages): 40 included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. The inline image blocks on each page still reference the *original* site's URL, though — swap those to the new media-library copies before decommissioning the old site.
+- **Images** (93 unique, 112 placements across the crawled pages): 23 included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. The inline image blocks on each page still reference the *original* site's URL, though — swap those to the new media-library copies before decommissioning the old site.
 - **Side-by-side layout preserved** (56 section(s)): the original site's two-column image+text sections (detected from its real Grid/GridCell markup) are generated as WordPress Media & Text blocks instead of a plain stacked image and paragraph, matching the original layout rather than flattening it.
 - **70 image(s) can't be auto-imported into the media library**: their source URLs (this site's stock-photo CDN links) have no filename or extension anywhere in the path, just an opaque ID -- WordPress's importer requires a recognized image extension in the URL itself and rejects these regardless of what the server actually returns. They still display correctly on the migrated pages (hotlinked to the original site), they just won't get an independent media-library copy automatically -- save them from the browser and upload manually if you want copies before decommissioning the old site.
 - **Navigation menu** (20 item(s), matching the site's real nav structure including page hierarchy) is included **twice**, in two different WordPress formats, so it works automatically regardless of which kind of theme the target site uses:

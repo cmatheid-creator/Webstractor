@@ -198,11 +198,13 @@
             },
             {
               "type": "paragraph",
-              "text": "Your connectivity is the backbone of your business. We manage state-of-the-art solutions for a highly connected, secure, and resilient business environment."
+              "text": "Your connectivity is the backbone of your business. We manage state-of-the-art solutions for a highly connected, secure, and resilient business environment.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Connect with us to learn how we can tailor connectivity solutions to support secure, anytime, anywhere connectivity for your employees and business locations."
+              "text": "Connect with us to learn how we can tailor connectivity solutions to support secure, anytime, anywhere connectivity for your employees and business locations.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -227,19 +229,22 @@
               "type": "list",
               "items": [
                 "Multi-Site WAN: Simplify network management across various geographical locations with Wide Area Networking (WAN) solutions."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Bandwidth Scalability: Easily scale your bandwidth based on specific site requirements and varying workloads."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Inter-Office Communications: Enable seamless and efficient communication between offices with features like VoIP, instant messaging, and video conferencing."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -258,19 +263,22 @@
               "type": "list",
               "items": [
                 "High-Speed Connectivity: Leverage fiber-optic and broadband options for fast, reliable internet access."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Guaranteed Uptime: Benefit from our Service Level Agreements (SLAs) that guarantee maximum uptime for uninterrupted business operations."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Dedicated Support: 24/7 customer support and monitoring to ensure your internet connectivity remains optimal at all times."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -289,19 +297,22 @@
               "type": "list",
               "items": [
                 "SASE (Secure Access Service Edge): Integrate networking and security functions into a single cloud-native service for secure, scalable, and simplified connectivity."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "SD-WAN (Software-Defined Wide Area Network): Achieve greater control over network traffic, enhanced performance, and increased security with SD-WAN solutions."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Data Encryption: Protect sensitive business data during transmission with end-to-end encryption protocols."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -324,25 +335,29 @@
             },
             {
               "type": "paragraph",
-              "text": "Ready to transition to a more agile and efficient cloud-based infrastructure? Contact us today to begin your cloud migration journey with a trusted partner."
+              "text": "Ready to transition to a more agile and efficient cloud-based infrastructure? Contact us today to begin your cloud migration journey with a trusted partner.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Migration Roadmap: Develop a tailored migration strategy that meets your unique business objectives."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Gap Analysis: Conduct a comprehensive assessment to identify your current capabilities and what you need to successfully migrate to the cloud."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Optimization: Continuously fine-tune cloud resources to maximize efficiency and reduce costs."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -361,19 +376,22 @@
               "type": "list",
               "items": [
                 "Seamless Virtual Private Network (VPN) Access: Secure, fast, and reliable VPN solutions to keep your remote employees connected to essential business resources."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Collaboration Tools: Integrated voice, video, and chat functionality for effective collaboration among remote teams."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Quality of Service (QoS): Prioritize business-critical applications to ensure optimum performance, even in remote settings."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -1087,11 +1105,13 @@
             },
             {
               "type": "paragraph",
-              "text": "AI-Driven sales solutions power business collaboration, customer engagement, and sales growth. By leveraging AI for manual tasks, sales teams can focus on engaging better with clients and closing more sales."
+              "text": "AI-Driven sales solutions power business collaboration, customer engagement, and sales growth. By leveraging AI for manual tasks, sales teams can focus on engaging better with clients and closing more sales.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Put the power of AI to work for your organization to enable your sales teams and supercharge your sales results."
+              "text": "Put the power of AI to work for your organization to enable your sales teams and supercharge your sales results.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1116,19 +1136,22 @@
               "type": "list",
               "items": [
                 "Live Transcripts: Get transcripts of client meetings in real-time, allowing you to focus on the client, not your note taking. Don't miss important comments, questions and voice inflections."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Meeting Recaps: Receive recaps after each meeting that you can share with peers and managers. Easily integrate with your CRM to automate the documentation of the sales journey."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Action Items: Automatically capture action items to streamline meeting follow-up and simplify task delegation."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1147,19 +1170,22 @@
               "type": "list",
               "items": [
                 "AI for Sales Managers: AI helps sales managers understand what\u2019s happening on sales calls so they can help coach and support reps and provide helpful feedback."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI Agent Assist: Leverage AI to suggest content, processes, and approaches based upon conversation content and automated sentiment analysis."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI Playbooks: Outline sales playbooks that drive consistency and sales success, then leverage AI to automatically track completion of each playbook step."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1178,13 +1204,15 @@
               "type": "list",
               "items": [
                 "AI-Driven Chat: Leverage knowledge bases, CRM, and key internal data sources to help sales prospects get preliminary inquiries answered quickly. Elevate qualified prospects to live rep's for follow up."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI-Powered Voice: Conversational AI-powered virtual voice agents can answer initial sales inquiries quickly and efficiently."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -1212,19 +1240,22 @@
           "content": [
             {
               "type": "paragraph",
-              "text": "Safeguarding your digital assets is critical in today's interconnected world:"
+              "text": "Safeguarding your digital assets is critical in today's interconnected world:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "The average cost of a data breach in the United States in 2022 was $9.44 million, up from $9.05 million in the previous year source"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "In 2023, it took organizations 204 days to detect data breaches, and an average of 73 days to contain them source"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1410,11 +1441,13 @@
             },
             {
               "type": "paragraph",
-              "text": "Artificial Intelligence (AI) has the power to be a transformative force that yields strong business benefits, but determining the most \"intelligent\" use of these emerging technologies requires addressing regulatory, privacy, ethical, and security concerns."
+              "text": "Artificial Intelligence (AI) has the power to be a transformative force that yields strong business benefits, but determining the most \"intelligent\" use of these emerging technologies requires addressing regulatory, privacy, ethical, and security concerns.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "The good news? We can help!"
+              "text": "The good news? We can help!",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1439,19 +1472,22 @@
               "type": "list",
               "items": [
                 "Strategic Vision: Understand how AI aligns with your organizational goals to ensure its effective deployment. Reaching consensus around where and how AI can enhance business outcomes is key."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Stakeholder Engagement: Involve key internal and external stakeholders in the decision-making process, ensuring alignment across all departments and optimizing the adoption and execution of AI initiatives."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Identify Focus Areas: Identify the key areas of your business where AI can help achieve business outcomes and, conversely, areas where you don't wish to use AI."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1470,19 +1506,22 @@
               "type": "list",
               "items": [
                 "Security and Privacy: Develop a policy that outlines the key privacy and security concerns related to the use of AI software and features."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Compliance Roadmap: Establish a compliance framework that aligns with industry regulations and standards such as GDPR, HIPAA, or other relevant guidelines."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Audit and Oversight: Implement auditing procedures to continuously monitor AI systems for compliance, effectiveness, and ethical behavior."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1501,19 +1540,22 @@
               "type": "list",
               "items": [
                 "Transparency: Require vendors to disclose algorithms, data sources, and methodologies to ensure accountability and ethical application of AI technologies."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Security Measures: Evaluate vendors based on the robustness of their cybersecurity protocols to safeguard sensitive data and system integrity."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Service Level Agreements: Clearly outline performance expectations, availability, and contingencies in vendor contracts to ensure seamless integration and ongoing management of AI solutions."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1532,19 +1574,22 @@
               "type": "list",
               "items": [
                 "Skills Assessment: Identify the skill gaps within your organization to customize a training program that equips employees with the requisite expertise in AI."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Training Modules: Implement a structured training curriculum that covers fundamental AI concepts, your custom AI Use Policy, best practices, and specific tools relevant to your industry."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Continuous Learning: Foster a culture of continuous learning and upskilling by offering periodic refresher courses, workshops, and seminars to keep staff updated on the latest advancements in AI."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -1578,7 +1623,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Comprehensive cyber risk assessments empower your organization to safeguard its assets, reputation, and bottom line. By identifying vulnerabilities and quantifying potential risks, risk assessments enable you to take proactive measures, ensuring the resilience and continuity of your operations."
+              "text": "Comprehensive cyber risk assessments empower your organization to safeguard its assets, reputation, and bottom line. By identifying vulnerabilities and quantifying potential risks, risk assessments enable you to take proactive measures, ensuring the resilience and continuity of your operations.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1603,19 +1649,22 @@
               "type": "list",
               "items": [
                 "Proactive Protection: Stay one step ahead of cyber threats. Risk Assessments help you identify weaknesses before they're exploited, giving you the upper hand in protecting your valuable data and systems."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Compliance Confidence: Risk Assessments help you meet cybersecurity standards, giving you peace of mind and reducing regulatory risks."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Strategic Resource Allocation: Make informed decisions about cybersecurity investments, helping you allocate resources effectively, prioritizing critical areas to maximize the impact of your security efforts."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1634,19 +1683,22 @@
               "type": "list",
               "items": [
                 "Business Continuity Assurance: Safeguard your operations against disruptions. Risk Assessments help you identify potential risks to your business continuity, ensuring you're prepared for the unexpected."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Reputation Enhancement: Protect your brand from cyber incidents. Risk Assessments and proactive measures show your stakeholders that you take cybersecurity seriously, enhancing trust and reputation."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Third-Party Confidence: Strengthen your relationships with partners and vendors. Risk Assessments of third-party entities ensure they meet your security standards, reducing overall risk in your business ecosystem."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -1665,19 +1717,22 @@
               "type": "list",
               "items": [
                 "Continuous Improvement: Risk Assessments aren't static; they evolve with the threat landscape. Regular updates and evaluations ensure your organization remains resilient and ready to face emerging cyber challenges."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Informed Decision-Making: Risk Assessments provide the insights you need. Make informed decisions about cybersecurity strategy, insurance coverage, risk appetite, and technology investments."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Employee Empowerment: Foster a culture of cybersecurity awareness. Risk Assessments raise employee understanding of potential risks, encouraging best practices and creating a vigilant team that actively contributes to your organization's defense."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2044,11 +2099,13 @@
             },
             {
               "type": "paragraph",
-              "text": "We provide industry-leading cybersecurity solutions so you can focus on what matters most \u2014 running your business effectively and efficiently."
+              "text": "We provide industry-leading cybersecurity solutions so you can focus on what matters most \u2014 running your business effectively and efficiently.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Stay ahead of cyber adversaries by protecting your key corporate assets. Secure your organization\u2019s future with us today."
+              "text": "Stay ahead of cyber adversaries by protecting your key corporate assets. Secure your organization\u2019s future with us today.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2073,19 +2130,22 @@
               "type": "list",
               "items": [
                 "Comprehensive Coverage: Safeguard your organization's digital assets, intellectual property, and customer data."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Cutting-Edge Technology: Utilize the latest advancements in AI and machine learning for threat detection and mitigation."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "24/7 Monitoring: Ensure round-the-clock protection with real-time monitoring and instant incident response."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2108,25 +2168,29 @@
             },
             {
               "type": "paragraph",
-              "text": "Staying ahead of cyber threats requires a host of technologies working together to secure your business. We help our clients build a comprehensive cybersecurity portfolio that includes technologies such as:"
+              "text": "Staying ahead of cyber threats requires a host of technologies working together to secure your business. We help our clients build a comprehensive cybersecurity portfolio that includes technologies such as:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Advanced Malware Scanning: Detect viruses, ransomware, and other malicious software before they compromise your systems."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Intrusion Detection Systems (IDS): Monitor network traffic for signs of unauthorized access or suspicious behavior."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Behavioral Analytics: Profile typical user behavior to identify anomalies and potential internal threats."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2143,25 +2207,29 @@
             },
             {
               "type": "paragraph",
-              "text": "We help our clients mitigate cyber risks with a portfolio of advanced threat prevention technologies including:"
+              "text": "We help our clients mitigate cyber risks with a portfolio of advanced threat prevention technologies including:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Firewalls & Web Filters: Employ multi-layered firewalls and web filtering to block unauthorized access and harmful content."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Endpoint Protection: Secure laptops, smartphones, and other endpoints that connect to your network."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Identity and Access Management (IAM): Implement strict access control to ensure only verified users have access to the information they need."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2178,25 +2246,29 @@
             },
             {
               "type": "paragraph",
-              "text": "Unfortunately, no cybersecurity strategy is 100% foolproof. We enable our clients to rapidly identify and respond to security incidents to mitigate potential damage through:"
+              "text": "Unfortunately, no cybersecurity strategy is 100% foolproof. We enable our clients to rapidly identify and respond to security incidents to mitigate potential damage through:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Immediate Alerting: Automated alerts for detected threats, ensuring quick action can be taken."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Incident Triage: Prioritize incidents based on severity, potential impact, and threat vectors."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Forensic Analysis: Conduct a detailed post-incident analysis to understand the threat's origin and impact, aiding in future protection efforts."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2411,7 +2483,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Stay ahead of cyber adversaries. Our advanced threat detection mechanisms identify potential risks, vulnerabilities, and malicious activities before they can wreak havoc on your systems."
+              "text": "Stay ahead of cyber adversaries. Our advanced threat detection mechanisms identify potential risks, vulnerabilities, and malicious activities before they can wreak havoc on your systems.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2434,11 +2507,13 @@
             },
             {
               "type": "paragraph",
-              "text": "A key first step in creating a comprehensive cybersecurity strategy is identifying the key assets that need to be protected, potential risks, and the processes and procedures that will be followed to detect and respond to cyber threats."
+              "text": "A key first step in creating a comprehensive cybersecurity strategy is identifying the key assets that need to be protected, potential risks, and the processes and procedures that will be followed to detect and respond to cyber threats.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Following the NIST cybersecurity model, we can help your organization:"
+              "text": "Following the NIST cybersecurity model, we can help your organization:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2448,7 +2523,8 @@
                 "Build and Maintain a Hardware and Software Inventory",
                 "Establish Cybersecurity Policies",
                 "Identify Threats, Vulnerabilities, and Risks to Assets"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2471,7 +2547,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Staying ahead of cyber threats requires a host of technologies working together to secure your business. We help our clients build a comprehensive cybersecurity portfolio that includes technologies such as:"
+              "text": "Staying ahead of cyber threats requires a host of technologies working together to secure your business. We help our clients build a comprehensive cybersecurity portfolio that includes technologies such as:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2482,7 +2559,8 @@
                 "Email Virus Scanners",
                 "Network Traffic Analysis",
                 "Endpoint Detection and Response (EDR)"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2499,7 +2577,8 @@
             },
             {
               "type": "paragraph",
-              "text": "The vast majority of successful cyber attacks involve the human element. We help our clients develop and deliver regular Cybersecurity Awareness Training to turn your employees into some of your best defenders against cyber threats. We cover a range of topics including:"
+              "text": "The vast majority of successful cyber attacks involve the human element. We help our clients develop and deliver regular Cybersecurity Awareness Training to turn your employees into some of your best defenders against cyber threats. We cover a range of topics including:",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2511,7 +2590,8 @@
                 "Safe Internet Habits",
                 "Social Networking Dangers",
                 "Bring-your-own-device (BYOD) Policies"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2588,11 +2668,13 @@
             },
             {
               "type": "paragraph",
-              "text": "You're busy running your business, and if you have an IT team in-house they are likely oversubscribed with current projects."
+              "text": "You're busy running your business, and if you have an IT team in-house they are likely oversubscribed with current projects.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "We're help to help fill those gaps with a suite of technology services that will help your business grow."
+              "text": "We're help to help fill those gaps with a suite of technology services that will help your business grow.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2615,7 +2697,8 @@
             },
             {
               "type": "paragraph",
-              "text": "As your personal Technology Concierge, we procure a custom portfolio of industry-leading technology providers that are best suited to achieving your unique business goals."
+              "text": "As your personal Technology Concierge, we procure a custom portfolio of industry-leading technology providers that are best suited to achieving your unique business goals.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2624,7 +2707,8 @@
                 "Your team can focus on core business objectives while we handle technology vetting",
                 "Optimize processes for enhanced efficiency and productivity",
                 "Eliminate the complexities of technology to save time and resources"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2641,7 +2725,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Whether meeting a temporary or ongoing need, our vCIOs seamlessly integrate into your team, providing strategic IT leadership to align your technology initiatives with your business goals."
+              "text": "Whether meeting a temporary or ongoing need, our vCIOs seamlessly integrate into your team, providing strategic IT leadership to align your technology initiatives with your business goals.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2650,7 +2735,8 @@
                 "Expert team dedicated to understanding and fulfilling your requirements",
                 "Customized tech solutions that align with your specific goals",
                 "Comprehensive strategy from architecture to technology stack selection"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -2667,7 +2753,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Free up your IT team to focus on your most strategic initiatives."
+              "text": "Free up your IT team to focus on your most strategic initiatives.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
@@ -2676,7 +2763,8 @@
                 "Expert Talent Pool: Access a diverse pool of skilled IT professionals with specialized expertise to meet your unique business requirements and drive your projects to success.",
                 "Cost-Effective Hiring: Reduce the costs and risks associated with permanent hires by leveraging our flexible staffing options, tailored to fit your budget and project timelines.",
                 "Seamless Integration: Our augmented staff seamlessly integrates with your existing team, ensuring smooth collaboration and continuity without the overhead of onboarding and training."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -2708,7 +2796,8 @@
                 "64% of surveyed business owners believe AI will transform their customer service. source",
                 "25% of companies are adopting AI to combat labor shortages. source",
                 "54% of executives say AI has already increased productivity. source"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -3065,7 +3154,8 @@
                 "84% of companies that improve their Customer Experience (CX) grow revenue. source",
                 "83% of workers across industries favor remote or hybrid work. source",
                 "Companies with effective communication and collaboration see a 50% reduction in employee turnover. source"
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -3616,11 +3706,13 @@
             },
             {
               "type": "paragraph",
-              "text": "Achieve superior collaboration, enhanced productivity, and significant cost savings with our cutting-edge Unified Communications as a Service (UCaaS) Solutions."
+              "text": "Achieve superior collaboration, enhanced productivity, and significant cost savings with our cutting-edge Unified Communications as a Service (UCaaS) Solutions.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Connect with us today to learn how your organization can benefit from unified, scalable, and secure communications."
+              "text": "Connect with us today to learn how your organization can benefit from unified, scalable, and secure communications.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -3645,19 +3737,22 @@
               "type": "list",
               "items": [
                 "Unified Application: Manage all your communication needs\u2014voice, video, chat, SMS, and email\u2014through a unified application."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Multi-Device Support: Enable seamless communications on desktops, mobile devices, and desk phones, ensuring that your team can connect from anywhere."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Instant Synchronization: Keep all communication tools in sync across different devices and platforms, eliminating the challenges of fragmented communication."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -3676,19 +3771,22 @@
               "type": "list",
               "items": [
                 "Integrated Team Collaboration: Utilize shared workspaces, file sharing, and real-time document collaboration to boost team productivity."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Smart Presence: Know who is available, busy, or away with intelligent presence features, making it easier to connect with the right people at the right time."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Virtual Meeting Rooms: Conduct online meetings, webinars, and video conferences with high-quality audio and video capabilities."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -3707,19 +3805,22 @@
               "type": "list",
               "items": [
                 "Flexible Plans: Choose from a range of flexible subscription models that can easily scale up or down as per your business needs."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Zero Maintenance: Eliminate the need for costly hardware and enjoy automated updates, ensuring your communication systems are always up-to-date."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Resource Optimization: Reduce costs by streamlining your communications infrastructure and minimizing the need for separate tools and platforms."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -4056,11 +4157,13 @@
             },
             {
               "type": "paragraph",
-              "text": "Drive revenue, improve customer satisfaction, and differentiate your brand with integrated Contact Center, CRM, Quality, and Workforce Management Solutions."
+              "text": "Drive revenue, improve customer satisfaction, and differentiate your brand with integrated Contact Center, CRM, Quality, and Workforce Management Solutions.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Combine the power of AI and automation with secure cloud access to supercharge your sales teams and elevate your customer service organization."
+              "text": "Combine the power of AI and automation with secure cloud access to supercharge your sales teams and elevate your customer service organization.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4085,19 +4188,22 @@
               "type": "list",
               "items": [
                 "Personalized Interactions: Use customer data and behavior analytics to personalize interactions and offer tailored solutions."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Customer Journey Mapping: Visualize your customer\u2019s entire journey, identify touchpoints, and improve the overall experience."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Post-Interaction Surveys: Collect valuable customer feedback to understand needs and expectations better, enabling continual service improvement."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4116,13 +4222,15 @@
               "type": "list",
               "items": [
                 "Predictive Analytics: Leverage advanced analytics to predict customer behavior, identify upsell and cross-sell opportunities, and forecast revenue accurately."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "ROI Tracking: Monitor the ROI of marketing campaigns, customer engagements, and other sales activities for better allocation of resources."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4147,19 +4255,22 @@
               "type": "list",
               "items": [
                 "Omnichannel Support: Deliver a unified experience across multiple channels\u2014phone, email, chat, and social media\u2014from a single dashboard."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Intelligent Routing: Automatically assign customer inquiries to the most appropriate and skilled agent, reducing wait times and boosting first-call resolution rates."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Real-Time Analytics: Monitor key performance indicators in real time to gauge customer satisfaction, agent productivity, and operational efficiency."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4178,19 +4289,22 @@
               "type": "list",
               "items": [
                 "Unified Customer View: Streamline all customer data into a single, comprehensive view for more informed interactions."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Interaction Management: Track, manage, and prioritize customer issues and requests directly within the CRM to reduce resolution times and improve customer satisfaction (CSAT)."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Automated Workflows: Eliminate manual tasks by automating routine processes such as ticket assignment, follow-ups, and reporting."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4209,13 +4323,15 @@
               "type": "list",
               "items": [
                 "AI-Driven Chat: AI-Powered chatbots can leverage knowledge bases, CRM, and key internal data sources to help customers get preliminary inquiries answered quickly, 24x7."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI-Powered Voice: Conversational AI-powered virtual voice agents can answer initial customer inquiries quickly and efficiently, any time of day, any day of the year."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4240,19 +4356,22 @@
               "type": "list",
               "items": [
                 "AI Agent Assist: Leverage AI to suggest content, processes, and approaches based upon conversation content and automated sentiment analysis."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Sentiment Analysis: AI-driven sentiment analysis can suggest responses based upon live interactions, identify moments when an agent may need supervisor assistance, and identify post-interaction coaching moments."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI Customer Journey: AI provides agents with context and guidance about the customer\u2019s issue and past interactions to help customers faster and improve customer satisfaction."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -4271,13 +4390,15 @@
               "type": "list",
               "items": [
                 "Automated Quality Analysis : Automate the Quality Assurance process by leveraging AI to analyze 100% of customer interactions, not just a small sample."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI-Powered Workforce Management : Leverage AI and machine learning to forecast agent staffing requirements, monitor contact center workflows, and make adjustments in real-time, reducing costs, wait times, and time-to-resolution."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -4987,19 +5108,23 @@
             },
             {
               "type": "paragraph",
-              "text": "I started in the Information Technology (IT) industry at age 19 as a college intern (back when I had hair!), and I've been a continual learner ever since. I have worked across a very broad range of technologies in my 30+ year career, including Data Networking, Voice over IP (VoIP), HD Video, Unified Communications as a service (UCaaS), Contact Center as a Service (CCaaS), Quality Management, Workforce Management, Artificial Intelligence (AI), and Sustainable Business Practices (People, Profit, and Planet)."
+              "text": "I started in the Information Technology (IT) industry at age 19 as a college intern (back when I had hair!), and I've been a continual learner ever since. I have worked across a very broad range of technologies in my 30+ year career, including Data Networking, Voice over IP (VoIP), HD Video, Unified Communications as a service (UCaaS), Contact Center as a Service (CCaaS), Quality Management, Workforce Management, Artificial Intelligence (AI), and Sustainable Business Practices (People, Profit, and Planet).",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "I have had the pleasure of working with some of the best people in the industry along the way, and many of them are now Stratecon Tech Advisors! We look forward to sharing our experiences, research, best practices, and resources to help you leverage technology to drive business success."
+              "text": "I have had the pleasure of working with some of the best people in the industry along the way, and many of them are now Stratecon Tech Advisors! We look forward to sharing our experiences, research, best practices, and resources to help you leverage technology to drive business success.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "- Carver Matheidas"
+              "text": "- Carver Matheidas",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "Principal Consultant and Founder"
+              "text": "Principal Consultant and Founder",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5022,7 +5147,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Our mission is to help businesses of all sizes reach their full potential through the intelligent use of technology."
+              "text": "Our mission is to help businesses of all sizes reach their full potential through the intelligent use of technology.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5039,7 +5165,8 @@
             },
             {
               "type": "paragraph",
-              "text": "Our team of experts has years of experience in the IT industry. We are passionate about helping businesses succeed and we pride ourselves on our technical expertise and exceptional customer service."
+              "text": "Our team of experts has years of experience in the IT industry. We are passionate about helping businesses succeed and we pride ourselves on our technical expertise and exceptional customer service.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5056,7 +5183,8 @@
             },
             {
               "type": "paragraph",
-              "text": "We offer a wide range of IT advisory services, all designed to help you build the most effective and efficient IT product portfolio that will secure and grow your business."
+              "text": "We offer a wide range of IT advisory services, all designed to help you build the most effective and efficient IT product portfolio that will secure and grow your business.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5368,11 +5496,13 @@
             },
             {
               "type": "paragraph",
-              "text": "AI-Driven customer service solutions automate key business processes, shorten the time it takes to resolve customer issues, and improve overall customer satisfaction."
+              "text": "AI-Driven customer service solutions automate key business processes, shorten the time it takes to resolve customer issues, and improve overall customer satisfaction.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "By using AI to enable and automate the access to key information, live agents are better equipped to deliver world-class customer experiences."
+              "text": "By using AI to enable and automate the access to key information, live agents are better equipped to deliver world-class customer experiences.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5397,13 +5527,15 @@
               "type": "list",
               "items": [
                 "AI-Driven Chat: AI-Powered chatbots can leverage knowledge bases, CRM, and key internal data sources to help customers get preliminary inquiries answered quickly, 24x7."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI-Powered Voice: Conversational AI-powered virtual voice agents can answer initial customer inquiries quickly and efficiently, any time of day, any day of the year."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5422,19 +5554,22 @@
               "type": "list",
               "items": [
                 "AI Agent Assist: Leverage AI to suggest content, processes, and approaches based upon conversation content and automated sentiment analysis."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "Sentiment Analysis: AI-driven sentiment analysis can suggest responses based upon live interactions, identify moments when an agent may need supervisor assistance, and identify post-interaction coaching moments."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI Customer Journey: AI provides agents with context and guidance about the customer\u2019s issue and past interactions to help customers faster and improve customer satisfaction."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         },
@@ -5453,13 +5588,15 @@
               "type": "list",
               "items": [
                 "Automated Quality Analysis : Automate the Quality Assurance process by leverage AI to analyze 100% of customer interactions, not just a small sample."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "list",
               "items": [
                 "AI-Powered Workforce Management : Leverage AI and machine learning to forecast agent staffing requirements, monitor contact center workflows, and make adjustments in real-time, reducing costs, wait times, time-to-resolution."
-              ]
+              ],
+              "typography_role": "BodyAlpha"
             }
           ]
         }
@@ -5487,11 +5624,13 @@
             },
             {
               "type": "paragraph",
-              "text": "An effective cybersecurity strategy requires regular assessment of existing processes, procedures, and technologies to determine gaps that make pose a risk to your business."
+              "text": "An effective cybersecurity strategy requires regular assessment of existing processes, procedures, and technologies to determine gaps that make pose a risk to your business.",
+              "typography_role": "BodyAlpha"
             },
             {
               "type": "paragraph",
-              "text": "If you haven't recently completed this important step, we suggest taking 5-10 minutes to complete the Free Cyber Risk Self Assessment, below."
+              "text": "If you haven't recently completed this important step, we suggest taking 5-10 minutes to complete the Free Cyber Risk Self Assessment, below.",
+              "typography_role": "BodyAlpha"
             }
           ]
         },

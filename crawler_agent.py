@@ -24,6 +24,7 @@ Output:
 import sys
 import json
 import re
+import html
 from urllib.parse import urlparse, urljoin
 
 from playwright.sync_api import sync_playwright
@@ -54,6 +55,63 @@ def element_text(el):
         except Exception:
             text = ""
     return " ".join((text or "").split())
+
+
+def element_inline_html(el, base_url):
+    """An element's content as a small, safe HTML fragment -- preserves
+    bold (<strong>/<b>), italic (<em>/<i>), and links (<a href>) instead
+    of flattening everything to plain text like element_text() does.
+    GoDaddy Website Builder content commonly leans on exactly this kind
+    of inline formatting to carry meaning the plain text alone loses --
+    e.g. a bolded stat plus a "source" citation link inside one list
+    item. Everything else (spans, classes, inline styles -- GoDaddy's
+    own generated wrapper markup) is unwrapped down to its own inner
+    content rather than kept, since none of it is meaningful here.
+    Falls back to plain text (via element_text()) if this fails for any
+    reason -- some formatting lost beats losing the block entirely."""
+    try:
+        raw = el.evaluate(
+            """(el, baseUrl) => {
+                function esc(s) {
+                    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                }
+                function walk(node) {
+                    if (node.nodeType === Node.TEXT_NODE) {
+                        return esc(node.textContent);
+                    }
+                    if (node.nodeType !== Node.ELEMENT_NODE) {
+                        return '';
+                    }
+                    const tag = node.tagName.toLowerCase();
+                    const inner = Array.from(node.childNodes).map(walk).join('');
+                    if (tag === 'strong' || tag === 'b') {
+                        return `<strong>${inner}</strong>`;
+                    }
+                    if (tag === 'em' || tag === 'i') {
+                        return `<em>${inner}</em>`;
+                    }
+                    if (tag === 'a') {
+                        const href = node.getAttribute('href');
+                        if (!href) return inner;
+                        let abs;
+                        try { abs = new URL(href, baseUrl).href; } catch (e) { abs = href; }
+                        return `<a href="${esc(abs)}">${inner}</a>`;
+                    }
+                    if (tag === 'br') {
+                        return ' ';
+                    }
+                    return inner;
+                }
+                return Array.from(el.childNodes).map(walk).join('');
+            }""",
+            base_url,
+        )
+    except Exception:
+        return html.escape(element_text(el))
+    # Collapse whitespace the same way element_text() does, without
+    # touching the tags themselves (none of the tags above ever contain
+    # a run of literal whitespace).
+    return " ".join((raw or "").split())
 
 
 MIN_CONTENT_IMAGE_SIZE = 24  # px; filters tracking pixels and tiny UI icons
@@ -384,7 +442,7 @@ def resolve_image_src(el, page_url, seen_image_urls):
     return abs_src, (el.get_attribute("alt") or "")
 
 
-def extract_element_content(container):
+def extract_element_content(container, page_url):
     """Headings/paragraphs/lists inside one element, in document order --
     the same block types and rules extract_blocks() applies at the page
     level, scoped to a single container. Used to pull the text side of a
@@ -403,15 +461,31 @@ def extract_element_content(container):
                 heading["typography_role"] = role
             content.append(heading)
         elif tag == "p":
-            content.append({"type": "paragraph", "text": text})
+            # "text" holds a small safe inline-HTML fragment (bold/italic/
+            # links preserved -- see element_inline_html()), not plain
+            # text -- generator_agent.py embeds it directly rather than
+            # HTML-escaping it.
+            para = {"type": "paragraph", "text": element_inline_html(el, page_url)}
+            role = el.get_attribute("data-typography")
+            if role:
+                para["typography_role"] = role
+            content.append(para)
         elif tag in ("ul", "ol"):
             items = [
-                element_text(li)
+                element_inline_html(li, page_url)
                 for li in el.query_selector_all("li")
                 if element_text(li)
             ]
             if items:
-                content.append({"type": "list", "items": items})
+                lst = {"type": "list", "items": items}
+                # GoDaddy tags the role on the list widget itself, not
+                # each individual <li> -- confirmed on the live site's
+                # own markup (a "BodyAlpha"-tagged <ul> wrapping plain
+                # <li>s with no attribute of their own).
+                role = el.get_attribute("data-typography")
+                if role:
+                    lst["typography_role"] = role
+                content.append(lst)
     return content
 
 
@@ -513,7 +587,7 @@ def extract_blocks(page, page_url):
                 text_cell = page.query_selector(
                     f'[data-migration-media-text-content="{pair_id}"]'
                 )
-                content = extract_element_content(text_cell) if text_cell else []
+                content = extract_element_content(text_cell, page_url) if text_cell else []
                 resolved = resolve_image_src(el, page_url, seen_image_urls)
 
                 if resolved is not None and content:
@@ -553,15 +627,29 @@ def extract_blocks(page, page_url):
                 heading["typography_role"] = role
             blocks.append(heading)
         elif tag == "p":
-            blocks.append({"type": "paragraph", "text": text})
+            # "text" holds a small safe inline-HTML fragment (bold/
+            # italic/links preserved -- see element_inline_html()), not
+            # plain text -- generator_agent.py embeds it directly rather
+            # than HTML-escaping it.
+            para = {"type": "paragraph", "text": element_inline_html(el, page_url)}
+            role = el.get_attribute("data-typography")
+            if role:
+                para["typography_role"] = role
+            blocks.append(para)
         elif tag in ("ul", "ol"):
             items = [
-                element_text(li)
+                element_inline_html(li, page_url)
                 for li in el.query_selector_all("li")
                 if element_text(li)
             ]
             if items:
-                blocks.append({"type": "list", "items": items})
+                lst = {"type": "list", "items": items}
+                # GoDaddy tags the role on the list widget itself, not
+                # each individual <li> -- see extract_element_content().
+                role = el.get_attribute("data-typography")
+                if role:
+                    lst["typography_role"] = role
+                blocks.append(lst)
 
     # Best-effort FAQ / accordion detection -- flagged low-confidence
     # since accordion markup varies a lot site to site.
