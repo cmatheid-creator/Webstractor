@@ -195,6 +195,56 @@ def _brand_role_style(role, brand):
     }
 
 
+def role_class_name(role):
+    """The shared CSS class a role's font-size/weight rule lives under
+    (see _extra_css_rules()) -- e.g. "has-role-bodyalpha" for "BodyAlpha".
+    """
+    return f"has-role-{role.lower()}"
+
+
+def _role_style_bits(role, brand):
+    """Like _brand_role_style(), but returns ready-to-use ("json_attrs",
+    "classes") fragments for a block comment's attributes and its
+    element's class list -- font family and color as Gutenberg's own
+    native fontFamily/textColor attributes (safe: block validation can
+    correctly reconstruct these), font-size/weight as a shared
+    role_class_name() className instead of an inline style.
+
+    That split matters: Gutenberg's editor re-validates every saved
+    block by regenerating its expected HTML from ONLY the JSON
+    attributes in its comment, and flags "Block contains unexpected or
+    invalid content" on any byte mismatch against what's actually
+    stored. An earlier version of this code appended "font-size:...;
+    font-weight:..." straight into each element's inline style with no
+    matching JSON attribute at all -- confirmed on a real test install,
+    that produced exactly this warning on every heading/paragraph/list
+    this project applies brand typography to. A className has no such
+    reconstruction step (Gutenberg just appends whatever string is
+    there), so pairing it with one real, shared CSS rule per role (
+    written once in _extra_css_rules(), not duplicated inline per
+    occurrence) sidesteps the mismatch entirely while still applying
+    the same font-size/weight.
+
+    Returns None if the role isn't in brand's typography at all.
+    """
+    hs = _brand_role_style(role, brand)
+    if not hs:
+        return None
+    json_attrs = []
+    classes = []
+    if hs.get("font_family_slug"):
+        json_attrs.append(f'"fontFamily":"{hs["font_family_slug"]}"')
+        classes.append(f'has-{hs["font_family_slug"]}-font-family')
+    if hs.get("text_color_slug"):
+        json_attrs.append(f'"textColor":"{hs["text_color_slug"]}"')
+        classes.append(f'has-{hs["text_color_slug"]}-color has-text-color')
+    if hs.get("font_size") or hs.get("font_weight"):
+        rc = role_class_name(role)
+        json_attrs.append(f'"className":"{rc}"')
+        classes.append(rc)
+    return {"json_attrs": ",".join(json_attrs), "classes": " ".join(classes)}
+
+
 def block_to_gutenberg(block):
     """Turn one structured content block into native Gutenberg block markup."""
     t = block["type"]
@@ -219,20 +269,9 @@ def block_to_gutenberg(block):
         # an inline style -- core/separator has no "grow" attribute of
         # its own to reach for.
         if block.get("typography_role") == "HeadingBeta":
-            hs = _brand_role_style("HeadingBeta", _BRAND) or {}
-            extra_attrs = ""
-            extra_classes = ""
-            extra_css = "margin-top:0;margin-bottom:0"
-            if hs.get("font_family_slug"):
-                extra_attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
-                extra_classes += f' has-{hs["font_family_slug"]}-font-family'
-            if hs.get("text_color_slug"):
-                extra_attrs += f',"textColor":"{hs["text_color_slug"]}"'
-                extra_classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-            if hs.get("font_size"):
-                extra_css += f';font-size:{hs["font_size"]}'
-            if hs.get("font_weight"):
-                extra_css += f';font-weight:{hs["font_weight"]}'
+            rb = _role_style_bits("HeadingBeta", _BRAND) or {}
+            extra_attrs = f',{rb["json_attrs"]}' if rb.get("json_attrs") else ""
+            extra_classes = f' {rb["classes"]}' if rb.get("classes") else ""
             # Real per-section vertical spacing, confirmed against the
             # live site's own CSS (56px top+bottom padding per section):
             # this generated page has no per-"section" wrapper the way
@@ -240,22 +279,25 @@ def block_to_gutenberg(block):
             # margin here these divider headings -- the actual visual
             # section boundaries -- were only getting WordPress's small
             # default block spacing (~1.5em) between them, far tighter
-            # than the original site's rhythm.
+            # than the original site's rhythm. "migration-section-divider"/
+            # "migration-divider-hr" carry that margin and the separators'
+            # flex-grow via className + a real shared CSS rule (see
+            # _extra_css_rules()) instead of an inline style with no
+            # matching JSON attribute -- see _role_style_bits()'s
+            # docstring for why that combination fails Gutenberg's block
+            # validation.
             return (
-                '<!-- wp:group {"align":"wide","style":{"spacing":{"margin":'
-                '{"top":"56px","bottom":"56px"}}},"layout":{"type":"flex",'
-                '"justifyContent":"center","verticalAlignment":"center"}} -->\n'
-                '<div class="wp-block-group alignwide" style="margin-top:56px;margin-bottom:56px">\n'
-                '<!-- wp:separator {"className":"is-style-wide"} -->\n'
-                '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
+                '<!-- wp:group {"align":"wide","className":"migration-section-divider",'
+                '"layout":{"type":"flex","justifyContent":"center","verticalAlignment":"center"}} -->\n'
+                '<div class="wp-block-group alignwide migration-section-divider">\n'
+                '<!-- wp:separator {"className":"is-style-wide migration-divider-hr"} -->\n'
+                '<hr class="wp-block-separator has-alpha-channel-opacity is-style-wide migration-divider-hr"/>\n'
                 '<!-- /wp:separator -->\n'
-                f'<!-- wp:heading {{"level":{level},"textAlign":"center","style":{{"spacing":{{"margin":'
-                f'{{"top":"0","bottom":"0"}}}}}}{extra_attrs}}} -->\n'
-                f'<h{level} class="wp-block-heading has-text-align-center{extra_classes}" '
-                f'style="{extra_css}">{text}</h{level}>\n'
+                f'<!-- wp:heading {{"level":{level},"textAlign":"center"{extra_attrs}}} -->\n'
+                f'<h{level} class="wp-block-heading has-text-align-center{extra_classes}">{text}</h{level}>\n'
                 '<!-- /wp:heading -->\n'
-                '<!-- wp:separator {"className":"is-style-wide"} -->\n'
-                '<hr style="flex:1 1 auto" class="wp-block-separator has-alpha-channel-opacity is-style-wide"/>\n'
+                '<!-- wp:separator {"className":"is-style-wide migration-divider-hr"} -->\n'
+                '<hr class="wp-block-separator has-alpha-channel-opacity is-style-wide migration-divider-hr"/>\n'
                 '<!-- /wp:separator -->\n'
                 '</div>\n'
                 '<!-- /wp:group -->'
@@ -267,25 +309,15 @@ def block_to_gutenberg(block):
         # WordPress generic default. Older structured_content.json files
         # predate this field and simply won't have it; falls back to the
         # generic heading below exactly as before.
-        hs = _brand_role_style(block.get("typography_role"), _BRAND)
-        if hs:
+        rb = _role_style_bits(block.get("typography_role"), _BRAND)
+        if rb:
             attrs = f'"level":{level}'
-            classes = "wp-block-heading"
-            css = []
-            if hs.get("font_family_slug"):
-                attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
-                classes += f' has-{hs["font_family_slug"]}-font-family'
-            if hs.get("text_color_slug"):
-                attrs += f',"textColor":"{hs["text_color_slug"]}"'
-                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-            if hs.get("font_size"):
-                css.append(f'font-size:{hs["font_size"]}')
-            if hs.get("font_weight"):
-                css.append(f'font-weight:{hs["font_weight"]}')
-            style_attr = f' style="{";".join(css)}"' if css else ""
+            if rb["json_attrs"]:
+                attrs += f',{rb["json_attrs"]}'
+            classes = f'wp-block-heading {rb["classes"]}'.strip()
             return (
                 f'<!-- wp:heading {{{attrs}}} -->\n'
-                f'<h{level} class="{classes}"{style_attr}>{text}</h{level}>\n'
+                f'<h{level} class="{classes}">{text}</h{level}>\n'
                 f'<!-- /wp:heading -->'
             )
 
@@ -302,26 +334,13 @@ def block_to_gutenberg(block):
         # doesn't re-escape it the way the heading branches above do for
         # their own plain-text "text" field.
         text = block["text"]
-        hs = _brand_role_style(block.get("typography_role"), _BRAND)
-        if hs:
-            attrs = ""
-            classes = ""
-            css = []
-            if hs.get("font_family_slug"):
-                attrs += f'"fontFamily":"{hs["font_family_slug"]}"'
-                classes += f' has-{hs["font_family_slug"]}-font-family'
-            if hs.get("text_color_slug"):
-                attrs += (',' if attrs else '') + f'"textColor":"{hs["text_color_slug"]}"'
-                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-            if hs.get("font_size"):
-                css.append(f'font-size:{hs["font_size"]}')
-            if hs.get("font_weight"):
-                css.append(f'font-weight:{hs["font_weight"]}')
-            style_attr = f' style="{";".join(css)}"' if css else ""
-            attrs_block = f' {{{attrs}}}' if attrs else ""
+        rb = _role_style_bits(block.get("typography_role"), _BRAND)
+        if rb:
+            attrs_block = f' {{{rb["json_attrs"]}}}' if rb["json_attrs"] else ""
+            classes = rb["classes"]
             return (
                 f'<!-- wp:paragraph{attrs_block} -->\n'
-                f'<p class="{classes.strip()}"{style_attr}>{text}</p>\n'
+                f'<p class="{classes}">{text}</p>\n'
                 '<!-- /wp:paragraph -->'
             )
         return f'<!-- wp:paragraph -->\n<p>{text}</p>\n<!-- /wp:paragraph -->'
@@ -330,26 +349,13 @@ def block_to_gutenberg(block):
         # Same inline-HTML contract as "paragraph" above -- each item is
         # already a safe fragment, not plain text.
         items = "".join(f"<li>{i}</li>" for i in block["items"])
-        hs = _brand_role_style(block.get("typography_role"), _BRAND)
-        if hs:
-            attrs = ""
-            classes = "wp-block-list"
-            css = []
-            if hs.get("font_family_slug"):
-                attrs += f'"fontFamily":"{hs["font_family_slug"]}"'
-                classes += f' has-{hs["font_family_slug"]}-font-family'
-            if hs.get("text_color_slug"):
-                attrs += (',' if attrs else '') + f'"textColor":"{hs["text_color_slug"]}"'
-                classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-            if hs.get("font_size"):
-                css.append(f'font-size:{hs["font_size"]}')
-            if hs.get("font_weight"):
-                css.append(f'font-weight:{hs["font_weight"]}')
-            style_attr = f' style="{";".join(css)}"' if css else ""
-            attrs_block = f' {{{attrs}}}' if attrs else ""
+        rb = _role_style_bits(block.get("typography_role"), _BRAND)
+        if rb:
+            attrs_block = f' {{{rb["json_attrs"]}}}' if rb["json_attrs"] else ""
+            classes = f'wp-block-list {rb["classes"]}'.strip()
             return (
                 f'<!-- wp:list{attrs_block} -->\n'
-                f'<ul class="{classes}"{style_attr}>{items}</ul>\n'
+                f'<ul class="{classes}">{items}</ul>\n'
                 '<!-- /wp:list -->'
             )
         return (
@@ -479,26 +485,16 @@ def block_to_gutenberg(block):
             # block defaults to.
             heading = card.get("heading")
             if heading:
-                hs = _brand_role_style(card.get("heading_role"), _BRAND)
+                rb = _role_style_bits(card.get("heading_role"), _BRAND)
                 text = html.escape(heading)
-                if hs:
+                if rb:
                     attrs = '"level":4,"textAlign":"center"'
-                    classes = "wp-block-heading has-text-align-center"
-                    css = []
-                    if hs.get("font_family_slug"):
-                        attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
-                        classes += f' has-{hs["font_family_slug"]}-font-family'
-                    if hs.get("text_color_slug"):
-                        attrs += f',"textColor":"{hs["text_color_slug"]}"'
-                        classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-                    if hs.get("font_size"):
-                        css.append(f'font-size:{hs["font_size"]}')
-                    if hs.get("font_weight"):
-                        css.append(f'font-weight:{hs["font_weight"]}')
-                    style_attr = f' style="{";".join(css)}"' if css else ""
+                    if rb["json_attrs"]:
+                        attrs += f',{rb["json_attrs"]}'
+                    classes = f'wp-block-heading has-text-align-center {rb["classes"]}'.strip()
                     parts.append(
                         f'<!-- wp:heading {{{attrs}}} -->\n'
-                        f'<h4 class="{classes}"{style_attr}>{text}</h4>\n'
+                        f'<h4 class="{classes}">{text}</h4>\n'
                         '<!-- /wp:heading -->'
                     )
                 else:
@@ -538,10 +534,16 @@ def block_to_gutenberg(block):
                 # text (the one that sets the row's height) butts right up
                 # against its own button, since auto-push has nothing left
                 # to push through for that card specifically. Confirmed on
-                # a real test import.
+                # a real test import. "migration-cta-buttons" carries both
+                # via className + a real shared CSS rule (see
+                # _extra_css_rules()) instead of an inline style with no
+                # matching JSON attribute -- see _role_style_bits()'s
+                # docstring for why that fails Gutenberg's block
+                # validation.
                 parts.append(
-                    '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->\n'
-                    '<div class="wp-block-buttons" style="margin-top:auto;padding-top:1.5rem">\n'
+                    '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"},'
+                    '"className":"migration-cta-buttons"} -->\n'
+                    '<div class="wp-block-buttons migration-cta-buttons">\n'
                     '<!-- wp:button -->\n'
                     f'<div class="wp-block-button"><a class="wp-block-button__link '
                     f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
@@ -550,21 +552,24 @@ def block_to_gutenberg(block):
                     '<!-- /wp:buttons -->'
                 )
 
-            # Both style="display:flex..." (so margin-top:auto above has a
-            # flex container to push against) and an explicit width are
-            # needed here, not just the parent wp:columns block's own
-            # layout -- confirmed a real gap without the explicit width:
-            # a trailing row with fewer cards than earlier rows (e.g. 7
-            # cards in rows of 3 leaves a lone card in the last row) has
-            # its column(s) stretch to fill the *whole* row instead of
-            # staying the same width as every other card, since a plain
-            # wp:column's width is otherwise just an equal share of
-            # however many siblings happen to be in that specific row.
+            # display:flex (so margin-top:auto above has a flex container
+            # to push against) and an explicit width are needed here, not
+            # just the parent wp:columns block's own layout -- confirmed a
+            # real gap without the explicit width: a trailing row with
+            # fewer cards than earlier rows (e.g. 7 cards in rows of 3
+            # leaves a lone card in the last row) has its column(s)
+            # stretch to fill the *whole* row instead of staying the same
+            # width as every other card, since a plain wp:column's width
+            # is otherwise just an equal share of however many siblings
+            # happen to be in that specific row. "migration-flex-column"
+            # carries all of that (including the 33.33% width) via
+            # className instead of a "width" attribute + inline style --
+            # see _role_style_bits()'s docstring for why the inline-style
+            # version fails Gutenberg's block validation.
             column_content = "\n\n".join(parts)
             column_blocks.append(
-                '<!-- wp:column {"width":"33.33%"} -->\n'
-                '<div class="wp-block-column" style="flex-basis:33.33%;display:flex;'
-                f'flex-direction:column">\n{column_content}\n</div>\n'
+                '<!-- wp:column {"className":"migration-flex-column"} -->\n'
+                f'<div class="wp-block-column migration-flex-column">\n{column_content}\n</div>\n'
                 '<!-- /wp:column -->'
             )
 
@@ -572,12 +577,13 @@ def block_to_gutenberg(block):
         # Explicit blockGap -- confirmed against the live site's own card
         # row: its gutters between cards are noticeably wider than
         # WordPress's small default column gap, which (combined with each
-        # column's explicit "33.33%" width leaving it almost no slack)
-        # made columns here read as wider than the live site's and wrap
-        # its paragraph text differently/less evenly.
+        # column's explicit 33.33% width leaving it almost no slack) made
+        # columns here read as wider than the live site's and wrap its
+        # paragraph text differently/less evenly. "migration-columns-gap"
+        # carries this via className -- see the column fix above for why.
         return (
-            '<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":"2.5rem"}}} -->\n'
-            '<div class="wp-block-columns alignwide" style="column-gap:2.5rem">\n'
+            '<!-- wp:columns {"align":"wide","className":"migration-columns-gap"} -->\n'
+            '<div class="wp-block-columns alignwide migration-columns-gap">\n'
             f"{columns_content}\n"
             '</div>\n'
             '<!-- /wp:columns -->\n'
@@ -659,25 +665,15 @@ def block_to_gutenberg(block):
                         f'<a href="{url_escaped}" style="text-decoration:none">{text}</a>'
                         if url_escaped else text
                     )
-                    hs = _brand_role_style(post.get("heading_role"), _BRAND)
-                    if hs:
+                    rb = _role_style_bits(post.get("heading_role"), _BRAND)
+                    if rb:
                         attrs = '"level":4'
-                        classes = "wp-block-heading"
-                        css = []
-                        if hs.get("font_family_slug"):
-                            attrs += f',"fontFamily":"{hs["font_family_slug"]}"'
-                            classes += f' has-{hs["font_family_slug"]}-font-family'
-                        if hs.get("text_color_slug"):
-                            attrs += f',"textColor":"{hs["text_color_slug"]}"'
-                            classes += f' has-{hs["text_color_slug"]}-color has-text-color'
-                        if hs.get("font_size"):
-                            css.append(f'font-size:{hs["font_size"]}')
-                        if hs.get("font_weight"):
-                            css.append(f'font-weight:{hs["font_weight"]}')
-                        style_attr = f' style="{";".join(css)}"' if css else ""
+                        if rb["json_attrs"]:
+                            attrs += f',{rb["json_attrs"]}'
+                        classes = f'wp-block-heading {rb["classes"]}'.strip()
                         parts.append(
                             f'<!-- wp:heading {{{attrs}}} -->\n'
-                            f'<h4 class="{classes}"{style_attr}>{inner}</h4>\n'
+                            f'<h4 class="{classes}">{inner}</h4>\n'
                             '<!-- /wp:heading -->'
                         )
                     else:
@@ -701,9 +697,13 @@ def block_to_gutenberg(block):
                     # column regardless of how long this particular post's
                     # excerpt happens to be, instead of it landing right
                     # after wherever the text above it ends.
+                    # "migration-push-bottom" carries this via className --
+                    # see _role_style_bits()'s docstring for why an inline
+                    # style with no matching JSON attribute fails
+                    # Gutenberg's block validation.
                     parts.append(
-                        '<!-- wp:paragraph -->\n'
-                        f'<p style="margin-top:auto"><a href="{url_escaped}">Continue Reading</a></p>\n'
+                        '<!-- wp:paragraph {"className":"migration-push-bottom"} -->\n'
+                        f'<p class="migration-push-bottom"><a href="{url_escaped}">Continue Reading</a></p>\n'
                         '<!-- /wp:paragraph -->'
                     )
 
@@ -712,19 +712,20 @@ def block_to_gutenberg(block):
                 # than a full row of 3 (7 posts = rows of 3, 3, 1) has its
                 # last column stretch to the full row width instead of
                 # staying the same size as every other card.
+                # "migration-flex-column" carries this via className --
+                # see card_group's identical fix for why.
                 column_content = "\n\n".join(parts)
                 column_blocks.append(
-                    '<!-- wp:column {"width":"33.33%"} -->\n'
-                    '<div class="wp-block-column" style="flex-basis:33.33%;display:flex;'
-                    f'flex-direction:column">\n{column_content}\n</div>\n'
+                    '<!-- wp:column {"className":"migration-flex-column"} -->\n'
+                    f'<div class="wp-block-column migration-flex-column">\n{column_content}\n</div>\n'
                     '<!-- /wp:column -->'
                 )
 
             columns_content = "\n\n".join(column_blocks)
             # Same blockGap fix as card_group's row -- see its comment.
             row_blocks.append(
-                '<!-- wp:columns {"align":"wide","style":{"spacing":{"blockGap":"2.5rem"}}} -->\n'
-                '<div class="wp-block-columns alignwide" style="column-gap:2.5rem">\n'
+                '<!-- wp:columns {"align":"wide","className":"migration-columns-gap"} -->\n'
+                '<div class="wp-block-columns alignwide migration-columns-gap">\n'
                 f"{columns_content}\n"
                 '</div>\n'
                 '<!-- /wp:columns -->'
@@ -1349,11 +1350,15 @@ def build_footer_template_part_content(footer, pages_by_slug):
         # own escapes that rule (the same reason nav_block above declares
         # "align":"wide" on itself rather than relying on its parent).
         # So: give the paragraph "alignwide" directly, and do the
-        # centering with an inline style instead, since the "align"
-        # attribute is already spoken for.
+        # centering via "migration-text-center" (className + a real
+        # shared CSS rule, see _extra_css_rules()) instead of an inline
+        # style, since the "align" attribute is already spoken for and
+        # an inline style here with no matching JSON attribute fails
+        # Gutenberg's block validation -- see _role_style_bits()'s
+        # docstring for the same reasoning applied elsewhere.
         copyright_block = (
-            '<!-- wp:paragraph {"align":"wide","fontSize":"small"} -->\n'
-            f'<p class="alignwide has-small-font-size" style="text-align:center">{copyright_html}</p>\n'
+            '<!-- wp:paragraph {"align":"wide","fontSize":"small","className":"migration-text-center"} -->\n'
+            f'<p class="alignwide has-small-font-size migration-text-center">{copyright_html}</p>\n'
             "<!-- /wp:paragraph -->\n"
         )
 
@@ -1987,16 +1992,42 @@ def _extra_css_rules(brand):
     rules this important to drop silently."""
     rules = []
 
-    # The logo's real sizing mechanism, confirmed against the live site's
-    # own CSS: height-constrained with auto width (e.g. "height:88px;
-    # width:auto"), not width-constrained. core/site-logo's own "width"
-    # attribute only supports the opposite (fixed width, auto height) --
-    # close enough when the downloaded file's aspect ratio matches
-    # exactly, but a raw CSS override here is exact regardless of any
-    # small mismatch between the file WordPress actually downloaded and
-    # whatever crop the live site's own <img> happened to measure.
+    # The logo's real rendered box, confirmed against the live site's own
+    # <img> via getBoundingClientRect() in brand_agent.py -- not just a
+    # height to scale from. WordPress's importer can only ever download
+    # GoDaddy's *uncropped* original asset here: canonical_attachment_url()
+    # has to truncate the URL right after its file extension for
+    # WordPress's fetch_remote_file() to accept it at all, which throws
+    # away the "cg:true" crop-guide directive in brand.json's logo URL --
+    # confirmed via a real site's DevTools inspector, the imported file's
+    # natural size (887x204, aspect ~4.35) is measurably wider/squatter
+    # than the live header's actual rendered logo (278x88, aspect
+    # ~3.16). A plain "height:88px;width:auto" scaled that extra width
+    # right along with it -- still 88px tall as intended, but ~380px
+    # wide instead of ~278px, visibly oversized/off-brand.
+    #
+    # Tried object-fit:cover first (crop to exactly fill 278x88) on the
+    # assumption the uncropped asset just had extra padding around a
+    # smaller mark -- confirmed WRONG by directly viewing the downloaded
+    # file: it's a tightly-fitted two-line lockup (icon + "STRATECON" /
+    # "TECH ADVISORS") with the text running edge to edge, no slack to
+    # crop into. cover clipped real letters off both lines. object-
+    # fit:contain instead scales the whole, undistorted image down to
+    # fit within 278x88 (letterboxed on whichever axis has slack, here
+    # top/bottom, landing around 278x64) -- smaller than the live site's
+    # actual box, but shows the complete, legible logo rather than a
+    # mangled crop. Best available fix without the actual crop GoDaddy's
+    # CDN applied, which WordPress's importer has no way to request.
     logo = (brand or {}).get("logo") or {}
-    if logo.get("height"):
+    if logo.get("height") and logo.get("width"):
+        rules.append(
+            (
+                ".wp-block-site-logo img{height:%dpx!important;width:%dpx!important;"
+                "object-fit:contain!important;object-position:center!important;"
+                "max-height:none!important;max-width:none!important}"
+            ) % (logo["height"], logo["width"])
+        )
+    elif logo.get("height"):
         rules.append(
             (
                 ".wp-block-site-logo img{height:%dpx!important;width:auto!important;"
@@ -2029,6 +2060,36 @@ def _extra_css_rules(brand):
     rules.append(
         ".post-feed-thumbnail img{transition:box-shadow 0.2s ease}"
         ".post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}"
+    )
+
+    # One real CSS rule per typography role's font-size/weight -- see
+    # _role_style_bits()'s docstring for why this lives here (a shared
+    # class) instead of inline on each element.
+    for role, spec in (brand or {}).get("typography", {}).items():
+        size = spec.get("font_size")
+        weight = spec.get("font_weight")
+        if not size and not weight:
+            continue
+        decls = []
+        if size:
+            decls.append(f"font-size:{size}")
+        if weight:
+            decls.append(f"font-weight:{weight}")
+        rules.append(f".{role_class_name(role)}{{{';'.join(decls)}}}")
+
+    # Structural utility classes used in place of untracked inline
+    # styles across block_to_gutenberg() -- see the same validation-
+    # mismatch reasoning as _role_style_bits()'s docstring. Written here
+    # unconditionally (not brand-dependent) since these blocks render
+    # the same way regardless of whether brand.json was supplied.
+    rules.append(
+        ".migration-divider-hr{flex:1 1 auto}"
+        ".migration-section-divider{margin-top:56px;margin-bottom:56px}"
+        ".migration-flex-column{flex-basis:33.33%;display:flex;flex-direction:column}"
+        ".migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}"
+        ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
+        ".migration-push-bottom{margin-top:auto}"
+        ".migration-text-center{text-align:center}"
     )
     return rules
 
