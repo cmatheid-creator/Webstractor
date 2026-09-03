@@ -1982,15 +1982,35 @@ def _darken_hex(hex_color, factor=0.82):
 
 
 def _extra_css_rules(brand):
-    """Raw CSS rules -- logo height/width override, button hover, blog
-    card thumbnail hover -- shared between build_global_styles_content()
-    (its "styles.css" field) and build_custom_css_content() (a fully
-    separate WordPress "Additional CSS" post). Kept as one shared list
-    so the two don't drift out of sync, but written to WordPress as two
-    independent copies -- see build_custom_css_content()'s docstring for
-    why relying on wp_global_styles alone isn't reliable enough for
-    rules this important to drop silently."""
+    """Raw CSS rules -- Google Fonts import, logo height/width override,
+    button hover, blog card thumbnail hover -- shared between
+    build_global_styles_content() (its "styles.css" field) and
+    build_custom_css_content() (a fully separate WordPress "Additional
+    CSS" post). Kept as one shared list so the two don't drift out of
+    sync, but written to WordPress as two independent copies -- see
+    build_custom_css_content()'s docstring for why relying on
+    wp_global_styles alone isn't reliable enough for rules this
+    important to drop silently."""
     rules = []
+
+    # theme.json/global-styles only ever registers a font-family's *name*
+    # (settings.typography.fontFamilies) -- it never fetches the font
+    # file itself, confirmed on a real test import: heading/nav text got
+    # the "has-cabin-font-family" class exactly as intended but rendered
+    # in Georgia/serif anyway, since nothing ever actually loaded "Cabin"
+    # from anywhere. This project's only other fix for that,
+    # build_apply_branding_php(), needs to be run from a shell on the
+    # server -- not an option without cPanel/SSH access. A CSS @import
+    # of the same Google Fonts stylesheet URL, right here in the same
+    # custom_css/global-styles content this function already feeds,
+    # loads the real font with zero server-side execution: WordPress
+    # just writes this CSS into a <style> tag in wp_head, and @import
+    # needs nothing more than that to fetch and apply the real font
+    # files. Must stay the very first rule -- CSS requires @import to
+    # precede every other rule in its stylesheet or browsers discard it.
+    fonts_href = _google_fonts_href(brand or {})
+    if fonts_href:
+        rules.append(f'@import url("{fonts_href}");')
 
     # The logo's real rendered box, confirmed against the live site's own
     # <img> via getBoundingClientRect() in brand_agent.py -- not just a
@@ -2085,7 +2105,19 @@ def _extra_css_rules(brand):
     rules.append(
         ".migration-divider-hr{flex:1 1 auto}"
         ".migration-section-divider{margin-top:56px;margin-bottom:56px}"
-        ".migration-flex-column{flex-basis:33.33%;display:flex;flex-direction:column}"
+        # flex-grow:0 is load-bearing, not decorative: core/columns'
+        # own default layout is a flex row that stretches every child
+        # equally (flex-grow:1, flex-basis:0) via a per-instance
+        # generated class/selector more specific than a single plain
+        # class -- confirmed on a real test import: without !important,
+        # this rule was present in the stylesheet but computed style
+        # still showed flex-grow:1/flex-basis:0, i.e. core's own rule
+        # was winning outright, so a trailing row with just one card
+        # was still free to grow and fill the whole row. !important
+        # sidesteps that specificity fight instead of trying to out-rank
+        # a per-instance selector this code doesn't control the name of.
+        ".migration-flex-column{flex-basis:33.33%!important;flex-grow:0!important;"
+        "display:flex!important;flex-direction:column!important}"
         ".migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}"
         ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
         ".migration-push-bottom{margin-top:auto}"
