@@ -9,7 +9,7 @@
   <title>Trusted Technology Advisers | Cybersecurity Solutions</title>
   <link>https://staging.stratecon-newsite.example</link>
   <description>Migrated from stratecon.tech by the automated migration pipeline (prototype)</description>
-  <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+  <pubDate>Thu, 03 Sep 2026 01:31:11 +0000</pubDate>
   <language>en-US</language>
   <wp:wxr_version>1.2</wp:wxr_version>
   <wp:base_site_url>https://staging.stratecon-newsite.example</wp:base_site_url>
@@ -23,7 +23,7 @@
   <item>
     <title>Trusted Technology Advisers | Cybersecurity Solutions</title>
     <link>https://staging.stratecon-newsite.example/home/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=100</guid>
     <description></description>
@@ -269,8 +269,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (text) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>100</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[home]]></wp:post_name>
@@ -288,7 +288,7 @@
   <item>
     <title>Connectivity</title>
     <link>https://staging.stratecon-newsite.example/connectivity/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=101</guid>
     <description></description>
@@ -461,8 +461,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>101</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[connectivity]]></wp:post_name>
@@ -480,7 +480,7 @@
   <item>
     <title>Blog</title>
     <link>https://staging.stratecon-newsite.example/blog/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=102</guid>
     <description></description>
@@ -761,8 +761,8 @@
 <!-- QA FLAG: post preview images still point at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>102</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[blog]]></wp:post_name>
@@ -780,7 +780,7 @@
   <item>
     <title>Terms of Service</title>
     <link>https://staging.stratecon-newsite.example/terms-of-service/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=103</guid>
     <description></description>
@@ -1103,8 +1103,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>103</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[terms-of-service]]></wp:post_name>
@@ -1122,7 +1122,7 @@
   <item>
     <title>Cybersecurity Insurance: Is It Right for Your SMB?</title>
     <link>https://staging.stratecon-newsite.example/cybersecurity-insurance-is-it-right-for-your-smb/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=104</guid>
     <description></description>
@@ -1349,8 +1349,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>104</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cybersecurity-insurance-is-it-right-for-your-smb]]></wp:post_name>
@@ -1368,7 +1368,7 @@
   <item>
     <title>AI for Sales</title>
     <link>https://staging.stratecon-newsite.example/ai-for-sales-1/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=105</guid>
     <description></description>
@@ -1477,8 +1477,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>105</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-for-sales-1]]></wp:post_name>
@@ -1496,7 +1496,7 @@
   <item>
     <title>Cybersecurity Solutions</title>
     <link>https://staging.stratecon-newsite.example/cybersecurity-solutions/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=106</guid>
     <description></description>
@@ -1757,8 +1757,8 @@
 <!-- QA FLAG: form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>106</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cybersecurity-solutions]]></wp:post_name>
@@ -1776,7 +1776,7 @@
   <item>
     <title>AI Strategy</title>
     <link>https://staging.stratecon-newsite.example/ai-strategy-1/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=107</guid>
     <description></description>
@@ -1900,8 +1900,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>107</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-strategy-1]]></wp:post_name>
@@ -1919,7 +1919,7 @@
   <item>
     <title>Risk Assessment</title>
     <link>https://staging.stratecon-newsite.example/risk-assessment-1/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=108</guid>
     <description></description>
@@ -2036,8 +2036,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>108</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[risk-assessment-1]]></wp:post_name>
@@ -2055,7 +2055,7 @@
   <item>
     <title>Creating and Testing a Business Continuity/Disaster Recovery Plan</title>
     <link>https://staging.stratecon-newsite.example/creating-and-testing-a-business-continuitydisaster-recovery-plan/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=109</guid>
     <description></description>
@@ -2362,8 +2362,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>109</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[creating-and-testing-a-business-continuitydisaster-recovery-plan]]></wp:post_name>
@@ -2381,7 +2381,7 @@
   <item>
     <title>Threat Protection</title>
     <link>https://staging.stratecon-newsite.example/threat-protection/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=110</guid>
     <description></description>
@@ -2570,8 +2570,8 @@
 <!-- QA FLAG: form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>110</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[threat-protection]]></wp:post_name>
@@ -2589,7 +2589,7 @@
   <item>
     <title>The Importance of Regular Cybersecurity Audits for SMBs</title>
     <link>https://staging.stratecon-newsite.example/the-importance-of-regular-cybersecurity-audits-for-smbs/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=111</guid>
     <description></description>
@@ -2700,8 +2700,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>111</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[the-importance-of-regular-cybersecurity-audits-for-smbs]]></wp:post_name>
@@ -2719,7 +2719,7 @@
   <item>
     <title>Threat ID &amp; Detection</title>
     <link>https://staging.stratecon-newsite.example/threat-id-%26-detection/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=112</guid>
     <description></description>
@@ -2863,8 +2863,8 @@
 <!-- QA FLAG: form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>112</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[threat-id-%26-detection]]></wp:post_name>
@@ -2882,7 +2882,7 @@
   <item>
     <title>Services</title>
     <link>https://staging.stratecon-newsite.example/services/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=113</guid>
     <description></description>
@@ -2983,8 +2983,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>113</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[services]]></wp:post_name>
@@ -3002,7 +3002,7 @@
   <item>
     <title>AI Solutions</title>
     <link>https://staging.stratecon-newsite.example/ai-solutions/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=114</guid>
     <description></description>
@@ -3317,8 +3317,8 @@
 <!-- QA FLAG: post preview images still point at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>114</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-solutions]]></wp:post_name>
@@ -3336,7 +3336,7 @@
   <item>
     <title>Privacy Policy</title>
     <link>https://staging.stratecon-newsite.example/privacy-policy/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=115</guid>
     <description></description>
@@ -3539,8 +3539,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>115</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[privacy-policy]]></wp:post_name>
@@ -3558,7 +3558,7 @@
   <item>
     <title>Stratecon Tech Advisors - Unified Communications, Contact Center, Workforce Management</title>
     <link>https://staging.stratecon-newsite.example/communications-solutions/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=116</guid>
     <description></description>
@@ -3715,8 +3715,8 @@
 <!-- QA FLAG: card images still point at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>116</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[communications-solutions]]></wp:post_name>
@@ -3734,7 +3734,7 @@
   <item>
     <title>AI and Data Analytics: Uncovering Business Insights for SMBs</title>
     <link>https://staging.stratecon-newsite.example/ai-and-data-analytics-uncovering-business-insights-for-smbs/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=117</guid>
     <description></description>
@@ -3901,8 +3901,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>117</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-and-data-analytics-uncovering-business-insights-for-smbs]]></wp:post_name>
@@ -3920,7 +3920,7 @@
   <item>
     <title>Supporting Hybrid Work with Effective Collaboration Tools</title>
     <link>https://staging.stratecon-newsite.example/supporting-hybrid-work-with-effective-collaboration-tools/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=118</guid>
     <description></description>
@@ -4047,8 +4047,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>118</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[supporting-hybrid-work-with-effective-collaboration-tools]]></wp:post_name>
@@ -4066,7 +4066,7 @@
   <item>
     <title>Preventing Data Breaches: 8 Essential Strategies for SMBs</title>
     <link>https://staging.stratecon-newsite.example/preventing-data-breaches-8-essential-strategies-for-smbs/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=119</guid>
     <description></description>
@@ -4161,8 +4161,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>119</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[preventing-data-breaches-8-essential-strategies-for-smbs]]></wp:post_name>
@@ -4180,7 +4180,7 @@
   <item>
     <title>Unified Communications</title>
     <link>https://staging.stratecon-newsite.example/unified-communications/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=120</guid>
     <description></description>
@@ -4293,8 +4293,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>120</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[unified-communications]]></wp:post_name>
@@ -4312,7 +4312,7 @@
   <item>
     <title>Building a Cybersecurity-Aware Culture in Your Business</title>
     <link>https://staging.stratecon-newsite.example/building-a-cybersecurity-aware-culture-in-your-business/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=121</guid>
     <description></description>
@@ -4455,8 +4455,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>121</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[building-a-cybersecurity-aware-culture-in-your-business]]></wp:post_name>
@@ -4474,7 +4474,7 @@
   <item>
     <title>Leveraging AI to Optimize Your Marketing Strategies</title>
     <link>https://staging.stratecon-newsite.example/leveraging-ai-to-optimize-your-marketing-strategies/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=122</guid>
     <description></description>
@@ -4597,8 +4597,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>122</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[leveraging-ai-to-optimize-your-marketing-strategies]]></wp:post_name>
@@ -4616,7 +4616,7 @@
   <item>
     <title>Customer Experience</title>
     <link>https://staging.stratecon-newsite.example/customer-experience/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=123</guid>
     <description></description>
@@ -4829,8 +4829,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>123</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[customer-experience]]></wp:post_name>
@@ -4848,7 +4848,7 @@
   <item>
     <title>Cybersecurity Compliance for SMBs: What You Need to Know</title>
     <link>https://staging.stratecon-newsite.example/cybersecurity-compliance-for-smbs-what-you-need-to-know/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=124</guid>
     <description></description>
@@ -5087,8 +5087,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>124</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cybersecurity-compliance-for-smbs-what-you-need-to-know]]></wp:post_name>
@@ -5106,7 +5106,7 @@
   <item>
     <title>Managing Communications in a Multi-Generational Workforce</title>
     <link>https://staging.stratecon-newsite.example/managing-communications-in-a-multi-generational-workforce/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=125</guid>
     <description></description>
@@ -5301,8 +5301,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>125</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[managing-communications-in-a-multi-generational-workforce]]></wp:post_name>
@@ -5320,7 +5320,7 @@
   <item>
     <title>Leveraging AI for Enhanced Customer Service</title>
     <link>https://staging.stratecon-newsite.example/leveraging-ai-for-enhanced-customer-service/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=126</guid>
     <description></description>
@@ -5515,8 +5515,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>126</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[leveraging-ai-for-enhanced-customer-service]]></wp:post_name>
@@ -5534,7 +5534,7 @@
   <item>
     <title>Stratecon Tech Advisors | Technology Advisory Services</title>
     <link>https://staging.stratecon-newsite.example/about/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=127</guid>
     <description></description>
@@ -5645,8 +5645,8 @@
 <!-- /wp:group -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>127</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[about]]></wp:post_name>
@@ -5664,7 +5664,7 @@
   <item>
     <title>10 Essential Cybersecurity Practices for SMBs in 2024</title>
     <link>https://staging.stratecon-newsite.example/10-essential-cybersecurity-practices-for-smbs-in-2024/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=128</guid>
     <description></description>
@@ -5815,8 +5815,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>128</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[10-essential-cybersecurity-practices-for-smbs-in-2024]]></wp:post_name>
@@ -5834,7 +5834,7 @@
   <item>
     <title>IT Advisor Services</title>
     <link>https://staging.stratecon-newsite.example/contact/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=129</guid>
     <description></description>
@@ -5917,8 +5917,8 @@
 <!-- QA FLAG: form 2 on this page had fields: (unnamed) (text) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>129</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[contact]]></wp:post_name>
@@ -5936,7 +5936,7 @@
   <item>
     <title>AI for Customer Service</title>
     <link>https://staging.stratecon-newsite.example/ai-for-customer-service/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=130</guid>
     <description></description>
@@ -6041,8 +6041,8 @@
 <!-- QA FLAG: image still points at the original site -- swap to the re-hosted media-library copy after import. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>130</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-for-customer-service]]></wp:post_name>
@@ -6060,7 +6060,7 @@
   <item>
     <title>Cyber Risk Assessment</title>
     <link>https://staging.stratecon-newsite.example/cyber-risk-assessment/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=131</guid>
     <description></description>
@@ -6100,8 +6100,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>131</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cyber-risk-assessment]]></wp:post_name>
@@ -6119,7 +6119,7 @@
   <item>
     <title>Top 5 Security Considerations When Utilizing Generative AI</title>
     <link>https://staging.stratecon-newsite.example/top-5-security-considerations-when-utilizing-generative-ai/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=132</guid>
     <description></description>
@@ -6242,8 +6242,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>132</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[top-5-security-considerations-when-utilizing-generative-ai]]></wp:post_name>
@@ -6261,7 +6261,7 @@
   <item>
     <title>AI Use Policy Template</title>
     <link>https://staging.stratecon-newsite.example/ai-use-policy-template/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=133</guid>
     <description></description>
@@ -6292,8 +6292,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>133</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-use-policy-template]]></wp:post_name>
@@ -6311,7 +6311,7 @@
   <item>
     <title>AI Disclosure Template</title>
     <link>https://staging.stratecon-newsite.example/ai-disclosure-template/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=134</guid>
     <description></description>
@@ -6342,8 +6342,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>134</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-disclosure-template]]></wp:post_name>
@@ -6361,7 +6361,7 @@
   <item>
     <title>STRATECON TECH</title>
     <link>https://staging.stratecon-newsite.example/contact-us/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=135</guid>
     <description></description>
@@ -6374,8 +6374,8 @@
 <!-- /wp:paragraph -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>135</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[contact-us]]></wp:post_name>
@@ -6393,7 +6393,7 @@
   <item>
     <title>The Spider-Man* Dilemma: Building an AI Strategy</title>
     <link>https://staging.stratecon-newsite.example/the-spider-mantm-dilemma-building-an-ai-strategy/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=136</guid>
     <description></description>
@@ -6508,8 +6508,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>136</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[the-spider-mantm-dilemma-building-an-ai-strategy]]></wp:post_name>
@@ -6527,7 +6527,7 @@
   <item>
     <title>How AI Can Transform Your Small to Medium Business</title>
     <link>https://staging.stratecon-newsite.example/how-ai-can-transform-your-small-to-medium-business/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?page_id=137</guid>
     <description></description>
@@ -6718,8 +6718,8 @@
 <!-- QA FLAG: form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin. -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>137</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[how-ai-can-transform-your-small-to-medium-business]]></wp:post_name>
@@ -6737,15 +6737,15 @@
   <item>
     <title>3d-internet-secuirty-badge</title>
     <link>https://staging.stratecon-newsite.example/3d-internet-secuirty-badge/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/3d-internet-secuirty-badge.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10000</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[3d-internet-secuirty-badge]]></wp:post_name>
@@ -6764,15 +6764,15 @@
   <item>
     <title>hurricane-58025-1280</title>
     <link>https://staging.stratecon-newsite.example/hurricane-58025-1280/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/hurricane-58025_1280.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10001</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[hurricane-58025-1280]]></wp:post_name>
@@ -6791,15 +6791,15 @@
   <item>
     <title>compliance-5899194-1280</title>
     <link>https://staging.stratecon-newsite.example/compliance-5899194-1280/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/compliance-5899194_1280.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10002</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[compliance-5899194-1280]]></wp:post_name>
@@ -6818,15 +6818,15 @@
   <item>
     <title>entrepreneur-marketing</title>
     <link>https://staging.stratecon-newsite.example/entrepreneur-marketing/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/entrepreneur-marketing.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10003</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[entrepreneur-marketing]]></wp:post_name>
@@ -6845,15 +6845,15 @@
   <item>
     <title>privacy-5400383-1280</title>
     <link>https://staging.stratecon-newsite.example/privacy-5400383-1280/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/privacy-5400383_1280.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10004</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[privacy-5400383-1280]]></wp:post_name>
@@ -6872,15 +6872,15 @@
   <item>
     <title>multiple-20people-20network</title>
     <link>https://staging.stratecon-newsite.example/multiple-20people-20network/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Multiple%20People%20network.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10005</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[multiple-20people-20network]]></wp:post_name>
@@ -6899,15 +6899,15 @@
   <item>
     <title>cyber-20training-20example</title>
     <link>https://staging.stratecon-newsite.example/cyber-20training-20example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Cyber%20Training%20example.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10006</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cyber-20training-20example]]></wp:post_name>
@@ -6926,15 +6926,15 @@
   <item>
     <title>woman-20analyzing-20data</title>
     <link>https://staging.stratecon-newsite.example/woman-20analyzing-20data/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Woman%20analyzing%20data.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10007</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[woman-20analyzing-20data]]></wp:post_name>
@@ -6953,15 +6953,15 @@
   <item>
     <title>woman-20remote-20worker</title>
     <link>https://staging.stratecon-newsite.example/woman-20remote-20worker/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Woman%20remote%20worker.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10008</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[woman-20remote-20worker]]></wp:post_name>
@@ -6980,15 +6980,15 @@
   <item>
     <title>smb-20cybersecurity-202</title>
     <link>https://staging.stratecon-newsite.example/smb-20cybersecurity-202/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/SMB%20Cybersecurity%202.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10009</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[smb-20cybersecurity-202]]></wp:post_name>
@@ -7007,15 +7007,15 @@
   <item>
     <title>Image of a keyboard with yellow font "74%" floating in front of it</title>
     <link>https://staging.stratecon-newsite.example/blob-daa1b50/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/blob-daa1b50.png</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10010</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[blob-daa1b50]]></wp:post_name>
@@ -7034,15 +7034,15 @@
   <item>
     <title>Image of green data streaming down a black screen with yellow font "86%" floating in front of it</title>
     <link>https://staging.stratecon-newsite.example/blob-de23452/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/blob-de23452.png</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10011</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[blob-de23452]]></wp:post_name>
@@ -7061,15 +7061,15 @@
   <item>
     <title>Image of racks of equipment in a data center with yellow font "41%" floating in front of it</title>
     <link>https://staging.stratecon-newsite.example/blob-dd0cd1c/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/blob-dd0cd1c.png</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10012</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[blob-dd0cd1c]]></wp:post_name>
@@ -7088,15 +7088,15 @@
   <item>
     <title>Digital  picture of a white padlock surrounded by concentric circles in varying shades of blue</title>
     <link>https://staging.stratecon-newsite.example/cyber-20lock/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Cyber%20Lock.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10013</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cyber-20lock]]></wp:post_name>
@@ -7115,15 +7115,15 @@
   <item>
     <title>Digital picture of a white padlock surrounded by the words "secure access control"</title>
     <link>https://staging.stratecon-newsite.example/cyber-secure-20access/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/cyber-secure%20access.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10014</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cyber-secure-20access]]></wp:post_name>
@@ -7142,15 +7142,15 @@
   <item>
     <title>Green data on black background with a hooded person sitting in front of computer screens - hacker</title>
     <link>https://staging.stratecon-newsite.example/hacker-8033977-1280/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/hacker-8033977_1280.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10015</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[hacker-8033977-1280]]></wp:post_name>
@@ -7169,15 +7169,15 @@
   <item>
     <title>ai-20customer-20service</title>
     <link>https://staging.stratecon-newsite.example/ai-20customer-20service/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/AI%20Customer%20Service.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10016</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-20customer-20service]]></wp:post_name>
@@ -7196,15 +7196,15 @@
   <item>
     <title>ai-20for-20smb</title>
     <link>https://staging.stratecon-newsite.example/ai-20for-20smb/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/AI%20for%20SMB.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10017</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[ai-20for-20smb]]></wp:post_name>
@@ -7223,15 +7223,15 @@
   <item>
     <title>spiderman-5561671-1280</title>
     <link>https://staging.stratecon-newsite.example/spiderman-5561671-1280/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/spiderman-5561671_1280.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10018</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[spiderman-5561671-1280]]></wp:post_name>
@@ -7250,15 +7250,15 @@
   <item>
     <title>tech-20hands-20touching</title>
     <link>https://staging.stratecon-newsite.example/tech-20hands-20touching/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/tech%20hands%20touching.jpg</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10019</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[tech-20hands-20touching]]></wp:post_name>
@@ -7277,15 +7277,15 @@
   <item>
     <title>Man in business suit holding his hand out and virtual charts hovering above it</title>
     <link>https://staging.stratecon-newsite.example/virtual-20charts/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Virtual%20charts.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10020</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[virtual-20charts]]></wp:post_name>
@@ -7304,15 +7304,15 @@
   <item>
     <title>Image of Stratecon founder Carver Matheidas in a business suit</title>
     <link>https://staging.stratecon-newsite.example/carver-20headshot-web/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Carver%20Headshot_web.png</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10021</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[carver-20headshot-web]]></wp:post_name>
@@ -7331,15 +7331,15 @@
   <item>
     <title>Cyber criminal surrounded by security and network icons</title>
     <link>https://staging.stratecon-newsite.example/cybersecurity-20criminal/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/cybersecurity%20criminal.webp</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>10022</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[cybersecurity-20criminal]]></wp:post_name>
@@ -7358,15 +7358,15 @@
   <item>
     <title>Home</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20000</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20000</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7401,15 +7401,15 @@
   <item>
     <title>AI</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20001</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20001</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7444,15 +7444,15 @@
   <item>
     <title>AI Solutions</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20002</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20002</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7487,15 +7487,15 @@
   <item>
     <title>AI Strategy</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20003</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20003</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7530,15 +7530,15 @@
   <item>
     <title>AI for Sales</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20004</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20004</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7573,15 +7573,15 @@
   <item>
     <title>AI for Customer Service</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20005</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20005</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7616,15 +7616,15 @@
   <item>
     <title>Communications</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20006</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20006</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7659,15 +7659,15 @@
   <item>
     <title>Communications Solutions</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20007</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20007</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7702,15 +7702,15 @@
   <item>
     <title>Connectivity</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20008</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20008</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7745,15 +7745,15 @@
   <item>
     <title>Customer Experience</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20009</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20009</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7788,15 +7788,15 @@
   <item>
     <title>Unified Communications</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20010</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20010</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7831,15 +7831,15 @@
   <item>
     <title>Cybersecurity</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20011</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20011</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7874,15 +7874,15 @@
   <item>
     <title>Cybersecurity Solutions</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20012</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20012</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7917,15 +7917,15 @@
   <item>
     <title>Risk Assessment</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20013</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20013</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -7960,15 +7960,15 @@
   <item>
     <title>Threat ID &amp; Detection</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20014</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20014</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8003,15 +8003,15 @@
   <item>
     <title>Threat Protection</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20015</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20015</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8046,15 +8046,15 @@
   <item>
     <title>Services</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20016</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20016</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8089,15 +8089,15 @@
   <item>
     <title>Blog</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20017</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20017</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8132,15 +8132,15 @@
   <item>
     <title>Contact</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20018</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20018</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8175,15 +8175,15 @@
   <item>
     <title>About</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=20019</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>20019</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[]]></wp:post_name>
@@ -8218,7 +8218,7 @@
   <item>
     <title>Migrated Site Menu</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=30000</guid>
     <description></description>
@@ -8247,8 +8247,8 @@
 <!-- wp:navigation-link {"label":"About","type":"page","id":127,"url":"https://staging.stratecon-newsite.example/about/","kind":"post-type"} /-->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>30000</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[migrated-site-menu]]></wp:post_name>
@@ -8262,7 +8262,7 @@
   <item>
     <title>Header</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=40000</guid>
     <description></description>
@@ -8278,8 +8278,8 @@
 <!-- /wp:group -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40000</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[header]]></wp:post_name>
@@ -8295,7 +8295,7 @@
   <item>
     <title>Footer</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:10 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=40001</guid>
     <description></description>
@@ -8328,8 +8328,8 @@
 <!-- /wp:group -->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40001</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:10]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:10]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[footer]]></wp:post_name>
@@ -8345,15 +8345,15 @@
   <item>
     <title>Custom Styles</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:11 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=40002</guid>
     <description></description>
-    <content:encoded><![CDATA[{"version":2,"isGlobalStylesUserThemeJSON":true,"settings":{"color":{"palette":[{"slug":"background","color":"#ffffff","name":"Background"},{"slug":"foreground","color":"#5e5e5e","name":"Text"},{"slug":"primary","color":"#1d2b52","name":"Primary (Button)"},{"slug":"primary-text","color":"#fafafa","name":"Primary Button Text"},{"slug":"link","color":"#1d2b52","name":"Link"},{"slug":"footer-background","color":"#f6f6f6","name":"Footer Background"}]},"typography":{"fontFamilies":[{"slug":"playfair-display","fontFamily":"\"Playfair Display\", Georgia, serif","name":"Heading"},{"slug":"cabin","fontFamily":"Cabin, Georgia, serif","name":"Body"}]}},"styles":{"color":{"background":"var:preset|color|background","text":"var:preset|color|foreground"},"typography":{"fontFamily":"var:preset|font-family|cabin"},"elements":{"link":{"color":{"text":"var:preset|color|link"}},"button":{"color":{"background":"var:preset|color|primary","text":"var:preset|color|primary-text"},":hover":{"color":{"background":"#182343"}}}},"css":"@import url(\"https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Cabin:wght@400;600&display=swap\");.wp-block-site-logo img{height:88px!important;width:278px!important;object-fit:contain!important;object-position:center!important;max-height:none!important;max-width:none!important}.wp-element-button:hover,.wp-block-button__link:hover{background-color:#182343!important}.post-feed-thumbnail img{transition:box-shadow 0.2s ease}.post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}.has-role-headingalpha{font-size:44px;font-weight:400}.has-role-headingbeta{font-size:32px;font-weight:400}.has-role-headingdelta{font-size:22px;font-weight:400}.has-role-bodyalpha{font-size:16px;font-weight:400}.has-role-buttonalpha{font-size:14px;font-weight:600}.has-role-linkalpha{font-size:16px;font-weight:400}.has-role-navalpha{font-size:14px;font-weight:600}.migration-divider-hr{flex:1 1 auto}.migration-section-divider{margin-top:56px;margin-bottom:56px}.migration-flex-column{flex-basis:33.33%!important;flex-grow:0!important;display:flex!important;flex-direction:column!important}.migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}.migration-cta-buttons{margin-top:auto;padding-top:1.5rem}.migration-push-bottom{margin-top:auto}.migration-text-center{text-align:center}"}}]]></content:encoded>
+    <content:encoded><![CDATA[{"version":2,"isGlobalStylesUserThemeJSON":true,"settings":{"color":{"palette":[{"slug":"background","color":"#ffffff","name":"Background"},{"slug":"foreground","color":"#5e5e5e","name":"Text"},{"slug":"primary","color":"#1d2b52","name":"Primary (Button)"},{"slug":"primary-text","color":"#fafafa","name":"Primary Button Text"},{"slug":"link","color":"#1d2b52","name":"Link"},{"slug":"footer-background","color":"#f6f6f6","name":"Footer Background"}]},"typography":{"fontFamilies":[{"slug":"playfair-display","fontFamily":"\"Playfair Display\", Georgia, serif","name":"Heading","fontFace":[{"fontFamily":"Playfair Display","fontStyle":"normal","fontWeight":"400","src":["https://fonts.gstatic.com/s/playfairdisplay/v40/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtM.woff2"]}]},{"slug":"cabin","fontFamily":"Cabin, Georgia, serif","name":"Body","fontFace":[{"fontFamily":"Cabin","fontStyle":"normal","fontWeight":"400","src":["https://fonts.gstatic.com/s/cabin/v35/u-4i0qWljRw-PfU81xCKCpdpbgZJl6Xvqdns.woff2"]},{"fontFamily":"Cabin","fontStyle":"normal","fontWeight":"600","src":["https://fonts.gstatic.com/s/cabin/v35/u-4i0qWljRw-PfU81xCKCpdpbgZJl6Xvqdns.woff2"]}]}]}},"styles":{"color":{"background":"var:preset|color|background","text":"var:preset|color|foreground"},"typography":{"fontFamily":"var:preset|font-family|cabin"},"elements":{"link":{"color":{"text":"var:preset|color|link"}},"button":{"color":{"background":"var:preset|color|primary","text":"var:preset|color|primary-text"},":hover":{"color":{"background":"#182343"}}}},"css":"@import url(\"https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Cabin:wght@400;600&display=swap\");.wp-block-site-logo img{height:88px!important;width:278px!important;object-fit:contain!important;object-position:center!important;max-height:none!important;max-width:none!important}.wp-element-button:hover,.wp-block-button__link:hover{background-color:#182343!important}.post-feed-thumbnail img{transition:box-shadow 0.2s ease}.post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}.has-role-headingalpha{font-size:44px;font-weight:400}.has-role-headingbeta{font-size:32px;font-weight:400}.has-role-headingdelta{font-size:22px;font-weight:400}.has-role-bodyalpha{font-size:16px;font-weight:400}.has-role-buttonalpha{font-size:14px;font-weight:600}.has-role-linkalpha{font-size:16px;font-weight:400}.has-role-navalpha{font-size:14px;font-weight:600}.migration-divider-hr{flex:1 1 auto}.migration-section-divider{margin-top:56px;margin-bottom:56px}.migration-flex-column{flex-basis:33.33%!important;flex-grow:0!important;display:flex!important;flex-direction:column!important}.migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}.migration-cta-buttons{margin-top:auto;padding-top:1.5rem}.migration-push-bottom{margin-top:auto}.migration-text-center{text-align:center}"}}]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40002</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:11]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:11]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[wp-global-styles-twentytwentyfour]]></wp:post_name>
@@ -8368,15 +8368,15 @@
   <item>
     <title>twentytwentyfour</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:11 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=40005</guid>
     <description></description>
     <content:encoded><![CDATA[@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Cabin:wght@400;600&display=swap");.wp-block-site-logo img{height:88px!important;width:278px!important;object-fit:contain!important;object-position:center!important;max-height:none!important;max-width:none!important}.wp-element-button:hover,.wp-block-button__link:hover{background-color:#182343!important}.post-feed-thumbnail img{transition:box-shadow 0.2s ease}.post-feed-thumbnail img:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18)}.has-role-headingalpha{font-size:44px;font-weight:400}.has-role-headingbeta{font-size:32px;font-weight:400}.has-role-headingdelta{font-size:22px;font-weight:400}.has-role-bodyalpha{font-size:16px;font-weight:400}.has-role-buttonalpha{font-size:14px;font-weight:600}.has-role-linkalpha{font-size:16px;font-weight:400}.has-role-navalpha{font-size:14px;font-weight:600}.migration-divider-hr{flex:1 1 auto}.migration-section-divider{margin-top:56px;margin-bottom:56px}.migration-flex-column{flex-basis:33.33%!important;flex-grow:0!important;display:flex!important;flex-direction:column!important}.migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}.migration-cta-buttons{margin-top:auto;padding-top:1.5rem}.migration-push-bottom{margin-top:auto}.migration-text-center{text-align:center}]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40005</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:11]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:11]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[twentytwentyfour]]></wp:post_name>
@@ -8390,7 +8390,7 @@
   <item>
     <title>Page</title>
     <link>https://staging.stratecon-newsite.example/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:11 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://staging.stratecon-newsite.example/?p=40003</guid>
     <description></description>
@@ -8405,8 +8405,8 @@
 <!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40003</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:11]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:11]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[page]]></wp:post_name>
@@ -8421,15 +8421,15 @@
   <item>
     <title>STRATECON TECH ADVISORS</title>
     <link>https://staging.stratecon-newsite.example/22a28f51-fa97-43af-906c-309373c738aa/</link>
-    <pubDate>Thu, 03 Sep 2026 00:47:33 +0000</pubDate>
+    <pubDate>Thu, 03 Sep 2026 01:31:11 +0000</pubDate>
     <dc:creator><![CDATA[migration-agent]]></dc:creator>
     <guid isPermaLink="false">https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png</guid>
     <description></description>
     <content:encoded><![CDATA[]]></content:encoded>
     <excerpt:encoded><![CDATA[]]></excerpt:encoded>
     <wp:post_id>40004</wp:post_id>
-    <wp:post_date><![CDATA[2026-09-03 00:47:33]]></wp:post_date>
-    <wp:post_date_gmt><![CDATA[2026-09-03 00:47:33]]></wp:post_date_gmt>
+    <wp:post_date><![CDATA[2026-09-03 01:31:11]]></wp:post_date>
+    <wp:post_date_gmt><![CDATA[2026-09-03 01:31:11]]></wp:post_date_gmt>
     <wp:comment_status><![CDATA[closed]]></wp:comment_status>
     <wp:ping_status><![CDATA[closed]]></wp:ping_status>
     <wp:post_name><![CDATA[22a28f51-fa97-43af-906c-309373c738aa]]></wp:post_name>

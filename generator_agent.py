@@ -23,6 +23,7 @@ import re
 import hashlib
 from datetime import datetime, timezone
 from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 from xml.sax.saxutils import escape as xml_escape
 
 # Set once by build_wxr() and read by block_to_gutenberg() and
@@ -2184,6 +2185,26 @@ def build_global_styles_content(brand):
     if not palette and not font_families:
         return None
 
+    # Attach real @font-face data (fetched from Google Fonts -- see
+    # _fetch_google_font_faces()'s docstring for why this, not a CSS
+    # @import, is what actually gets these fonts to load) to each
+    # family entry via theme.json v2's native "fontFace" schema.
+    # WordPress's own font-loading pipeline (WP_Font_Face_Resolver)
+    # picks this straight out of settings.typography.fontFamilies and
+    # prints the real @font-face CSS in wp_head -- no @import, no PHP
+    # execution, and not dependent on anything this project's own
+    # generated CSS controls. A family this couldn't fetch faces for
+    # (no internet access when this script ran, or Google Fonts
+    # unreachable) just keeps registering its name with no "fontFace",
+    # same as before -- the font falls back to its stack's next entry,
+    # exactly like today, rather than failing the whole build.
+    faces_by_family = _fetch_google_font_faces(brand)
+    for f in font_families:
+        primary_name = f["fontFamily"].split(",")[0].strip().strip("\"'")
+        faces = faces_by_family.get(primary_name)
+        if faces:
+            f["fontFace"] = faces
+
     styles = {}
     color_styles = {}
     if "background" in palette:
@@ -2332,6 +2353,84 @@ def _google_fonts_href(brand):
         family_params.append(f"family={name_param}:wght@{';'.join(weights)}")
 
     return "https://fonts.googleapis.com/css2?" + "&".join(family_params) + "&display=swap"
+
+
+_FONT_FACE_RE = re.compile(
+    r"font-family:\s*'([^']+)';\s*"
+    r"font-style:\s*(\w+);\s*"
+    r"font-weight:\s*(\d+);.*?"
+    r"src:\s*url\(([^)]+)\)\s*format\('(\w+)'\)",
+    re.DOTALL,
+)
+
+
+def _fetch_google_font_faces(brand):
+    """Real @font-face src URLs (one per family+weight) for every font
+    brand.json found, fetched from Google's own CSS2 endpoint -- not
+    just the stylesheet *link* build_apply_branding_php() and the
+    _google_fonts_href()-based @import both rely on, which need
+    something to actually execute for the browser to fetch the font
+    (server-side PHP for the first, and confirmed unreliable in
+    practice for the second: on a real test site with CSS optimization/
+    minification active -- a common WordPress performance-plugin
+    feature, and SiteGround's own SG Optimizer plugin was active on the
+    one this was tested against -- @import is a well-known casualty of
+    that kind of processing, since combining/minifying stylesheets
+    often drops or reorders it, and CSS requires @import to be the
+    first rule in its stylesheet or browsers discard it outright).
+
+    These URLs get embedded directly in build_global_styles_content()'s
+    settings.typography.fontFamilies[].fontFace, WordPress's own native
+    font-loading schema (see WP_Font_Face_Resolver::
+    get_fonts_from_theme_json(), core since WP 6.4) -- the same
+    mechanism Appearance > Editor > Styles > Fonts uses when a person
+    installs a Google Font by hand, which is already confirmed to work
+    on the real site this was built against. WordPress generates the
+    real @font-face CSS from this itself and prints it in wp_head, no
+    @import or PHP execution involved.
+
+    Requires real internet access to Google Fonts -- unlike the rest of
+    this script, which only ever reads local JSON. Returns {} (not an
+    error) if the fetch fails for any reason, since a sandboxed/offline
+    run of this script is a normal case, not a bug: build_global_styles_
+    content() falls back to just registering the font names without
+    "fontFace" entries, same as before this existed.
+    """
+    href = _google_fonts_href(brand)
+    if not href:
+        return {}
+
+    try:
+        req = Request(
+            href,
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+                )
+            },
+        )
+        with urlopen(req, timeout=15) as resp:
+            css_text = resp.read().decode("utf-8", errors="replace")
+    except Exception:
+        return {}
+
+    # Google's response repeats each family+weight once per unicode-range
+    # subset (cyrillic, vietnamese, latin-ext, latin, ...); the broadest,
+    # most essential "latin" block reliably comes last in every response
+    # observed from this endpoint, so keeping the LAST match per
+    # (family, weight, style) -- rather than the first -- lands on that
+    # one instead of a narrow-coverage subset.
+    faces_by_family = {}
+    for family, style, weight, src, fmt in _FONT_FACE_RE.findall(css_text):
+        faces_by_family.setdefault(family, {})[(weight, style)] = {
+            "fontFamily": family,
+            "fontStyle": style,
+            "fontWeight": weight,
+            "src": [src],
+        }
+
+    return {family: list(faces.values()) for family, faces in faces_by_family.items()}
 
 
 def build_apply_branding_php(brand):
