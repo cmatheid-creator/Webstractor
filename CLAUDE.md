@@ -51,41 +51,113 @@ a clean in-scope example.
 
 ## What's already built and proven (in this folder)
 
-- `structured_content.json` — Content Structuring Agent output for 4 real pages
-  (Home, About, Services, Contact), manually built from real fetched content in
-  the planning conversation. **12 more pages are marked `not_yet_extracted`** in
-  the nav section — the sub-pages under AI/Communications/Cybersecurity, plus
-  the Blog.
-- `generator_agent.py` — real, tested. Converts `structured_content.json` into
-  `stratecon-migration.xml` (valid WXR, verified by parsing it), `redirects.csv`,
-  and `qa_report.md`. Run it again on richer input and it scales.
-- `crawler_agent.py` — **written but NOT yet run against a real site**. It compiles
-  cleanly (verified with `py_compile`) but was built in a sandboxed environment
-  with no internet access, so it's untested against real-world HTML. Expect
-  issues on first real run — that's normal, not a design failure. It uses
-  Playwright, does headless-browser rendering (needed since GoDaddy Website
-  Builder pages are JS-rendered), and outputs directly into the same JSON schema
-  `generator_agent.py` consumes. It also runs a first-pass Qualification Agent
-  (regex-based) that flags/skips pages matching payment/login/forum patterns.
+Superseded the original prototype status below — this has been run against the
+real site repeatedly, end to end, across many iteration rounds:
 
-## Immediate next step
+- `crawler_agent.py` — run for real against https://stratecon.tech (all ~16+
+  pages, including AI/Communications/Cybersecurity sub-pages and the blog).
+  Captures headings/paragraphs/lists with their real GoDaddy `data-typography`
+  role and a safe inline-HTML fragment (bold/italic/links preserved via
+  `element_inline_html()`), card groups, post-feed ("AI Insights") cards, and
+  media-text pairs. `structured_content.json` in this folder is real crawled
+  output, not the original 4-page hand-built sample.
+- `brand_agent.py` — run for real; `brand.json` in this folder is real
+  extracted logo/colors/typography from the live site's computed styles.
+- `generator_agent.py` — heavily extended well past the original prototype.
+  Applies real brand typography (font/size/weight/color) to headings,
+  paragraphs, lists, nav, and buttons; generates a real header/footer template
+  part, global styles (colors, fonts, logo sizing), a `custom_css` WXR item as
+  a resilient second delivery path for CSS overrides, and — as of the most
+  recent round — real `@font-face` data fetched live from Google Fonts and
+  embedded via WordPress's native font-loading schema (`settings.typography.
+  fontFamilies[].fontFace`), so brand fonts load without needing shell access
+  to run `apply_branding.php`. Also dedupes re-hosted images by canonical URL
+  (`display_image_url()`) so the same photo doesn't get downloaded 2-3 times
+  under different GoDaddy CDN resize-suffixed URLs. All hand-authored Gutenberg
+  markup has been checked against real block-editor validation (not just
+  front-end rendering) — every custom style/class hook uses `className` +
+  a real CSS rule instead of an untracked inline `style=`, since the latter
+  reliably produces "Block contains unexpected or invalid content" in the
+  editor.
+- A local WordPress test install (fresh installs + the actual WordPress
+  Importer plugin) has been used repeatedly this project to verify generated
+  WXR files end to end — real import, real Site Editor, real block-editor
+  validation — before ever handing a file to Carver. Prefer this over
+  reasoning about markup from first principles when something looks wrong;
+  guessing has produced real regressions before (see "flex-grow" note below).
 
-1. Install dependencies: `pip install playwright && playwright install chromium`
-2. Run: `python3 crawler_agent.py https://stratecon.tech`
-3. Debug whatever breaks — first crawls against a real site reliably surface
-   issues (accordion markup, form detection, pagination, etc. can vary from what
-   the extraction heuristics expect).
-4. Feed the resulting `structured_content.json` into `generator_agent.py` and
-   verify the output WXR file covers the whole site, not just the original 4 pages.
-5. Once that works end to end for stratecon.tech, the next gaps to close (not yet
-   built): image download/re-hosting, brand/style (CSS) extraction, and the
-   Qualification Agent needs to move from regex heuristics to something more
-   robust before this is trusted on client sites it hasn't been tuned against.
+## Dev site workflow (dev.stratecon.tech)
 
-## Open questions / things flagged for review, not yet resolved
+Carver's real WordPress dev/staging site, hosted on SiteGround, used to
+validate each generated WXR before anything goes near the real
+stratecon.tech. The manual reset→reimport→verify loop, in order:
 
-- Contact form's exact fields weren't fully visible in extracted content — needs
-  confirmation against the live site before any real migration goes live.
-- Newsletter signup is mapped to a placeholder shortcode — needs to be wired to
-  whatever email tool the new site will actually use.
-- No image handling built yet at all.
+1. Full WP Reset (WP Reset plugin)
+2. Reactivate theme (Twenty Twenty-Four) — usually already stays active
+3. Reactivate WordPress Importer plugin — usually already stays active
+4. Settings → Permalinks → **Post name** → Save Changes (a full reset drops
+   this back to "Plain", which 404s every non-homepage URL — this step is not
+   optional)
+5. Import the generated `stratecon-migration.xml`
+6. Publish all imported pages (they land as drafts)
+7. Set Site Logo: Appearance → Editor → Styles → (or the identity/logo
+   picker) → select the already-imported logo attachment from Media
+   Library — **do this only after step 5**, never before. Touching the Site
+   Editor before importing has previously caused WordPress to lazily create a
+   stub row for the theme's own header/footer template parts or global
+   styles, which collides with the real imported ones on a slug/singleton
+   basis and silently keeps the stub active instead. Import first, always.
+8. Verify — screenshots or, if this session has direct site access (see
+   below), a real Playwright pass across the pages that changed.
+
+If this Claude Code session has real credentials for dev.stratecon.tech (a
+dedicated `claude-agent` WordPress admin account — check for a local,
+git-ignored credentials file in this environment before asking Carver for
+one), drive this workflow directly with Playwright instead of walking Carver
+through it by hand: log in, run the WP Reset, reimport, publish, set the
+logo, and take real screenshots/read real computed styles/open the real
+block editor to check for validation warnings, the same way this project's
+local WordPress test install has been used throughout. That closes the loop
+directly instead of round-tripping every change through Carver's own manual
+clicking and screenshots.
+
+**Never commit real WordPress credentials to this repo.** If Carver hasn't
+already set up a local credentials file outside git, ask where one should
+live (e.g. `~/dev-site-credentials.txt` in this account's home directory,
+outside the repo) rather than writing a password into any tracked file.
+
+## Known issues carried forward from prior sessions
+
+- **Two specific re-hosted images intermittently fail to import** on Carver's
+  real SiteGround host ("Cyber Training example.webp" / "AI Customer
+  Service.webp" source filenames) despite every diagnostic available from a
+  sandboxed session coming back clean: the source URLs are valid/reachable,
+  the downloaded bytes are valid JPEGs despite the `.webp` URL extension,
+  WordPress's own type-sniffing correctly retypes them, and a full local
+  production-equivalent reimport succeeds every time. Suspected but
+  unconfirmed: an interaction with SiteGround Optimizer's own WebP
+  image-conversion feature, since these are the only two images on the site
+  sourced from `.webp`-extensioned URLs. If this session has real site
+  access, this is worth investigating directly (check the plugin's settings,
+  the Media Library state, and the site's own error log) rather than
+  continuing to reason about it from a sandbox.
+- **Font loading was fixed twice.** A CSS `@import` of the Google Fonts
+  stylesheet (in the `custom_css`/global-styles content) looked correct in a
+  sandboxed test but didn't survive on the real host — @import needs to be
+  the literal first rule in its stylesheet or browsers discard it, and
+  CSS-combining/minifying plugins (SiteGround Optimizer is active on the dev
+  site) are a well-known way that breaks. Replaced with real `@font-face`
+  data embedded in `settings.typography.fontFamilies[].fontFace` (theme.json
+  v2's native schema, read by `WP_Font_Face_Resolver`, core since WP 6.4) —
+  confirmed via a local WordPress install that this produces real
+  `@font-face` CSS in `wp_head`, not yet confirmed against the real dev site
+  as of the last handoff.
+- Contact form's exact fields weren't fully visible in extracted content —
+  needs confirmation against the live site before any real migration goes
+  live.
+- Newsletter signup is mapped to a placeholder shortcode — needs to be wired
+  to whatever email tool the new site will actually use.
+- The Qualification Agent is still regex-based (see the pipeline design
+  above) — fine for stratecon.tech, which this project has been tuned
+  against, but needs to move to something more robust before this is trusted
+  on a client site it hasn't seen.

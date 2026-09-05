@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Never commit real credentials for the dev/live site
+*credentials*
+.env
+.env.*
