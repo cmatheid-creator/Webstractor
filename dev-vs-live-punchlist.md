@@ -41,11 +41,19 @@ Fix direction:
 
 ## Tier 2 — page-specific content gaps
 
-### 3. `cybersecurity-solutions` — "Cybersecurity Insights" card grid (~12 posts) missing
+### 3. `cybersecurity-solutions` — "Cybersecurity Insights" card grid (~12 posts) missing — FIXED
 
-Replaced by the CF7 placeholder (same root cause as #1). ~60% of the
-page's body text is gone. The "Free Cybersecurity eBook" form fields are
-also not captured (only the surrounding text).
+Was replaced by the CF7 placeholder (same root cause as #1) and ~60% of
+the page's body text was gone. Root cause was a second bug: the RSS-feed
+widget mounts its post cards only on scroll-into-view, and on this long
+page `crawl()`'s single step-scroll pass didn't give it enough settle
+time, so `mark_post_feeds()` saw an empty grid. Fixed with
+`settle_lazy_widgets()` in `crawler_agent.py` — scrolls each
+`RSS_FEEDS_RENDERED` grid into view and waits for its `[data-ux="Card"]`
+children before extraction. Verified on the dev site: all 10 Insights
+cards (heading, link, thumbnail, date, categories, excerpt) now render as
+a 3-column grid matching live. The eBook form is a clean placeholder
+panel (per #1); its Name/Email/Company fields are captured.
 
 ### 4. Contact page — real contact form gone
 
@@ -55,10 +63,17 @@ keeps the text (phone, hours, "Drop us a line") but both forms are
 decision** (Contact Form 7 / Fluent Forms / WPForms / Gravity) plus real
 per-field capture in the crawler.
 
-### 5. `the-spider-mantm-dilemma-building-an-ai-strategy` — body content duplicated
+### 5. `the-spider-mantm-dilemma-building-an-ai-strategy` — body content duplicated — FIXED
 
-Dev body ~1.5× live. Likely the FAQ-dupe / repeated-section bug. Needs a
-targeted look.
+Every bulleted item in the "AI Use Policies" and "AI Disclosure
+Statements" sections appeared twice — once as a flattened paragraph, once
+as a list. GoDaddy wraps a `<ul>` *inside* a `<p>` (invalid HTML, still
+rendered); the crawler's document-order loop emitted the `<p>` (list text
+flattened to prose) and then the nested `<ul>` (as a proper list). The
+`<p>` handler in `crawler_agent.py` now skips when it contains a nested
+list, keeping only any real lead-in text; the list is still captured on
+its own iteration. Verified on the dev site: each bullet appears once, as
+a list.
 
 ### 6. Spot-check thin pages
 

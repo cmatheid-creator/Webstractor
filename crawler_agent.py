@@ -313,6 +313,48 @@ def extract_content_card(card, page_url, seen_image_urls):
     return card_data
 
 
+def settle_lazy_widgets(page):
+    """GoDaddy's "RSS Feed" widget mounts its post cards only when it
+    scrolls into view, via an IntersectionObserver -- and on a long page
+    crawl()'s single step-scroll pass isn't always enough settle time.
+    Confirmed on cybersecurity-solutions: its "Cybersecurity Insights"
+    feed (10 post cards) sits ~3000px down and came back completely empty
+    (no post_feed block at all), so the page lost a whole section and the
+    generator rendered nothing there. Scroll each feed grid into view and
+    wait for its cards to render before mark_post_feeds()/extract_blocks()
+    read the DOM.
+    """
+    grids = page.query_selector_all('[data-aid="RSS_FEEDS_RENDERED"]')
+    if not grids:
+        # The RSS_FEEDS_RENDERED container itself can be lazy -- a slower,
+        # finer scroll pass gives it a chance to appear before we give up.
+        try:
+            page.evaluate(
+                """async () => {
+                    const step = window.innerHeight * 0.5;
+                    for (let y = 0; y < document.body.scrollHeight; y += step) {
+                        window.scrollTo(0, y);
+                        await new Promise(r => setTimeout(r, 300));
+                    }
+                }"""
+            )
+            page.wait_for_timeout(500)
+        except Exception:
+            pass
+        grids = page.query_selector_all('[data-aid="RSS_FEEDS_RENDERED"]')
+    for grid in grids:
+        try:
+            grid.scroll_into_view_if_needed(timeout=3000)
+            grid.wait_for_selector('[data-ux="Card"]', timeout=5000)
+        except Exception:
+            pass
+    try:
+        page.evaluate("() => window.scrollTo(0, 0)")
+    except Exception:
+        pass
+    page.wait_for_timeout(300)
+
+
 def mark_post_feeds(page):
     """Tags GoDaddy Website Builder's "RSS Feed" widget -- confirmed via
     live markup: a <div data-ux="Grid" data-aid="RSS_FEEDS_RENDERED">
@@ -608,6 +650,7 @@ def extract_blocks(page, page_url):
     if hero:
         blocks.append(hero)
 
+    settle_lazy_widgets(page)
     mark_media_text_pairs(page)
     mark_content_cards(page)
     mark_post_feeds(page)
@@ -761,6 +804,30 @@ def extract_blocks(page, page_url):
                 heading["typography_role"] = role
             blocks.append(heading)
         elif tag == "p":
+            # GoDaddy sometimes wraps a <ul>/<ol> *inside* a <p> (invalid
+            # HTML, but browsers render it). The loop reaches that nested
+            # list on its own iteration and emits it as a proper "list"
+            # block; without this guard the same items also come out here
+            # as one flattened paragraph -- a real duplication confirmed
+            # on the live "Spider-Man Dilemma" post (every bulleted
+            # benefit appeared twice, once as prose, once as a list).
+            # Keep only any real text that precedes the nested list.
+            if el.query_selector("ul, ol") is not None:
+                lead = el.evaluate(
+                    """e => {
+                        const c = e.cloneNode(true);
+                        c.querySelectorAll('ul, ol').forEach(x => x.remove());
+                        return c.textContent.replace(/\\s+/g, ' ').trim();
+                    }"""
+                )
+                if lead:
+                    para = {"type": "paragraph", "text": html.escape(lead)}
+                    role = el.get_attribute("data-typography")
+                    if role:
+                        para["typography_role"] = role
+                    blocks.append(para)
+                continue  # the nested <ul>/<ol> is emitted on its own turn
+
             # "text" holds a small safe inline-HTML fragment (bold/
             # italic/links preserved -- see element_inline_html()), not
             # plain text -- generator_agent.py embeds it directly rather
