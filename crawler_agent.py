@@ -627,6 +627,19 @@ def extract_blocks(page, page_url):
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
             continue  # inside the header, footer, or a nav -- not page content
 
+        # A single GoDaddy blog post (/blog/f/<slug>) renders inside the
+        # blog feed widget, which repeats the feed's own section title
+        # ("Stratecon Tech Insights") and standing intro blurb ("Please
+        # check back here often...") above every individual post. Those
+        # are feed chrome, not this post's content -- drop them. The
+        # post's real title carries data-ux="BlogMainHeading" and is
+        # promoted to the page <h1> in the heading branch below.
+        if el.evaluate(
+            "e => !!e.closest('[data-aid=\"RSS_SECTION_TITLE_RENDERED\"],"
+            " [data-aid=\"RSS_SECTION_INTRO_RENDERED\"]')"
+        ):
+            continue
+
         # Anything inside a detected ContentCard is pulled in as part of
         # that card's group (below, the first time we hit any element
         # belonging to any card in the group) rather than extracted again
@@ -736,7 +749,13 @@ def extract_blocks(page, page_url):
             continue
 
         if tag.startswith("h"):
-            heading = {"type": "heading", "level": int(tag[1]), "text": text}
+            # GoDaddy renders a single blog post's own title as an <h3>
+            # (data-ux="BlogMainHeading") under the feed's section title.
+            # With that feed title now dropped (above), this is the
+            # page's real headline -- promote it to <h1> so the migrated
+            # post isn't left with no page-level heading.
+            level = 1 if el.get_attribute("data-ux") == "BlogMainHeading" else int(tag[1])
+            heading = {"type": "heading", "level": level, "text": text}
             role = el.get_attribute("data-typography")
             if role:
                 heading["typography_role"] = role
@@ -783,19 +802,75 @@ def extract_blocks(page, page_url):
             "raw_text_blocks": faq_items,
         })
 
-    # Forms -- capture field names/types so the Generator Agent can flag
-    # the right plugin (contact form vs newsletter signup) for review.
-    forms = []
-    for form in page.query_selector_all("form"):
-        fields = []
-        for inp in form.query_selector_all("input, textarea, select"):
-            fields.append({
-                "name": inp.get_attribute("name") or "",
-                "type": inp.get_attribute("type") or inp.evaluate("e => e.tagName.toLowerCase()"),
-            })
-        forms.append(fields)
-    if forms:
-        blocks.append({"type": "forms_detected", "forms": forms})
+    # Forms. GoDaddy wraps each real form in a widget-<type> div and tags
+    # its fields with data-aid. Three kinds show up on this site:
+    #   widget-contact   -> a real contact form (CONTACT_FORM_* fields)
+    #   widget-subscribe -> a newsletter email-capture box
+    #   widget-rss       -> the blog feed's own "subscribe for updates" box
+    # Anything in the site chrome (the sitewide footer newsletter, a nav
+    # search box) is excluded. Classifying every <form> the same way and
+    # emitting one "forms_detected" block put a literal
+    # "[contact-form-7 id=\"TBD\"]" placeholder on ~20 pages whose only
+    # form was a subscribe box -- the generator now renders contact forms
+    # and newsletter boxes as distinct, clearly-labelled placeholders.
+    form_info = page.evaluate(
+        r"""() => {
+            const CH = 'nav,[data-ux="Header"],[role="contentinfo"],[data-aid="FOOTER_COOKIE_BANNER_RENDERED"]';
+            const KNOWN = {
+                CONTACT_FORM_NAME: 'Name', CONTACT_FORM_EMAIL: 'Email',
+                CONTACT_FORM_MESSAGE: 'Message', CONTACT_FORM_PHONE: 'Phone',
+                CONTACT_FORM_EMAIL_OPT_IN: 'Email opt-in', Company: 'Company',
+            };
+            const label = aid => {
+                if (!aid) return null;
+                if (KNOWN[aid]) return KNOWN[aid];
+                return aid.replace(/^CONTACT_FORM_/, '').replace(/_RENDERED?$/, '')
+                          .replace(/_/g, ' ').trim().toLowerCase()
+                          .replace(/\b\w/g, c => c.toUpperCase());
+            };
+            const out = { contact: [], newsletter: 0 };
+            for (const f of document.querySelectorAll('form')) {
+                if (f.closest(CH)) continue;
+                const w = f.closest('[class*="widget-"]');
+                const wc = w ? [...w.classList].find(c => /^widget-[a-z]+$/.test(c)) : '';
+                const contactAids = !!f.querySelector('[data-aid^="CONTACT_FORM_"]');
+                const visible = [...f.querySelectorAll('input,textarea,select')]
+                    .filter(i => i.type !== 'hidden' && i.getAttribute('name') !== '_app_id');
+                let kind = 'contact';
+                if (wc === 'widget-subscribe' || wc === 'widget-rss') kind = 'newsletter';
+                else if (!contactAids && wc !== 'widget-contact'
+                         && visible.length === 1 && /^(email|text)$/.test(visible[0].type || '')) kind = 'newsletter';
+                if (kind === 'newsletter') { out.newsletter++; continue; }
+                const fields = visible.map(i => {
+                    const wrapAid = i.closest('[data-aid]') ? i.closest('[data-aid]').getAttribute('data-aid') : null;
+                    return {
+                        label: label(i.getAttribute('data-aid') || wrapAid)
+                            || i.getAttribute('placeholder') || i.getAttribute('aria-label') || '',
+                        type: (i.getAttribute('type') || i.tagName.toLowerCase()),
+                    };
+                });
+                const region = f.closest('[role="region"], section');
+                let title = '';
+                const th = region && region.querySelector(
+                    '[data-aid="CONTACT_FORM_TITLE_REND"], [data-aid="CONTACT_FORM_TITLE_RENDERED"], h1, h2, h3');
+                if (th) title = th.textContent.replace(/\s+/g, ' ').trim();
+                out.contact.push({ title, fields });
+            }
+            return out;
+        }"""
+    )
+    for cf in form_info.get("contact", []):
+        blocks.append({
+            "type": "contact_form",
+            "title": cf.get("title") or "Contact form",
+            "fields": cf.get("fields", []),
+        })
+    if form_info.get("newsletter"):
+        blocks.append({
+            "type": "newsletter_signup",
+            "label": "Newsletter signup",
+            "text": "Sign up to receive updates and blog posts by email.",
+        })
 
     return blocks
 

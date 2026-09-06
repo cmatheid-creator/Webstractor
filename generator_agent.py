@@ -269,6 +269,29 @@ def _role_style_bits(role, brand, include_color=True):
     return {"json_attrs": ",".join(json_attrs), "classes": " ".join(classes)}
 
 
+def _form_placeholder(title, description, qa_note):
+    """A clearly-labelled, self-explanatory placeholder panel for a form
+    the pipeline can't build yet (no form-plugin decision has been made).
+    Real Gutenberg blocks only -- a bordered group with a heading and an
+    italic note -- never a literal `[contact-form-7 ...]` / `[..._form]`
+    shortcode, which renders as raw bracket text to visitors on any site
+    without that exact plugin installed. The QA note is stripped into
+    qa_report.md like every other QA flag."""
+    return (
+        '<!-- wp:group {"className":"migration-form-placeholder","layout":{"type":"constrained"}} -->\n'
+        '<div class="wp-block-group migration-form-placeholder">\n'
+        '<!-- wp:heading {"level":3} -->\n'
+        f'<h3 class="wp-block-heading">{html.escape(title)}</h3>\n'
+        '<!-- /wp:heading -->\n'
+        '<!-- wp:paragraph {"className":"migration-form-note"} -->\n'
+        f'<p class="migration-form-note"><em>{html.escape(description)}</em></p>\n'
+        '<!-- /wp:paragraph -->\n'
+        '</div>\n'
+        '<!-- /wp:group -->\n'
+        f'<!-- QA FLAG: {qa_note} -->'
+    )
+
+
 def block_to_gutenberg(block):
     """Turn one structured content block into native Gutenberg block markup."""
     t = block["type"]
@@ -512,42 +535,48 @@ def block_to_gutenberg(block):
         return "\n\n".join(parts)
 
     if t == "newsletter_signup":
-        label = html.escape(block.get("label", "Newsletter"))
-        text = html.escape(block.get("text", ""))
-        return (
-            '<!-- wp:heading {"level":2} -->\n'
-            f'<h2 class="wp-block-heading">{label}</h2>\n'
-            '<!-- /wp:heading -->\n'
-            '<!-- wp:paragraph -->\n'
-            f'<p>{text}</p>\n'
-            '<!-- /wp:paragraph -->\n'
-            '<!-- wp:shortcode -->[newsletter_signup_form]<!-- /wp:shortcode -->'
-            '\n<!-- QA FLAG: replace shortcode with the real WP newsletter/email plugin block -->'
+        label = block.get("label") or "Newsletter signup"
+        desc = (block.get("text") or "").strip()
+        return _form_placeholder(
+            label,
+            (desc + " " if desc else "")
+            + "Newsletter signup — connect this to the site's email/newsletter "
+            "tool before go-live.",
+            "newsletter signup -- wire to the real email/newsletter plugin",
         )
 
     if t == "contact_form":
-        note = html.escape(block.get("note", ""))
-        return (
-            '<!-- wp:shortcode -->[contact-form-7 id="TBD" title="Contact form"]<!-- /wp:shortcode -->\n'
-            f'<!-- QA FLAG: {note} -->'
+        fields = block.get("fields") or []
+        if fields:
+            flist = ", ".join(
+                f"{f.get('label') or 'field'} ({f.get('type', 'text')})" for f in fields
+            )
+        else:
+            flist = block.get("note") or "fields not captured from the live site"
+        return _form_placeholder(
+            block.get("title") or "Contact form",
+            f"Contact form — captured fields: {flist}. Connect this to the "
+            "site's form plugin before go-live.",
+            f"contact form \"{block.get('title', '')}\" -- fields: {flist} -- "
+            "wire to the real form plugin",
         )
 
     if t == "forms_detected":
-        # Real per-field form data the crawler found -- surface it as a QA
-        # note with a placeholder shortcode, same shape as contact_form,
-        # rather than falling through to the generic unhandled-type
-        # placeholder (which would show raw "[Unhandled block type]" text
-        # to site visitors on every page with a form).
+        # Legacy block shape (older structured_content.json); newer crawls
+        # emit contact_form / newsletter_signup instead. Same clean
+        # placeholder panel either way -- never a literal shortcode.
         parts = []
         for i, fields in enumerate(block.get("forms", []), 1):
             field_desc = ", ".join(
-                f"{f['name'] or '(unnamed)'} ({f['type']})" for f in fields
+                f"{f.get('name') or '(unnamed)'} ({f.get('type', '')})" for f in fields
             ) or "no fields detected"
-            parts.append(
-                '<!-- wp:shortcode -->[contact-form-7 id="TBD" title="Form"]<!-- /wp:shortcode -->\n'
-                f'<!-- QA FLAG: form {i} on this page had fields: {field_desc} -- '
-                'confirm against the live site and wire to the real form plugin. -->'
-            )
+            parts.append(_form_placeholder(
+                "Form",
+                f"Form — fields: {field_desc}. Connect this to the site's form "
+                "plugin before go-live.",
+                f"form {i} on this page had fields: {field_desc} -- confirm "
+                "against the live site and wire to the real form plugin",
+            ))
         return "\n\n".join(parts)
 
     if t == "image":
@@ -2328,6 +2357,19 @@ def _extra_css_rules(brand):
         ".migration-hero .wp-block-cover__inner-container{text-align:center;"
         "max-width:820px;margin-left:auto;margin-right:auto}"
         ".migration-hero .wp-block-cover__inner-container :where(h1,p){color:#ffffff}"
+    )
+
+    # Form placeholder panel (see _form_placeholder()) -- a form the
+    # pipeline can't build until a form-plugin decision is made. Styled
+    # as an obvious "to be wired up" box so it never reads as a broken
+    # form or as stray bracket text. Theme-neutral (no brand token) since
+    # it's scaffolding, not final design.
+    rules.append(
+        ".migration-form-placeholder{border:1px dashed rgba(120,120,120,.45);"
+        "border-radius:6px;padding:1.25rem 1.5rem;background:rgba(120,120,120,.06);"
+        "margin:1.5rem 0}"
+        ".migration-form-placeholder .migration-form-note{opacity:.75;"
+        "font-size:.95em;margin:.25rem 0 0}"
     )
     return rules
 
