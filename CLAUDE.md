@@ -167,15 +167,46 @@ from SiteGround's bot rule; only a claimed-browser UA triggers it, plain
   "Per-page review notes" section in `qa_report.md`. Verified: 0 freeform,
   0 validation warnings on every page checked in the real block editor.
 
+## Hero / `<h1>` capture — landed and verified (2026-09-05, direct-access session)
+
+The "no hero, no `<h1>` on the home page" issue below is **fixed**:
+
+- **`crawler_agent.py` — `extract_hero()`.** GoDaddy Website Builder bundles
+  the hero into the same header widget as the logo/nav (`data-ux="Header"`),
+  which `CHROME_SELECTOR` excludes wholesale as chrome — so the main pass
+  never saw it. `extract_hero()` reaches in explicitly for
+  `<h1 data-aid="HEADER_TAGLINE_RENDERED">` (the only real page-level `<h1>`
+  on the site), the `HEADER_TAGLINE2_RENDERED` sub-tagline, the
+  `HEADER_CTA_BTN` call-to-action, and the `BACKGROUND_IMAGE_RENDERED` CSS
+  background image (its `aria-label` doubles as alt text). Emitted as a
+  `hero` block prepended in `extract_blocks()`; returns `None` on pages with
+  no hero (home-only here). `featured_image` now prefers the hero image over
+  `og:image` (which GoDaddy sets to the same generic `stock/2646` everywhere).
+- **`generator_agent.py` — `hero` → `core/cover`.** Full-width cover: brand
+  primary overlay at 60% dim (`overlayColor:"primary"`), inner `<h1>` in the
+  brand HeadingAlpha font (no navy text colour on the dark overlay — new
+  `_role_style_bits(include_color=False)`), sub-tagline paragraph, centred
+  CTA button routed through the same slug resolution the card CTAs use. New
+  `.migration-hero` CSS backs the overlay colour / min-height / white text
+  independently of the imported palette. `collect_unique_images()` picks up
+  the hero image so it flows into `repair_migration.php`'s stock-sideload
+  list automatically.
+- **Verified on the real dev site** (full WP Reset → import → publish →
+  set front page → verify, headed Chrome): the migrated home now has exactly
+  **one `<h1>`** ("Trusted Technology Advice", was zero); the cover renders
+  full-bleed with the `#1d2b52` overlay, white Playfair Display heading,
+  Cabin sub-tagline, and a "Contact Us" button linking to `/contact/`;
+  **0 block-editor validation warnings** on the page (cover + inner blocks
+  all parse clean); Playfair Display + Cabin still load, no regression to
+  the rest of the page. `repair_migration.php` was **not** run this pass (no
+  shell on SiteGround), so the hero background — like the other ~70 stock
+  images — still hot-links to `img1.wsimg.com` until it is.
+
 ## Known issues still open (crawler / extraction side — next batch)
 
 These are all in `crawler_agent.py` / the extraction step, not the
 generator: the generator faithfully renders an incomplete capture.
 
-- **No hero/banner section, no `<h1>` on the home page.** The crawler never
-  captures GoDaddy's hero pattern, so the migrated home starts at its first
-  section heading (an `<h2>`) with no page-level `<h1>`. `featured_image` is
-  also the same bogus value (`isteam/stock/2646`) on every page.
 - **FAQ accordion is flattened.** `extract_blocks()`'s FAQ detection emits a
   `faq_raw_unverified` block: questions captured, **no answers paired**, and
   the whole thing concatenated once then repeated. Renders on the page as

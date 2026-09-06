@@ -11,10 +11,25 @@
       "slug": "home",
       "title": "Trusted Technology Advisers | Cybersecurity Solutions",
       "meta_description": "Stratecon Tech Advisors offers trusted technology advice for responsible AI, comprehensive cybersecurity, and communications solutions to  grow your business.",
-      "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
+      "featured_image": "https://img1.wsimg.com/isteam/stock/2646/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1535,m",
       "type": "page",
       "is_front_page": true,
       "blocks": [
+        {
+          "type": "hero",
+          "heading": "Trusted Technology Advice",
+          "heading_role": "HeadingAlpha",
+          "subheading": "Securing Your Digital Future",
+          "subheading_role": "HeadingDelta",
+          "cta": {
+            "text": "Contact Us",
+            "href": "https://stratecon.tech/contact"
+          },
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/2646/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1535,m",
+            "alt": "An open hand cupping a floating globe made of digital elements, representing technology"
+          }
+        },
         {
           "type": "heading",
           "level": 2,

@@ -489,9 +489,124 @@ def extract_element_content(container, page_url):
     return content
 
 
+def extract_hero(page, page_url):
+    """The page's hero / banner section, or None if it doesn't have one.
+
+    GoDaddy Website Builder bundles the hero into the same header widget
+    it uses for the logo and nav (data-ux="Header"), which CHROME_SELECTOR
+    otherwise excludes wholesale as site chrome -- so extract_blocks()'s
+    main pass never sees it, and the migrated page starts cold at its
+    first <h2> section heading with no page-level <h1> at all. Confirmed
+    against the live site's own markup, the hero lives in
+    <section data-aid="HEADER_SECTION"> and carries:
+
+      * <h1 data-aid="HEADER_TAGLINE_RENDERED"> -- the only real
+        page-level <h1> anywhere on this site (data-typography
+        "HeadingAlpha");
+      * <div data-aid="HEADER_TAGLINE2_RENDERED"> -- a sub-tagline
+        (data-typography "HeadingDelta");
+      * <a data-aid="HEADER_CTA_BTN"> -- a call-to-action button
+        (data-typography "ButtonAlpha");
+      * <div data-aid="BACKGROUND_IMAGE_RENDERED"> -- a full-bleed
+        background image set via a CSS background-image (not an <img>),
+        whose aria-label is a real human-written description that doubles
+        as alt text.
+
+    On this site only the home page has a hero; every other page has the
+    same header widget with no HEADER_SECTION tagline, so this returns
+    None there and the caller simply prepends nothing. Keyed purely on
+    the presence of the <h1> tagline, so any other page that grows one
+    would pick it up too.
+    """
+    data = page.evaluate(
+        r"""(baseUrl) => {
+            const sec = document.querySelector('[data-aid="HEADER_SECTION"]');
+            if (!sec) return null;
+
+            const h1 = sec.querySelector('h1[data-aid="HEADER_TAGLINE_RENDERED"]');
+            const headingText = h1 ? h1.textContent.trim() : '';
+            if (!headingText) return null;  // no real hero on this page
+
+            const sub = sec.querySelector('[data-aid="HEADER_TAGLINE2_RENDERED"]');
+            const cta = sec.querySelector('a[data-aid="HEADER_CTA_BTN"]');
+            const bg = sec.querySelector('[data-aid="BACKGROUND_IMAGE_RENDERED"]');
+
+            // The background image is a CSS background-image, and it may
+            // sit on the marked element itself or on a nested slideshow
+            // container -- walk the marked element and its descendants and
+            // take the first real url(...) found.
+            let imgUrl = '';
+            if (bg) {
+                const cands = [bg, ...bg.querySelectorAll('*')];
+                for (const el of cands) {
+                    const bi = getComputedStyle(el).backgroundImage;
+                    if (bi && bi !== 'none') {
+                        const m = bi.match(/url\((['"]?)(.*?)\1\)/);
+                        if (m && m[2]) { imgUrl = m[2]; break; }
+                    }
+                }
+            }
+
+            const abs = (u) => {
+                if (!u) return '';
+                try { return new URL(u, baseUrl).href; } catch (e) { return u; }
+            };
+
+            return {
+                heading: headingText,
+                heading_role: h1.getAttribute('data-typography') || '',
+                subheading: sub ? sub.textContent.trim() : '',
+                subheading_role: sub ? (sub.getAttribute('data-typography') || '') : '',
+                cta: cta ? {
+                    text: cta.textContent.trim(),
+                    href: abs(cta.getAttribute('href')),
+                } : null,
+                image: imgUrl ? {
+                    src: abs(imgUrl),
+                    alt: (bg && bg.getAttribute('aria-label')) || '',
+                } : null,
+            };
+        }""",
+        page_url,
+    )
+    if not data or not data.get("heading"):
+        return None
+    hero = {"type": "hero", "heading": data["heading"]}
+    if data.get("heading_role"):
+        hero["heading_role"] = data["heading_role"]
+    if data.get("subheading"):
+        hero["subheading"] = data["subheading"]
+        if data.get("subheading_role"):
+            hero["subheading_role"] = data["subheading_role"]
+    if data.get("cta") and data["cta"].get("text"):
+        hero["cta"] = {
+            "text": data["cta"]["text"],
+            "href": data["cta"].get("href") or "",
+        }
+    if data.get("image") and data["image"].get("src"):
+        hero["image"] = {
+            "src": data["image"]["src"],
+            "alt": data["image"].get("alt") or "",
+        }
+    return hero
+
+
 def extract_blocks(page, page_url):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
+
+    # The hero/banner lives inside the header widget CHROME_SELECTOR
+    # excludes, so it's pulled in explicitly here and prepended -- ahead
+    # of the first section heading the main document-order pass starts
+    # from. Its own <h1>/sub-tagline/CTA are all inside data-ux="Header",
+    # so that same pass still skips them: no double extraction.
+    try:
+        hero = extract_hero(page, page_url)
+    except Exception as e:
+        print(f"  [warn] hero extraction failed: {e}")
+        hero = None
+    if hero:
+        blocks.append(hero)
 
     mark_media_text_pairs(page)
     mark_content_cards(page)
@@ -975,6 +1090,14 @@ def crawl(start_url, max_pages=100):
                         # correct og:image regardless.
                         og_image_el = page.query_selector('meta[property="og:image"]')
                         og_image = og_image_el.get_attribute("content") if og_image_el else ""
+                        # A page's own hero background image is a far better
+                        # "featured image" than og:image, which GoDaddy sets
+                        # to the same generic stock photo on every page --
+                        # so when the crawler captured a real hero (see
+                        # extract_hero()), prefer its image here.
+                        hero_image = ""
+                        if blocks and blocks[0].get("type") == "hero":
+                            hero_image = (blocks[0].get("image") or {}).get("src", "")
                         extracted_paths.add(canonical_path)
                         # Record the canonical, query-stripped URL, not
                         # whichever query-string variant happened to be
@@ -988,7 +1111,7 @@ def crawl(start_url, max_pages=100):
                             "slug": slugify(canonical_url, start_url),
                             "title": title,
                             "meta_description": meta_desc or "",
-                            "featured_image": og_image or "",
+                            "featured_image": hero_image or og_image or "",
                             "type": "page",
                             "is_front_page": (canonical_url == start_url.rstrip("/")),
                             "blocks": blocks,

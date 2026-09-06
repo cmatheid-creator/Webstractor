@@ -94,6 +94,7 @@ function migr_sideload($src, $alt) {
 }
 
 $stock = array(
+    'https://img1.wsimg.com/isteam/stock/2646/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1535,m' => 'An open hand cupping a floating globe made of digital elements, representing technology',
     'https://img1.wsimg.com/isteam/stock/10130/:/cr=t:0%25,l:22.46%25,w:55.08%25,h:100%25/rs=w:365,h:365,cg:true' => 'Picture of a man in a business suit with his finger pointing at an icon of a person wearing a tie',
     'https://img1.wsimg.com/isteam/stock/Q3VZ7AA/:/cr=t:0%25,l:17.57%25,w:64.86%25,h:100%25/rs=w:365,h:365,cg:true' => 'Picture of a black female pointing at a glass whiteboard covered in sticky notes',
     'https://img1.wsimg.com/isteam/stock/3250/:/cr=t:0%25,l:15%25,w:70%25,h:99.99%25/rs=w:365,h:365,cg:true,m' => 'Man standing in front of a large chalkboard that is filled with pictures of charts,  workflows',

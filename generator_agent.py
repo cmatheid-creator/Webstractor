@@ -218,7 +218,7 @@ def role_class_name(role):
     return f"has-role-{role.lower()}"
 
 
-def _role_style_bits(role, brand):
+def _role_style_bits(role, brand, include_color=True):
     """Like _brand_role_style(), but returns ready-to-use ("json_attrs",
     "classes") fragments for a block comment's attributes and its
     element's class list -- font family and color as Gutenberg's own
@@ -242,6 +242,12 @@ def _role_style_bits(role, brand):
     the same font-size/weight.
 
     Returns None if the role isn't in brand's typography at all.
+
+    include_color=False drops the textColor attribute/class -- for a role
+    rendered against a background the brand color wasn't chosen for (the
+    hero cover's dark overlay, where the HeadingAlpha navy would be all
+    but invisible), where the light text color is supplied by a scoped
+    CSS rule instead.
     """
     hs = _brand_role_style(role, brand)
     if not hs:
@@ -251,7 +257,7 @@ def _role_style_bits(role, brand):
     if hs.get("font_family_slug"):
         json_attrs.append(f'"fontFamily":"{hs["font_family_slug"]}"')
         classes.append(f'has-{hs["font_family_slug"]}-font-family')
-    if hs.get("text_color_slug"):
+    if include_color and hs.get("text_color_slug"):
         json_attrs.append(f'"textColor":"{hs["text_color_slug"]}"')
         classes.append(f'has-{hs["text_color_slug"]}-color has-text-color')
     if hs.get("font_size") or hs.get("font_weight"):
@@ -264,6 +270,114 @@ def _role_style_bits(role, brand):
 def block_to_gutenberg(block):
     """Turn one structured content block into native Gutenberg block markup."""
     t = block["type"]
+
+    if t == "hero":
+        # GoDaddy Website Builder's header-widget hero -- see
+        # crawler_agent.py's extract_hero(). Rendered as a full-width
+        # core/cover: the background image, a dark overlay in the brand
+        # primary color (dimRatio 60), and an inner container with the
+        # page's real <h1>, the sub-tagline as a paragraph, and the CTA
+        # as a button. Without this block the migrated home page has no
+        # hero and no page-level <h1> at all -- it starts cold at its
+        # first <h2> section heading.
+        #
+        # The overlay color is set as a *named* palette color
+        # ("overlayColor":"primary"), the most stable core/cover
+        # serialization -- no inline style to drift against block
+        # validation. ".migration-hero" (see _extra_css_rules()) then
+        # backs it with a real CSS rule for the overlay color, the light
+        # text color the brand's own navy HeadingAlpha can't provide on a
+        # dark overlay, and a min-height -- none of which depend on
+        # whether the imported palette registered "primary".
+        heading_text = html.escape(block["heading"])
+        inner = []
+
+        hb = _role_style_bits(block.get("heading_role"), _BRAND, include_color=False)
+        if hb and hb["json_attrs"]:
+            h_attrs = f'"level":1,{hb["json_attrs"]}'
+            h_classes = f'wp-block-heading {hb["classes"]}'.strip()
+        else:
+            h_attrs = '"level":1'
+            h_classes = "wp-block-heading"
+        inner.append(
+            f'<!-- wp:heading {{{h_attrs}}} -->\n'
+            f'<h1 class="{h_classes}">{heading_text}</h1>\n'
+            '<!-- /wp:heading -->'
+        )
+
+        subheading = block.get("subheading")
+        if subheading:
+            sb = _role_style_bits(
+                block.get("subheading_role"), _BRAND, include_color=False
+            )
+            if sb and sb["json_attrs"]:
+                attrs_block = f' {{{sb["json_attrs"]}}}'
+                p_classes = f' class="{sb["classes"]}"'
+            else:
+                attrs_block = ""
+                p_classes = ""
+            inner.append(
+                f'<!-- wp:paragraph{attrs_block} -->\n'
+                f'<p{p_classes}>{html.escape(subheading)}</p>\n'
+                '<!-- /wp:paragraph -->'
+            )
+
+        cta = block.get("cta")
+        if cta and cta.get("text"):
+            slug = href_to_slug(cta.get("href"))
+            url = (
+                f"{NEW_BASE_URL}/{slug}/"
+                if _PAGES_BY_SLUG and slug in _PAGES_BY_SLUG
+                else cta.get("href")
+            )
+            label = html.escape(cta.get("text"))
+            url_escaped = xml_escape(url or "#")
+            inner.append(
+                '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->\n'
+                '<div class="wp-block-buttons">\n'
+                '<!-- wp:button -->\n'
+                '<div class="wp-block-button"><a class="wp-block-button__link '
+                f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
+                '<!-- /wp:button -->\n'
+                '</div>\n'
+                '<!-- /wp:buttons -->'
+            )
+
+        inner_markup = "\n\n".join(inner)
+
+        image = block.get("image")
+        if not image or not image.get("src"):
+            # No hero image captured -- fall back to a plain centered
+            # group so the <h1>/sub-tagline/CTA are still emitted rather
+            # than dropped.
+            return (
+                '<!-- wp:group {"align":"full","className":"migration-hero",'
+                '"layout":{"type":"constrained"}} -->\n'
+                '<div class="wp-block-group alignfull migration-hero">\n'
+                f'{inner_markup}\n'
+                '</div>\n'
+                '<!-- /wp:group -->'
+            )
+
+        src = xml_escape(display_image_url(image["src"]))
+        alt = xml_escape(image.get("alt", ""))
+        return (
+            '<!-- wp:cover {"url":"' + src + '","dimRatio":60,'
+            '"overlayColor":"primary","align":"full","className":"migration-hero"} -->\n'
+            '<div class="wp-block-cover alignfull migration-hero">\n'
+            '<span aria-hidden="true" class="wp-block-cover__background '
+            'has-primary-background-color has-background-dim-60 has-background-dim"></span>\n'
+            f'<img class="wp-block-cover__image-background" alt="{alt}" src="{src}" '
+            'data-object-fit="cover"/>\n'
+            '<div class="wp-block-cover__inner-container">\n'
+            f'{inner_markup}\n'
+            '</div>\n'
+            '</div>\n'
+            '<!-- /wp:cover -->\n'
+            '<!-- QA FLAG: hero background image still points at the original site '
+            '(a GoDaddy stock photo with no importable URL) -- repair_migration.php '
+            'sideloads it and repoints this reference. -->'
+        )
 
     if t == "heading":
         level = block.get("level", 2)
@@ -817,9 +931,10 @@ def collect_unique_images(pages):
     """Dedupe image blocks across all pages and return {canonical_url:
     alt} pairs, one entry per real underlying photo. Covers plain
     "image" blocks, the image half of a "media_text" side-by-side pair,
-    each card's image within a "card_group", and each post's thumbnail
-    within a "post_feed" -- all four carry a real image that needs its
-    own WXR attachment item.
+    a "hero" block's background image, each card's image within a
+    "card_group", and each post's thumbnail within a "post_feed" -- all
+    carry a real image that needs its own WXR attachment item (or, when
+    the URL has no importable form, a repair_migration.php sideload).
 
     Dedupes by display_image_url(url), not the raw url -- the same
     logical photo commonly shows up at several different GoDaddy CDN
@@ -840,6 +955,12 @@ def collect_unique_images(pages):
                 url = display_image_url(block["src"])
                 if url not in images:
                     images[url] = block.get("alt", "")
+            elif block["type"] == "hero":
+                image = block.get("image")
+                if image and image.get("src"):
+                    url = display_image_url(image["src"])
+                    if url not in images:
+                        images[url] = image.get("alt", "")
             elif block["type"] == "card_group":
                 for card in block.get("cards", []):
                     image = card.get("image")
@@ -1702,6 +1823,7 @@ def build_qa_report(data, brand=None):
     faq_unverified_count = count_blocks("faq_raw_unverified")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
+    hero_count = count_blocks("hero")
 
     known_slugs = {p["slug"] for p in pages}
     menu_items_xml, _, skipped_nav_labels = build_nav_menu_items_xml(
@@ -1734,6 +1856,16 @@ def build_qa_report(data, brand=None):
             f"so no WXR import can set it. **`{OUT_REPAIR}` sets it for you** (run it once "
             f"after import); or set it by hand via Settings → Reading → \"Your homepage "
             f"displays\" → a static page. Skip both and `/` shows the default blog listing."
+        )
+    if hero_count:
+        lines.append(
+            f"- **Hero section** ({hero_count} page(s), incl. the home page): the "
+            "heading, sub-tagline, and call-to-action button were lifted from GoDaddy's "
+            "header widget (which is otherwise treated as site chrome) and rebuilt as a "
+            "full-width cover block — this is the migrated home page's only page-level "
+            "`<h1>`. The background is a GoDaddy stock photo with no importable URL; "
+            f"`{OUT_REPAIR}` sideloads it with the rest of the stock images. Sanity-check "
+            "the wording and the CTA target."
         )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
@@ -2172,6 +2304,22 @@ def _extra_css_rules(brand):
         ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
         ".migration-push-bottom{margin-top:auto}"
         ".migration-text-center{text-align:center}"
+    )
+
+    # The hero cover (see block_to_gutenberg()'s "hero" branch). The
+    # block markup already carries "overlayColor":"primary"; these rules
+    # back it up independently of whether the imported palette registered
+    # "primary" -- the overlay color, a real min-height, centered inner
+    # content, and the light text color the brand's own navy HeadingAlpha
+    # can't provide against a dark overlay (scoped to .migration-hero so
+    # it never leaks into the rest of the page).
+    primary = (brand or {}).get("colors", {}).get("button_background") or "#1d2b52"
+    rules.append(
+        ".migration-hero{min-height:460px}"
+        ".migration-hero .wp-block-cover__background{background-color:" + primary + "}"
+        ".migration-hero .wp-block-cover__inner-container{text-align:center;"
+        "max-width:820px;margin-left:auto;margin-right:auto}"
+        ".migration-hero .wp-block-cover__inner-container :where(h1,p){color:#ffffff}"
     )
     return rules
 
