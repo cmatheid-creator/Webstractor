@@ -19,8 +19,10 @@ seed of the real "Generator Agent" in the multi-agent pipeline.
 
 import json
 import html
+import os
 import re
 import hashlib
+import zipfile
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
@@ -375,8 +377,8 @@ def block_to_gutenberg(block):
             '</div>\n'
             '<!-- /wp:cover -->\n'
             '<!-- QA FLAG: hero background image still points at the original site '
-            '(a GoDaddy stock photo with no importable URL) -- repair_migration.php '
-            'sideloads it and repoints this reference. -->'
+            '(a GoDaddy stock photo with no importable URL) -- the Stratecon Migration '
+            'Repair plugin sideloads it and repoints this reference. -->'
         )
 
     if t == "heading":
@@ -934,7 +936,8 @@ def collect_unique_images(pages):
     a "hero" block's background image, each card's image within a
     "card_group", and each post's thumbnail within a "post_feed" -- all
     carry a real image that needs its own WXR attachment item (or, when
-    the URL has no importable form, a repair_migration.php sideload).
+    the URL has no importable form, a sideload by the Stratecon Migration
+    Repair plugin).
 
     Dedupes by display_image_url(url), not the raw url -- the same
     logical photo commonly shows up at several different GoDaddy CDN
@@ -1853,9 +1856,11 @@ def build_qa_report(data, brand=None):
             f"- **Homepage**: the front page imports as a normal page — titled "
             f"\"{clean_title(front_page['title'])}\", slug `{front_page['slug']}`. Which page "
             f"WordPress shows at `/` is a site option (Settings → Reading), not page content, "
-            f"so no WXR import can set it. **`{OUT_REPAIR}` sets it for you** (run it once "
-            f"after import); or set it by hand via Settings → Reading → \"Your homepage "
-            f"displays\" → a static page. Skip both and `/` shows the default blog listing."
+            f"so no WXR import can set it. **The {REPAIR_PLUGIN_NAME} plugin sets it for "
+            f"you** — {REPAIR_HOWTO}; or set it by hand via Settings → Reading → \"Your "
+            f"homepage displays\" → a static page. Skip both and `/` shows the default blog "
+            f"listing. (Publish the imported pages first — the plugin can only point `/` at a "
+            f"page that exists.)"
         )
     if hero_count:
         lines.append(
@@ -1864,8 +1869,8 @@ def build_qa_report(data, brand=None):
             "header widget (which is otherwise treated as site chrome) and rebuilt as a "
             "full-width cover block — this is the migrated home page's only page-level "
             "`<h1>`. The background is a GoDaddy stock photo with no importable URL; "
-            f"`{OUT_REPAIR}` sideloads it with the rest of the stock images. Sanity-check "
-            "the wording and the CTA target."
+            f"the {REPAIR_PLUGIN_NAME} plugin sideloads it with the rest of the stock "
+            "images. Sanity-check the wording and the CTA target."
         )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
@@ -1884,8 +1889,8 @@ def build_qa_report(data, brand=None):
             "URLs carry an extension that doesn't match the actual bytes (a `.webp`/`.png` "
             "URL that returns JPEG); WordPress saves those with the correct extension but the "
             f"importer leaves the page's `<img>` tag pointing at the old one, so it 404s. "
-            f"**`{OUT_REPAIR}` repoints every broken `wp-content/uploads/` image URL** at the "
-            "file WordPress actually created — run it once after import."
+            f"**The {REPAIR_PLUGIN_NAME} plugin repoints every broken `wp-content/uploads/` "
+            f"image URL** at the file WordPress actually created — {REPAIR_HOWTO}."
         )
         if media_text_count:
             lines.append(
@@ -1901,9 +1906,10 @@ def build_qa_report(data, brand=None):
                 "their source URLs (the original site's stock-photo CDN) have no filename or "
                 "extension for the importer's attachment mechanism to accept, just an opaque "
                 "ID, so the WXR leaves them hotlinked to the old site. "
-                f"**`{OUT_REPAIR}` pulls independent copies** (downloads each, sniffs the real "
-                "image type, then sideloads it) and repoints every occurrence — run it once "
-                "after import. Until then they display fine, just served from the old host."
+                f"**The {REPAIR_PLUGIN_NAME} plugin pulls independent copies** (downloads "
+                "each, sniffs the real image type, then sideloads it) and repoints every "
+                f"occurrence — {REPAIR_HOWTO}. Until then they display fine, just served from "
+                "the old host."
             )
     if menu_items_xml:
         lines.append(
@@ -2035,10 +2041,12 @@ def build_qa_report(data, brand=None):
     lines.append("- `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.")
     lines.append("- `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.")
     lines.append(
-        f"- `{OUT_REPAIR}` — run once from the WordPress root (`php {OUT_REPAIR}`) after "
-        "importing and publishing the pages. Repoints broken re-hosted image URLs at the "
+        f"- `{OUT_REPAIR}` — the **{REPAIR_PLUGIN_NAME}** plugin. After importing and "
+        f"publishing the pages, {REPAIR_HOWTO}. Repoints broken re-hosted image URLs at the "
         "file WordPress actually saved, pulls media-library copies of the stock images the "
-        "importer couldn't, and sets the static front page. Safe to re-run."
+        "importer couldn't, and sets the static front page. No server/shell access needed; "
+        "safe to activate again. (A shell, where available, can instead run "
+        "`php wp-content/plugins/repair-migration/repair-migration.php` directly.)"
     )
     if brand:
         lines.append(f"- `{OUT_THEME}` — the extracted color palette and font list in WordPress's block-theme format.")
@@ -2711,7 +2719,22 @@ def build_apply_branding_php(brand):
     return "".join(parts)
 
 
-OUT_REPAIR = "repair_migration.php"
+# The post-import repair is shipped as an installable WordPress plugin
+# (upload the .zip via Plugins -> Add New -> Upload Plugin, then Activate)
+# rather than a `php repair_migration.php` shell script -- SiteGround and
+# most shared hosts give the client no shell to run one. OUT_REPAIR is the
+# artifact the client actually handles (the .zip); OUT_REPAIR_PHP_REL is
+# the plugin file inside it / on disk.
+OUT_REPAIR_DIR = "repair-migration"
+OUT_REPAIR_PHP_REL = os.path.join(OUT_REPAIR_DIR, "repair-migration.php")
+OUT_REPAIR = "repair-migration.zip"
+REPAIR_PLUGIN_NAME = "Stratecon Migration Repair"
+# How the client runs the repair, for QA-report prose. It's a plugin now,
+# not a shell script -- upload + activate, no server access needed.
+REPAIR_HOWTO = (
+    f"upload **`{OUT_REPAIR}`** via Plugins → Add New → Upload Plugin and click "
+    f"Activate — it runs once, shows a report, then deactivates itself"
+)
 
 
 def _php_single_quoted(value):
@@ -2721,10 +2744,17 @@ def _php_single_quoted(value):
 
 
 def build_repair_migration_php(data):
-    """A companion PHP script -- run once from the WordPress root after a
-    fresh WXR import (`php repair_migration.php`), the same pattern as
-    apply_branding.php -- that fixes the things WXR + the core importer
-    provably get wrong, none of which any WXR item can express:
+    """The post-import repair, as an installable WordPress plugin -- the
+    client uploads `repair-migration.zip` via Plugins -> Add New -> Upload
+    Plugin and clicks Activate; it does its work once on activation,
+    prints a report in an admin notice, then deactivates itself. No shell
+    access needed (SiteGround and most shared hosts don't give the client
+    one). The same file is still runnable straight from the CLI where a
+    shell *is* available (`php wp-content/plugins/repair-migration/
+    repair-migration.php`).
+
+    It fixes the things WXR + the core importer provably get wrong, none
+    of which any WXR item can express:
 
       1. Broken re-hosted image URLs. GoDaddy serves some images from a
          URL whose extension lies about the bytes (a `.webp`/`.png` URL
@@ -2751,9 +2781,9 @@ def build_repair_migration_php(data):
          no WXR item can set it, so a migrated home page otherwise
          imports as a normal page and `/` shows the blog listing.
 
-    Idempotent: a second run re-checks the same conditions and no-ops on
-    anything already fixed (a stock URL no longer present in any post is
-    skipped rather than re-downloaded).
+    Idempotent: activating it again re-checks the same conditions and
+    no-ops on anything already fixed (a stock URL no longer present in
+    any post is skipped rather than re-downloaded).
     """
     front_page = next((p for p in data.get("pages", []) if p.get("is_front_page")), None)
     _, non_importable = partition_images_by_importability(
@@ -2761,93 +2791,100 @@ def build_repair_migration_php(data):
     )
 
     php_stock_entries = ",\n".join(
-        f"    {_php_single_quoted(url)} => {_php_single_quoted(alt or '')}"
+        f"        {_php_single_quoted(url)} => {_php_single_quoted(alt or '')}"
         for url, alt in non_importable.items()
-    ) or "    // (none -- every image had an importable URL)"
+    ) or "        // (none -- every image had an importable URL)"
     front_slug_literal = (
         _php_single_quoted(front_page["slug"]) if front_page else "null"
     )
 
     # Raw string: every backslash below is for PHP/PCRE, not Python. The
-    # two dynamic values are spliced in via sentinel replace so nothing
-    # needs Python brace- or escape-handling.
+    # dynamic values are spliced in via sentinel replace so nothing needs
+    # Python brace- or escape-handling.
     template = r'''<?php
-// Run once from the WordPress root (next to wp-load.php) after importing
-// stratecon-migration.xml with "Download and import file attachments"
-// checked:   php repair_migration.php
-//
-// Fixes what the WXR + core importer provably get wrong and no WXR item
-// can carry -- broken re-hosted image URLs, un-copied stock images, and
-// the static-front-page option. Safe to run more than once.
-require_once(__DIR__ . '/wp-load.php');
-require_once(ABSPATH . 'wp-admin/includes/image.php');
-require_once(ABSPATH . 'wp-admin/includes/file.php');
-require_once(ABSPATH . 'wp-admin/includes/media.php');
+/**
+ * Plugin Name: __PLUGIN_NAME__
+ * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, and sets the static front page. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
+ * Version:     1.0.0
+ * Author:      Webstractor migration pipeline (auto-generated)
+ */
 
-$uploads = wp_get_upload_dir();
-$all_posts = get_posts(array(
-    'post_type'   => array('page', 'post'),
-    'post_status' => 'any',
-    'numberposts' => -1,
-));
-
-// ---------------------------------------------------------------------
-// 1. Repoint broken /wp-content/uploads/ image URLs at the real file.
-// ---------------------------------------------------------------------
-$img_url_re = '~https?://[^\s\x22\x27<>()]+?/wp-content/uploads/[^\s\x22\x27<>()]+?\.(?:jpe?g|png|gif|webp|avif)(?=[\s\x22\x27>)]|$)~i';
-$fixed_refs = 0;
-foreach ($all_posts as $post) {
-    $content = $post->post_content;
-    if (strpos($content, '/wp-content/uploads/') === false) {
-        continue;
+if (!defined('ABSPATH')) {
+    // No WordPress around us -- this is a direct CLI run, e.g.
+    //   php wp-content/plugins/repair-migration/repair-migration.php
+    // (handy where a shell IS available; the plugin path is for hosts
+    // where it isn't).
+    if (PHP_SAPI !== 'cli') {
+        exit;
     }
-    $updated = $content;
-    if (preg_match_all($img_url_re, $content, $m)) {
-        foreach (array_unique($m[0]) as $url) {
-            $rel  = ltrim(str_replace($uploads['baseurl'], '', $url), '/');
-            $path = $uploads['basedir'] . '/' . $rel;
-            if (file_exists($path)) {
-                continue;  // URL already resolves -- nothing to do
-            }
-            $dir  = dirname($path);
-            $stem = preg_replace('/\.[a-z0-9]+$/i', '', basename($path));
-            // Same stem, any real image extension; also tolerate
-            // WordPress's -1/-2 filename-collision suffix on the real
-            // file. Prefer an exact-stem match; fall back to a suffixed
-            // one. Skip WordPress's own -WxH sub-size thumbnails.
-            $candidates = array_merge(
-                (array) glob($dir . '/' . $stem . '.*'),
-                (array) glob($dir . '/' . $stem . '-*.*')
-            );
-            $replacement = null;
-            foreach ($candidates as $cand) {
-                if (preg_match('/-\d+x\d+\.[a-z0-9]+$/i', $cand)) {
-                    continue;  // WordPress sub-size, not the original
-                }
-                if (preg_match('/\.(jpe?g|png|gif|webp|avif)$/i', $cand) && is_file($cand)) {
-                    $replacement = $uploads['baseurl'] . '/' . ltrim(str_replace($uploads['basedir'], '', $cand), '/');
-                    break;
-                }
-            }
-            if ($replacement && $replacement !== $url) {
-                $updated = str_replace($url, $replacement, $updated);
-                $fixed_refs++;
-            }
+    $candidates = array(
+        dirname(__FILE__, 4) . '/wp-load.php',  // wp-content/plugins/<dir>/<file>
+        dirname(__FILE__, 3) . '/wp-load.php',
+        dirname(__FILE__, 2) . '/wp-load.php',
+        dirname(__FILE__) . '/wp-load.php',
+    );
+    $loaded = false;
+    foreach ($candidates as $wp_load) {
+        if (file_exists($wp_load)) {
+            require_once $wp_load;
+            $loaded = true;
+            break;
         }
     }
-    if ($updated !== $content) {
-        wp_update_post(array('ID' => $post->ID, 'post_content' => $updated));
+    if (!$loaded) {
+        fwrite(STDERR, "wp-load.php not found relative to " . __FILE__ . "\n");
+        exit(1);
     }
+    foreach (stratecon_migration_repair_run() as $line) {
+        echo $line . "\n";
+    }
+    exit(0);
 }
-echo "Broken image URLs repointed: {$fixed_refs}\n";
 
-// ---------------------------------------------------------------------
-// 2. Sideload stock images the importer couldn't, then repoint refs.
-//    These URLs have no extension, so media_sideload_image()'s own
-//    URL-regex can't name the temp file -- download, sniff the real
-//    type, name it ourselves, then hand it to media_handle_sideload().
-// ---------------------------------------------------------------------
-function migr_sideload($src, $alt) {
+register_activation_hook(__FILE__, function () {
+    // Stash the report for the admin notice below. No echo here: any
+    // output during activation trips WordPress's "plugin generated N
+    // characters of unexpected output" warning.
+    set_transient(
+        'stratecon_migration_repair_report',
+        stratecon_migration_repair_run(),
+        10 * MINUTE_IN_SECONDS
+    );
+});
+
+add_action('admin_notices', function () {
+    $report = get_transient('stratecon_migration_repair_report');
+    if ($report === false) {
+        return;
+    }
+    delete_transient('stratecon_migration_repair_report');
+    // Arm a one-request-later self-deactivate: the notice is shown once,
+    // then the plugin bows out on its own on the next admin page load.
+    // Nothing of it runs on a normal request, but no reason to leave it
+    // sitting in the active list either.
+    update_option('stratecon_migration_repair_cleanup', 1, false);
+    echo '<div class="notice notice-success"><p><strong>' . esc_html('__PLUGIN_NAME__') . ' &mdash; done.</strong></p><ul style="list-style:disc;margin-left:2em">';
+    foreach ((array) $report as $line) {
+        echo '<li>' . esc_html($line) . '</li>';
+    }
+    echo '</ul><p>This plugin has finished its one-time job and will deactivate itself. You can delete it.</p></div>';
+});
+
+add_action('admin_init', function () {
+    if (!get_option('stratecon_migration_repair_cleanup')) {
+        return;
+    }
+    delete_option('stratecon_migration_repair_cleanup');
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    deactivate_plugins(plugin_basename(__FILE__));
+});
+
+// Sideload one image whose URL has no usable extension (GoDaddy's
+// isteam/stock/<id> URLs): download, sniff the real type, name the temp
+// file ourselves, then hand it to media_handle_sideload(). Declared
+// unconditionally at file scope so PHP hoists it -- the CLI branch above
+// calls run() before this point in the file is ever reached.
+function stratecon_migration_repair_sideload($src, $alt) {
     $tmp = download_url($src, 30);
     if (is_wp_error($tmp)) {
         return $tmp;
@@ -2866,60 +2903,150 @@ function migr_sideload($src, $alt) {
     return wp_get_attachment_url($id);
 }
 
-$stock = array(
+function stratecon_migration_repair_run() {
+    @set_time_limit(300);
+    @ignore_user_abort(true);
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+
+    $report = array();
+    $uploads = wp_get_upload_dir();
+    $all_posts = get_posts(array(
+        'post_type'   => array('page', 'post'),
+        'post_status' => 'any',
+        'numberposts' => -1,
+    ));
+
+    // -----------------------------------------------------------------
+    // 1. Repoint broken /wp-content/uploads/ image URLs at the real file.
+    // -----------------------------------------------------------------
+    $img_url_re = '~https?://[^\s\x22\x27<>()]+?/wp-content/uploads/[^\s\x22\x27<>()]+?\.(?:jpe?g|png|gif|webp|avif)(?=[\s\x22\x27>)]|$)~i';
+    $fixed_refs = 0;
+    foreach ($all_posts as $post) {
+        $content = $post->post_content;
+        if (strpos($content, '/wp-content/uploads/') === false) {
+            continue;
+        }
+        $updated = $content;
+        if (preg_match_all($img_url_re, $content, $m)) {
+            foreach (array_unique($m[0]) as $url) {
+                $rel  = ltrim(str_replace($uploads['baseurl'], '', $url), '/');
+                $path = $uploads['basedir'] . '/' . $rel;
+                if (file_exists($path)) {
+                    continue;  // URL already resolves -- nothing to do
+                }
+                $dir  = dirname($path);
+                $stem = preg_replace('/\.[a-z0-9]+$/i', '', basename($path));
+                // Same stem, any real image extension; also tolerate
+                // WordPress's -1/-2 filename-collision suffix on the real
+                // file. Prefer an exact-stem match; fall back to a
+                // suffixed one. Skip WordPress's own -WxH sub-sizes.
+                $candidates = array_merge(
+                    (array) glob($dir . '/' . $stem . '.*'),
+                    (array) glob($dir . '/' . $stem . '-*.*')
+                );
+                $replacement = null;
+                foreach ($candidates as $cand) {
+                    if (preg_match('/-\d+x\d+\.[a-z0-9]+$/i', $cand)) {
+                        continue;  // WordPress sub-size, not the original
+                    }
+                    if (preg_match('/\.(jpe?g|png|gif|webp|avif)$/i', $cand) && is_file($cand)) {
+                        $replacement = $uploads['baseurl'] . '/' . ltrim(str_replace($uploads['basedir'], '', $cand), '/');
+                        break;
+                    }
+                }
+                if ($replacement && $replacement !== $url) {
+                    $updated = str_replace($url, $replacement, $updated);
+                    $fixed_refs++;
+                }
+            }
+        }
+        if ($updated !== $content) {
+            wp_update_post(array('ID' => $post->ID, 'post_content' => $updated));
+        }
+    }
+    $report[] = "Broken image URLs repointed: {$fixed_refs}";
+
+    // -----------------------------------------------------------------
+    // 2. Sideload stock images the importer couldn't, then repoint refs.
+    // -----------------------------------------------------------------
+    $stock = array(
 __STOCK_ENTRIES__
-);
-$sideloaded = 0;
-$stock_skipped = 0;
-foreach ($stock as $src => $alt) {
-    $still_used = false;
-    foreach ($all_posts as $post) {
-        if (strpos(get_post_field('post_content', $post->ID), $src) !== false) {
-            $still_used = true;
-            break;
+    );
+    $sideloaded = 0;
+    $stock_skipped = 0;
+    foreach ($stock as $src => $alt) {
+        $still_used = false;
+        foreach ($all_posts as $post) {
+            if (strpos(get_post_field('post_content', $post->ID), $src) !== false) {
+                $still_used = true;
+                break;
+            }
+        }
+        if (!$still_used) {
+            $stock_skipped++;
+            continue;  // already handled on a previous run, or never referenced
+        }
+        $new_url = stratecon_migration_repair_sideload($src, $alt);
+        if (is_wp_error($new_url)) {
+            $report[] = "  stock sideload failed ({$src}): " . $new_url->get_error_message();
+            continue;
+        }
+        foreach ($all_posts as $post) {
+            $content = get_post_field('post_content', $post->ID);
+            if (strpos($content, $src) !== false) {
+                wp_update_post(array('ID' => $post->ID, 'post_content' => str_replace($src, $new_url, $content)));
+            }
+        }
+        $sideloaded++;
+    }
+    $report[] = "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)";
+
+    // -----------------------------------------------------------------
+    // 3. Static front page.
+    // -----------------------------------------------------------------
+    $front_slug = __FRONT_SLUG__;
+    if ($front_slug) {
+        $front = get_page_by_path($front_slug);
+        if ($front) {
+            update_option('show_on_front', 'page');
+            update_option('page_on_front', $front->ID);
+            $note = ($front->post_status === 'publish') ? '' : " (still a {$front->post_status} -- publish it so / resolves)";
+            $report[] = "Front page set to \"{$front->post_title}\" (slug {$front_slug}, id {$front->ID}){$note}.";
+        } else {
+            $report[] = "Front-page slug \"{$front_slug}\" not found -- publish the imported pages first, then activate this plugin again.";
         }
     }
-    if (!$still_used) {
-        $stock_skipped++;
-        continue;  // already handled on a previous run, or never referenced
-    }
-    $new_url = migr_sideload($src, $alt);
-    if (is_wp_error($new_url)) {
-        echo "  stock sideload failed ({$src}): " . $new_url->get_error_message() . "\n";
-        continue;
-    }
-    foreach ($all_posts as $post) {
-        $content = get_post_field('post_content', $post->ID);
-        if (strpos($content, $src) !== false) {
-            wp_update_post(array('ID' => $post->ID, 'post_content' => str_replace($src, $new_url, $content)));
-        }
-    }
-    $sideloaded++;
-}
-echo "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)\n";
 
-// ---------------------------------------------------------------------
-// 3. Static front page.
-// ---------------------------------------------------------------------
-$front_slug = __FRONT_SLUG__;
-if ($front_slug) {
-    $front = get_page_by_path($front_slug);
-    if ($front) {
-        update_option('show_on_front', 'page');
-        update_option('page_on_front', $front->ID);
-        echo "Front page set to \"{$front->post_title}\" (slug {$front_slug}, id {$front->ID}).\n";
-    } else {
-        echo "Front-page slug \"{$front_slug}\" not found -- publish the imported pages first.\n";
-    }
+    return $report;
 }
-
-echo "Done.\n";
 '''
     return (
         template
+        .replace("__PLUGIN_NAME__", REPAIR_PLUGIN_NAME)
         .replace("__STOCK_ENTRIES__", php_stock_entries)
         .replace("__FRONT_SLUG__", front_slug_literal)
     )
+
+
+def write_repair_migration_plugin(data):
+    """Write the repair plugin to disk as both an unpacked
+    `repair-migration/repair-migration.php` (for a shell / SFTP drop-in)
+    and a `repair-migration.zip` the client uploads via Plugins -> Add
+    New -> Upload Plugin. Returns the list of paths written."""
+    php = build_repair_migration_php(data)
+    os.makedirs(OUT_REPAIR_DIR, exist_ok=True)
+    with open(OUT_REPAIR_PHP_REL, "w") as f:
+        f.write(php)
+    # Fixed timestamp/permissions so the .zip only changes in git when the
+    # plugin's contents actually change, not on every regeneration.
+    info = zipfile.ZipInfo("repair-migration/repair-migration.php", (2026, 1, 1, 0, 0, 0))
+    info.external_attr = 0o644 << 16
+    info.compress_type = zipfile.ZIP_DEFLATED
+    with zipfile.ZipFile(OUT_REPAIR, "w") as z:
+        z.writestr(info, php)
+    return [OUT_REPAIR_PHP_REL, OUT_REPAIR]
 
 
 def main():
@@ -2944,10 +3071,9 @@ def main():
     with open(OUT_QA, "w") as f:
         f.write(build_qa_report(data, brand))
 
-    with open(OUT_REPAIR, "w") as f:
-        f.write(build_repair_migration_php(data))
+    repair_paths = write_repair_migration_plugin(data)
 
-    outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA, OUT_REPAIR]
+    outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA, *repair_paths]
     if brand:
         with open(OUT_THEME, "w") as f:
             f.write(build_theme_json(brand))

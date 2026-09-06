@@ -100,23 +100,32 @@ stratecon.tech. The manual reset→reimport→verify loop, in order:
    optional)
 5. Import the generated `stratecon-migration.xml`
 6. Publish all imported pages (they land as drafts)
-7. Set Site Logo: Appearance → Editor → Styles → (or the identity/logo
+7. Install the **Stratecon Migration Repair** plugin — Plugins → Add New →
+   Upload Plugin → `repair-migration.zip` → Activate. It runs once on
+   activation (repoints broken re-hosted image URLs, sideloads the ~70
+   GoDaddy stock images the importer can't take, and **sets the static
+   front page** from the crawler's `is_front_page` flag), shows a report
+   in an admin notice, then deactivates itself. Must run *after* step 6 —
+   it can only point `/` at a page that already exists and is published.
+   Idempotent; safe to activate again.
+8. Set Site Logo: Appearance → Editor → Styles → (or the identity/logo
    picker) → select the already-imported logo attachment from Media
    Library — **do this only after step 5**, never before. Touching the Site
    Editor before importing has previously caused WordPress to lazily create a
    stub row for the theme's own header/footer template parts or global
    styles, which collides with the real imported ones on a slug/singleton
    basis and silently keeps the stub active instead. Import first, always.
-8. Verify — screenshots or, if this session has direct site access (see
+9. Verify — screenshots or, if this session has direct site access (see
    below), a real Playwright pass across the pages that changed.
 
 If this Claude Code session has real credentials for dev.stratecon.tech (a
 dedicated `claude-agent` WordPress admin account — check for a local,
 git-ignored credentials file in this environment before asking Carver for
 one), drive this workflow directly with Playwright instead of walking Carver
-through it by hand: log in, run the WP Reset, reimport, publish, set the
-logo, and take real screenshots/read real computed styles/open the real
-block editor to check for validation warnings, the same way this project's
+through it by hand: log in, run the WP Reset, reimport, publish, upload +
+activate `repair-migration.zip`, set the logo, and take real screenshots/
+read real computed styles/open the real block editor to check for
+validation warnings, the same way this project's
 local WordPress test install has been used throughout. That closes the loop
 directly instead of round-tripping every change through Carver's own manual
 clicking and screenshots.
@@ -147,19 +156,27 @@ from SiteGround's bot rule; only a claimed-browser UA triggers it, plain
   extension, so the `<img>` 404s. Same failure hits any image whose GoDaddy
   URL extension lies about its bytes (the founder headshot `.png`, a `blob-*`
   `.png`, several `.webp`). Not a SiteGround problem, not intermittent — a
-  pipeline problem. Fixed: see `repair_migration.php` below.
+  pipeline problem. Fixed: see the repair plugin (`repair-migration.zip`) below.
 
 ## Fixes landed this session (generator_agent.py)
 
-- **`repair_migration.php`** — new generator output, run once from the WP
-  root after import (same pattern as `apply_branding.php`). Does the three
-  things no WXR item can: (1) repoints broken re-hosted image URLs at the
-  file WordPress actually saved; (2) sideloads the GoDaddy `isteam/stock/...`
-  images the importer can't take (opaque IDs, no extension) and repoints
-  every reference — ~70 on this site; (3) sets the static front page from
-  the crawler's `is_front_page` flag. Idempotent. Verified end-to-end on the
-  dev site: 0 broken images, 0 remaining `img1.wsimg.com` hot-links, `/`
-  serves the migrated home.
+- **`repair-migration.zip` — post-import repair, now an installable plugin**
+  (was `repair_migration.php`, a `php` shell script — SiteGround gives the
+  client no shell). Upload via Plugins → Add New → Upload Plugin, click
+  Activate: it runs once on activation, shows a report in an admin notice,
+  then deactivates itself. Does the three things no WXR item can: (1)
+  repoints broken re-hosted image URLs at the file WordPress actually saved;
+  (2) sideloads the GoDaddy `isteam/stock/...` images the importer can't
+  take (opaque IDs, no extension) and repoints every reference — ~70 on this
+  site; (3) sets the static front page from the crawler's `is_front_page`
+  flag. Idempotent. The same file still runs straight from a shell where one
+  exists (`php wp-content/plugins/repair-migration/repair-migration.php`).
+  The generator emits both the unpacked `repair-migration/repair-migration.php`
+  and the `.zip`. Verified end-to-end on the dev site by activating it:
+  report read "Broken image URLs repointed: 13 / Stock images sideloaded: 70
+  / Front page set to … id 100", 0 broken images afterward, hero background
+  now served from `dev.stratecon.tech`, plugin self-deactivated on the next
+  admin page load.
 - **`core/freeform` (Classic) blocks eliminated.** The generator was emitting
   `<!-- QA FLAG -->` HTML comments *between* top-level blocks; WordPress's
   parser turns each stray comment into a Classic block on import (1–4 per
@@ -189,18 +206,18 @@ The "no hero, no `<h1>` on the home page" issue below is **fixed**:
   CTA button routed through the same slug resolution the card CTAs use. New
   `.migration-hero` CSS backs the overlay colour / min-height / white text
   independently of the imported palette. `collect_unique_images()` picks up
-  the hero image so it flows into `repair_migration.php`'s stock-sideload
-  list automatically.
+  the hero image so it flows into the repair plugin's stock-sideload list
+  automatically.
 - **Verified on the real dev site** (full WP Reset → import → publish →
-  set front page → verify, headed Chrome): the migrated home now has exactly
-  **one `<h1>`** ("Trusted Technology Advice", was zero); the cover renders
-  full-bleed with the `#1d2b52` overlay, white Playfair Display heading,
-  Cabin sub-tagline, and a "Contact Us" button linking to `/contact/`;
-  **0 block-editor validation warnings** on the page (cover + inner blocks
-  all parse clean); Playfair Display + Cabin still load, no regression to
-  the rest of the page. `repair_migration.php` was **not** run this pass (no
-  shell on SiteGround), so the hero background — like the other ~70 stock
-  images — still hot-links to `img1.wsimg.com` until it is.
+  activate `repair-migration.zip` → verify, headed Chrome): the migrated
+  home now has exactly **one `<h1>`** ("Trusted Technology Advice", was
+  zero); the cover renders full-bleed with the `#1d2b52` overlay, white
+  Playfair Display heading, Cabin sub-tagline, and a "Contact Us" button
+  linking to `/contact/`; **0 block-editor validation warnings** on the page
+  (cover + inner blocks all parse clean); Playfair Display + Cabin still
+  load, no regression to the rest of the page. After the repair plugin ran,
+  the hero background is served from `dev.stratecon.tech` (sideloaded), not
+  hot-linked.
 
 ## Known issues still open (crawler / extraction side — next batch)
 
