@@ -126,38 +126,68 @@ already set up a local credentials file outside git, ask where one should
 live (e.g. `~/dev-site-credentials.txt` in this account's home directory,
 outside the repo) rather than writing a password into any tracked file.
 
-## Known issues carried forward from prior sessions
+## Verified against the real dev site (2026-09-05, direct-access session)
 
-- **Two specific re-hosted images intermittently fail to import** on Carver's
-  real SiteGround host ("Cyber Training example.webp" / "AI Customer
-  Service.webp" source filenames) despite every diagnostic available from a
-  sandboxed session coming back clean: the source URLs are valid/reachable,
-  the downloaded bytes are valid JPEGs despite the `.webp` URL extension,
-  WordPress's own type-sniffing correctly retypes them, and a full local
-  production-equivalent reimport succeeds every time. Suspected but
-  unconfirmed: an interaction with SiteGround Optimizer's own WebP
-  image-conversion feature, since these are the only two images on the site
-  sourced from `.webp`-extensioned URLs. If this session has real site
-  access, this is worth investigating directly (check the plugin's settings,
-  the Media Library state, and the site's own error log) rather than
-  continuing to reason about it from a sandbox.
-- **Font loading was fixed twice.** A CSS `@import` of the Google Fonts
-  stylesheet (in the `custom_css`/global-styles content) looked correct in a
-  sandboxed test but didn't survive on the real host — @import needs to be
-  the literal first rule in its stylesheet or browsers discard it, and
-  CSS-combining/minifying plugins (SiteGround Optimizer is active on the dev
-  site) are a well-known way that breaks. Replaced with real `@font-face`
-  data embedded in `settings.typography.fontFamilies[].fontFace` (theme.json
-  v2's native schema, read by `WP_Font_Face_Resolver`, core since WP 6.4) —
-  confirmed via a local WordPress install that this produces real
-  `@font-face` CSS in `wp_head`, not yet confirmed against the real dev site
-  as of the last handoff.
-- Contact form's exact fields weren't fully visible in extracted content —
-  needs confirmation against the live site before any real migration goes
-  live.
-- Newsletter signup is mapped to a placeholder shortcode — needs to be wired
-  to whatever email tool the new site will actually use.
-- The Qualification Agent is still regex-based (see the pipeline design
-  above) — fine for stratecon.tech, which this project has been tuned
-  against, but needs to move to something more robust before this is trusted
-  on a client site it hasn't seen.
+A full reset → import → publish → repair → verify pass ran directly against
+dev.stratecon.tech (headed real Chrome — headless Chromium gets a hard 403
+from SiteGround's bot rule; only a claimed-browser UA triggers it, plain
+`curl` is fine). Results:
+
+- **Fonts: confirmed working on the real host.** Playfair Display + Cabin
+  render (not a fallback serif) on every migrated page —
+  `document.fonts.check()` true, correct `#1d2b52`/sizes. The theme.json
+  `fontFace` mechanism holds up on SiteGround. Note SiteGround's Speed
+  Optimizer (the renamed SG Optimizer) is currently **inactive** on the dev
+  site; WP-Optimize's cache/minify plugin is active instead. Re-test with
+  Speed Optimizer on before trusting fonts in production.
+- **The "two intermittently-missing images" were misdiagnosed.** They import
+  fine — WordPress downloads the JPEG bytes behind the `.webp` URL, saves the
+  file as `.jpg`, generates every sub-size. They rendered *broken* because
+  the importer's content URL-rewrite keeps the original `.webp`/`.png`
+  extension, so the `<img>` 404s. Same failure hits any image whose GoDaddy
+  URL extension lies about its bytes (the founder headshot `.png`, a `blob-*`
+  `.png`, several `.webp`). Not a SiteGround problem, not intermittent — a
+  pipeline problem. Fixed: see `repair_migration.php` below.
+
+## Fixes landed this session (generator_agent.py)
+
+- **`repair_migration.php`** — new generator output, run once from the WP
+  root after import (same pattern as `apply_branding.php`). Does the three
+  things no WXR item can: (1) repoints broken re-hosted image URLs at the
+  file WordPress actually saved; (2) sideloads the GoDaddy `isteam/stock/...`
+  images the importer can't take (opaque IDs, no extension) and repoints
+  every reference — ~70 on this site; (3) sets the static front page from
+  the crawler's `is_front_page` flag. Idempotent. Verified end-to-end on the
+  dev site: 0 broken images, 0 remaining `img1.wsimg.com` hot-links, `/`
+  serves the migrated home.
+- **`core/freeform` (Classic) blocks eliminated.** The generator was emitting
+  `<!-- QA FLAG -->` HTML comments *between* top-level blocks; WordPress's
+  parser turns each stray comment into a Classic block on import (1–4 per
+  page). They're now stripped from `post_content` and collected into a
+  "Per-page review notes" section in `qa_report.md`. Verified: 0 freeform,
+  0 validation warnings on every page checked in the real block editor.
+
+## Known issues still open (crawler / extraction side — next batch)
+
+These are all in `crawler_agent.py` / the extraction step, not the
+generator: the generator faithfully renders an incomplete capture.
+
+- **No hero/banner section, no `<h1>` on the home page.** The crawler never
+  captures GoDaddy's hero pattern, so the migrated home starts at its first
+  section heading (an `<h2>`) with no page-level `<h1>`. `featured_image` is
+  also the same bogus value (`isteam/stock/2646`) on every page.
+- **FAQ accordion is flattened.** `extract_blocks()`'s FAQ detection emits a
+  `faq_raw_unverified` block: questions captured, **no answers paired**, and
+  the whole thing concatenated once then repeated. Renders on the page as
+  duplicated FAQ text plus orphan questions. This is what the LLM Content
+  Structuring Agent (pipeline step 5) is for.
+- **Contact form / newsletter.** `forms_detected` captured one empty field.
+  Contact page shows no real form and a literal `[contact-form-7 id="TBD"]`
+  placeholder. Needs a form-plugin decision + real field capture.
+- **`post_feed` ("AI Insights") layout.** Large vertical whitespace in the
+  card grid; thumbnails often absent (client-JS-loaded on the source, not
+  seen by the crawler; the og:image fallback is the bogus `stock/2646`).
+- Minor text artifacts from link extraction: "Please Contact Us us if…"
+  (double "us"), trailing literal "source" after each stat on AI Solutions.
+- The Qualification Agent is still regex-based — fine for stratecon.tech but
+  needs hardening before an unseen client site.

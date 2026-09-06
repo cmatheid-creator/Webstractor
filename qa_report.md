@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-03 01:31 UTC
+Generated: 2026-09-06 00:51 UTC
 
 ## Summary
 
@@ -9,11 +9,11 @@ Generated: 2026-09-03 01:31 UTC
 
 ## Items flagged for human review before go-live
 
-- **Set the homepage** (one-time, unavoidable manual step): the front page imports as a normal page — titled "Trusted Technology Advisers | Cybersecurity Solutions", slug `home` — like any other. Which page WordPress actually shows at `/` is a site option (Settings → Reading → "Your homepage displays" → set it to a static page → choose this one), not page content, so no WXR import can set it automatically. Skip this and `/` shows the default blog post listing instead.
+- **Homepage**: the front page imports as a normal page — titled "Trusted Technology Advisers | Cybersecurity Solutions", slug `home`. Which page WordPress shows at `/` is a site option (Settings → Reading), not page content, so no WXR import can set it. **`repair_migration.php` sets it for you** (run it once after import); or set it by hand via Settings → Reading → "Your homepage displays" → a static page. Skip both and `/` shows the default blog listing.
 - **Forms detected** (20 page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.
-- **Images** (93 unique, 112 placements across the crawled pages): 23 included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. The inline image blocks on each page still reference the *original* site's URL, though — swap those to the new media-library copies before decommissioning the old site.
+- **Images** (93 unique, 112 placements across the crawled pages): 23 included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. Some of the original site's image URLs carry an extension that doesn't match the actual bytes (a `.webp`/`.png` URL that returns JPEG); WordPress saves those with the correct extension but the importer leaves the page's `<img>` tag pointing at the old one, so it 404s. **`repair_migration.php` repoints every broken `wp-content/uploads/` image URL** at the file WordPress actually created — run it once after import.
 - **Side-by-side layout preserved** (56 section(s)): the original site's two-column image+text sections (detected from its real Grid/GridCell markup) are generated as WordPress Media & Text blocks instead of a plain stacked image and paragraph, matching the original layout rather than flattening it.
-- **70 image(s) can't be auto-imported into the media library**: their source URLs (this site's stock-photo CDN links) have no filename or extension anywhere in the path, just an opaque ID -- WordPress's importer requires a recognized image extension in the URL itself and rejects these regardless of what the server actually returns. They still display correctly on the migrated pages (hotlinked to the original site), they just won't get an independent media-library copy automatically -- save them from the browser and upload manually if you want copies before decommissioning the old site.
+- **70 stock image(s) can't ride the WXR import**: their source URLs (the original site's stock-photo CDN) have no filename or extension for the importer's attachment mechanism to accept, just an opaque ID, so the WXR leaves them hotlinked to the old site. **`repair_migration.php` pulls independent copies** (downloads each, sniffs the real image type, then sideloads it) and repoints every occurrence — run it once after import. Until then they display fine, just served from the old host.
 - **Navigation menu** (20 item(s), matching the site's real nav structure including page hierarchy) is included **twice**, in two different WordPress formats, so it works automatically regardless of which kind of theme the target site uses:
   - A classic menu named "Migrated Site Menu" (for classic/hybrid themes — Appearance → Menus, assign it to a menu location).
   - A block-theme navigation entry (`wp_navigation`, also named "Migrated Site Menu") for block themes like Twenty Twenty-Four. This one is wired in automatically (see the header/footer bullet below) — nothing to click for it specifically.
@@ -24,9 +24,106 @@ Generated: 2026-09-03 01:31 UTC
 - **Logo** found at https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/22a28f51-fa97-43af-906c-309373c738aa.png/:/rs=h:88,cg:true,m/qt=q:95 -- included in the WXR as a real media-library attachment (post_id 40004). Setting it as the site's active logo (the `site_logo` option/`custom_logo` theme mod) isn't something WXR can do on its own, though -- run `php apply_branding.php` once after importing (from the WordPress root) to finish the job.
 - **Brand fonts loaded for real**: `theme.json`/"Custom Styles" only *register* the extracted font-family names -- nothing else fetches the actual font files, so every role using one would otherwise silently fall back to its generic fallback (e.g. Georgia/serif). `php apply_branding.php` (see above) also writes a small must-use plugin that loads the real fonts from Google Fonts on every page, sitewide. Without file access to run that script, WordPress's built-in Font Library (Appearance → Editor → Styles → Typography, WP 6.5+) is the no-code alternative -- but confirmed a real gotcha there: **installing** a font only adds it to the library, each individual weight/style face still needs to be **activated** separately (checked on) before it actually loads. A font showing e.g. "1 of 8 active" in the Fonts screen means only one weight is live -- headings/nav using a different weight will silently fall back to the generic font until every face that role needs is checked on too. Also survives a database reset worse than the must-use-plugin route: Font Library's installed fonts are database entries, wiped by a full reset, and need reinstalling+reactivating afterward -- the must-use plugin is a file on disk that a DB reset doesn't touch.
 
+## Per-page review notes
+
+Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content. They're collected here instead: left in the page body, WordPress's block editor turns every one into a stray "Classic" block on import.
+
+- **Trusted Technology Advisers | Cybersecurity Solutions** (`home`):
+  - card images still point at the original site -- swap to the re-hosted media-library copy after import.
+  - Low-confidence FAQ extraction -- review before publishing.
+  - form 1 on this page had fields: (unnamed) (text) -- confirm against the live site and wire to the real form plugin.
+- **Connectivity** (`connectivity`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Blog** (`blog`):
+  - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
+- **Cybersecurity Insurance: Is It Right for Your SMB?** (`cybersecurity-insurance-is-it-right-for-your-smb`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **AI for Sales** (`ai-for-sales-1`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Cybersecurity Solutions** (`cybersecurity-solutions`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - card images still point at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin.
+- **AI Strategy** (`ai-strategy-1`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Risk Assessment** (`risk-assessment-1`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Creating and Testing a Business Continuity/Disaster Recovery Plan** (`creating-and-testing-a-business-continuitydisaster-recovery-plan`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Threat Protection** (`threat-protection`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin.
+- **The Importance of Regular Cybersecurity Audits for SMBs** (`the-importance-of-regular-cybersecurity-audits-for-smbs`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Threat ID & Detection** (`threat-id-%26-detection`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (text) -- confirm against the live site and wire to the real form plugin.
+- **Services** (`services`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **AI Solutions** (`ai-solutions`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - card images still point at the original site -- swap to the re-hosted media-library copy after import.
+  - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
+- **Stratecon Tech Advisors - Unified Communications, Contact Center, Workforce Management** (`communications-solutions`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - card images still point at the original site -- swap to the re-hosted media-library copy after import.
+- **AI and Data Analytics: Uncovering Business Insights for SMBs** (`ai-and-data-analytics-uncovering-business-insights-for-smbs`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Supporting Hybrid Work with Effective Collaboration Tools** (`supporting-hybrid-work-with-effective-collaboration-tools`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Preventing Data Breaches: 8 Essential Strategies for SMBs** (`preventing-data-breaches-8-essential-strategies-for-smbs`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Unified Communications** (`unified-communications`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Building a Cybersecurity-Aware Culture in Your Business** (`building-a-cybersecurity-aware-culture-in-your-business`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Leveraging AI to Optimize Your Marketing Strategies** (`leveraging-ai-to-optimize-your-marketing-strategies`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Customer Experience** (`customer-experience`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Cybersecurity Compliance for SMBs: What You Need to Know** (`cybersecurity-compliance-for-smbs-what-you-need-to-know`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Managing Communications in a Multi-Generational Workforce** (`managing-communications-in-a-multi-generational-workforce`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Leveraging AI for Enhanced Customer Service** (`leveraging-ai-for-enhanced-customer-service`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **Stratecon Tech Advisors | Technology Advisory Services** (`about`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **10 Essential Cybersecurity Practices for SMBs in 2024** (`10-essential-cybersecurity-practices-for-smbs-in-2024`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **IT Advisor Services** (`contact`):
+  - form 1 on this page had fields: _app_id (text), (unnamed) (text), (unnamed) (text), (unnamed) (textarea), (unnamed) (checkbox) -- confirm against the live site and wire to the real form plugin.
+  - form 2 on this page had fields: (unnamed) (text) -- confirm against the live site and wire to the real form plugin.
+- **AI for Customer Service** (`ai-for-customer-service`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Cyber Risk Assessment** (`cyber-risk-assessment`):
+  - image still points at the original site -- swap to the re-hosted media-library copy after import.
+- **Top 5 Security Considerations When Utilizing Generative AI** (`top-5-security-considerations-when-utilizing-generative-ai`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **The Spider-Man* Dilemma: Building an AI Strategy** (`the-spider-mantm-dilemma-building-an-ai-strategy`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+- **How AI Can Transform Your Small to Medium Business** (`how-ai-can-transform-your-small-to-medium-business`):
+  - still points at the original site -- swap to the re-hosted media-library copy after import.
+  - form 1 on this page had fields: (unnamed) (email) -- confirm against the live site and wire to the real form plugin.
+
 ## What's in the attached files
 
 - `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.
 - `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.
+- `repair_migration.php` — run once from the WordPress root (`php repair_migration.php`) after importing and publishing the pages. Repoints broken re-hosted image URLs at the file WordPress actually saved, pulls media-library copies of the stock images the importer couldn't, and sets the static front page. Safe to re-run.
 - `theme.json` — the extracted color palette and font list in WordPress's block-theme format.
 - `apply_branding.php` — run once after each fresh import (`php apply_branding.php` from the WordPress root) to set the site logo and load the real brand fonts; see the notes above.

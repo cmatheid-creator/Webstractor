@@ -46,6 +46,21 @@ _PAGES_BY_SLUG = None
 # the linked page's own real featured_image (og:image).
 _FEATURED_IMAGE_BY_SLUG = None
 
+# {page_slug: [note, ...]} -- collected by build_item_xml() as it pulls
+# every "<!-- QA FLAG: ... -->" comment back out of a page's generated
+# block markup, and rendered as a per-page section in build_qa_report().
+# Those comments must NOT stay in post_content: WordPress's block parser
+# turns each comment sitting between two top-level blocks into its own
+# core/freeform (Classic) block on import -- confirmed against the real
+# dev site, every page carried one Classic block per QA-flag comment.
+# The QA report is where a human reviewer looks for this anyway.
+_QA_NOTES = {}
+
+# Recognized inline QA-flag comment, e.g.
+#   <!-- QA FLAG: card images still point at the original site ... -->
+# Comment bodies never contain ">" so [^>] is a safe, greedy-free match.
+QA_FLAG_COMMENT_RE = re.compile(r"[ \t]*<!-- QA FLAG:\s*(?P<note>[^>]*?)\s*-->\n?")
+
 
 # GoDaddy Website Builder can't do real nested nav menus, so some source
 # sites fake a sub-item look by prefixing the page <title> itself with a
@@ -752,9 +767,20 @@ def block_to_gutenberg(block):
 
 
 def build_item_xml(page, post_id, parent_post_id=0):
-    blocks_md = "\n\n".join(block_to_gutenberg(b) for b in page["blocks"])
-    title = xml_escape(clean_title(page["title"]))
     slug = page["slug"]
+    blocks_md = "\n\n".join(block_to_gutenberg(b) for b in page["blocks"])
+
+    # Pull every "<!-- QA FLAG: ... -->" comment out of the block markup
+    # and into the QA report (see _QA_NOTES). Left in post_content, each
+    # one sitting between two top-level blocks becomes its own core/
+    # freeform (Classic) block on import.
+    notes = [m.group("note").strip() for m in QA_FLAG_COMMENT_RE.finditer(blocks_md)]
+    if notes:
+        _QA_NOTES.setdefault(slug, []).extend(notes)
+        blocks_md = QA_FLAG_COMMENT_RE.sub("", blocks_md)
+        blocks_md = re.sub(r"\n{3,}", "\n\n", blocks_md).strip()
+
+    title = xml_escape(clean_title(page["title"]))
     meta_desc = xml_escape(page.get("meta_description", ""))
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
@@ -1484,6 +1510,7 @@ def build_page_template_item_xml(post_id, content):
 def build_wxr(data, brand=None):
     global _BRAND
     _BRAND = brand
+    _QA_NOTES.clear()  # per-run; build_qa_report() reads what this run collects
 
     site = data["site"]
     navigation = data.get("navigation") or []
@@ -1701,12 +1728,12 @@ def build_qa_report(data, brand=None):
     front_page = next((p for p in pages if p.get("is_front_page")), None)
     if front_page:
         lines.append(
-            f"- **Set the homepage** (one-time, unavoidable manual step): the front page "
-            f"imports as a normal page — titled \"{clean_title(front_page['title'])}\", slug "
-            f"`{front_page['slug']}` — like any other. Which page WordPress actually shows at "
-            f"`/` is a site option (Settings → Reading → \"Your homepage displays\" → set it to "
-            f"a static page → choose this one), not page content, so no WXR import can set it "
-            f"automatically. Skip this and `/` shows the default blog post listing instead."
+            f"- **Homepage**: the front page imports as a normal page — titled "
+            f"\"{clean_title(front_page['title'])}\", slug `{front_page['slug']}`. Which page "
+            f"WordPress shows at `/` is a site option (Settings → Reading), not page content, "
+            f"so no WXR import can set it. **`{OUT_REPAIR}` sets it for you** (run it once "
+            f"after import); or set it by hand via Settings → Reading → \"Your homepage "
+            f"displays\" → a static page. Skip both and `/` shows the default blog listing."
         )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
@@ -1721,9 +1748,12 @@ def build_qa_report(data, brand=None):
             f"the crawled pages): {len(importable_images)} included as WXR attachment items "
             "pointing at the original site's URLs. Check **\"Download and import file "
             "attachments\"** during import (the default) so WordPress fetches real, "
-            "independent copies into your media library. The inline image blocks on each "
-            "page still reference the *original* site's URL, though — swap those to the new "
-            "media-library copies before decommissioning the old site."
+            "independent copies into your media library. Some of the original site's image "
+            "URLs carry an extension that doesn't match the actual bytes (a `.webp`/`.png` "
+            "URL that returns JPEG); WordPress saves those with the correct extension but the "
+            f"importer leaves the page's `<img>` tag pointing at the old one, so it 404s. "
+            f"**`{OUT_REPAIR}` repoints every broken `wp-content/uploads/` image URL** at the "
+            "file WordPress actually created — run it once after import."
         )
         if media_text_count:
             lines.append(
@@ -1735,15 +1765,13 @@ def build_qa_report(data, brand=None):
             )
         if non_importable_images:
             lines.append(
-                f"- **{len(non_importable_images)} image(s) can't be auto-imported into the "
-                "media library**: their source URLs (this site's stock-photo CDN links) have "
-                "no filename or extension anywhere in the path, just an opaque ID -- "
-                "WordPress's importer requires a recognized image extension in the URL itself "
-                "and rejects these regardless of what the server actually returns. They still "
-                "display correctly on the migrated pages (hotlinked to the original site), "
-                "they just won't get an independent media-library copy automatically -- "
-                "save them from the browser and upload manually if you want copies before "
-                "decommissioning the old site."
+                f"- **{len(non_importable_images)} stock image(s) can't ride the WXR import**: "
+                "their source URLs (the original site's stock-photo CDN) have no filename or "
+                "extension for the importer's attachment mechanism to accept, just an opaque "
+                "ID, so the WXR leaves them hotlinked to the old site. "
+                f"**`{OUT_REPAIR}` pulls independent copies** (downloads each, sniffs the real "
+                "image type, then sideloads it) and repoints every occurrence — run it once "
+                "after import. Until then they display fine, just served from the old host."
             )
     if menu_items_xml:
         lines.append(
@@ -1854,11 +1882,32 @@ def build_qa_report(data, brand=None):
                 "database entries, wiped by a full reset, and need reinstalling+reactivating "
                 "afterward -- the must-use plugin is a file on disk that a DB reset doesn't touch."
             )
+    if _QA_NOTES:
+        lines.append("")
+        lines.append("## Per-page review notes")
+        lines.append("")
+        lines.append(
+            "Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's "
+            "content. They're collected here instead: left in the page body, WordPress's "
+            "block editor turns every one into a stray \"Classic\" block on import."
+        )
+        lines.append("")
+        pages_by_slug_title = {p["slug"]: clean_title(p["title"]) for p in pages}
+        for slug, notes in _QA_NOTES.items():
+            lines.append(f"- **{pages_by_slug_title.get(slug, slug)}** (`{slug}`):")
+            for note in dict.fromkeys(notes):  # dedupe, keep order
+                lines.append(f"  - {note}")
     lines.append("")
     lines.append("## What's in the attached files")
     lines.append("")
     lines.append("- `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.")
     lines.append("- `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.")
+    lines.append(
+        f"- `{OUT_REPAIR}` — run once from the WordPress root (`php {OUT_REPAIR}`) after "
+        "importing and publishing the pages. Repoints broken re-hosted image URLs at the "
+        "file WordPress actually saved, pulls media-library copies of the stock images the "
+        "importer couldn't, and sets the static front page. Safe to re-run."
+    )
     if brand:
         lines.append(f"- `{OUT_THEME}` — the extracted color palette and font list in WordPress's block-theme format.")
         if build_apply_branding_php(brand):
@@ -2514,6 +2563,217 @@ def build_apply_branding_php(brand):
     return "".join(parts)
 
 
+OUT_REPAIR = "repair_migration.php"
+
+
+def _php_single_quoted(value):
+    """A PHP single-quoted string literal for an arbitrary Python str --
+    only \\ and ' need escaping inside PHP single quotes."""
+    return "'" + str(value).replace("\\", "\\\\").replace("'", "\\'") + "'"
+
+
+def build_repair_migration_php(data):
+    """A companion PHP script -- run once from the WordPress root after a
+    fresh WXR import (`php repair_migration.php`), the same pattern as
+    apply_branding.php -- that fixes the things WXR + the core importer
+    provably get wrong, none of which any WXR item can express:
+
+      1. Broken re-hosted image URLs. GoDaddy serves some images from a
+         URL whose extension lies about the bytes (a `.webp`/`.png` URL
+         returning JPEG). WordPress downloads the bytes, correctly saves
+         the file as `.jpg`, and generates every sub-size -- but the
+         importer's content URL-rewrite keeps the original `.webp`/`.png`
+         extension, so every `<img>` referencing it 404s. Confirmed on
+         the real dev site: `AI Customer Service`, `Cyber Training
+         example`, the founder headshot, and others. This walks every
+         imported page, finds `wp-content/uploads/...` image URLs with no
+         file behind them, and repoints them at the real attachment (same
+         filename stem, whatever extension WordPress actually used).
+
+      2. Stock images that never got a media-library copy. GoDaddy's
+         `isteam/stock/<id>/:/...` URLs have no filename or extension for
+         the importer's attachment mechanism to accept, so they stayed
+         hot-linked to the old site. media_sideload_image() sniffs the
+         real type from the response and doesn't care about the URL
+         shape, so it can pull independent copies; each occurrence in
+         page content is then repointed at the new local URL.
+
+      3. The static front page. "Which page shows at /" is the
+         show_on_front / page_on_front option pair, not page content --
+         no WXR item can set it, so a migrated home page otherwise
+         imports as a normal page and `/` shows the blog listing.
+
+    Idempotent: a second run re-checks the same conditions and no-ops on
+    anything already fixed (a stock URL no longer present in any post is
+    skipped rather than re-downloaded).
+    """
+    front_page = next((p for p in data.get("pages", []) if p.get("is_front_page")), None)
+    _, non_importable = partition_images_by_importability(
+        collect_unique_images(data.get("pages", []))
+    )
+
+    php_stock_entries = ",\n".join(
+        f"    {_php_single_quoted(url)} => {_php_single_quoted(alt or '')}"
+        for url, alt in non_importable.items()
+    ) or "    // (none -- every image had an importable URL)"
+    front_slug_literal = (
+        _php_single_quoted(front_page["slug"]) if front_page else "null"
+    )
+
+    # Raw string: every backslash below is for PHP/PCRE, not Python. The
+    # two dynamic values are spliced in via sentinel replace so nothing
+    # needs Python brace- or escape-handling.
+    template = r'''<?php
+// Run once from the WordPress root (next to wp-load.php) after importing
+// stratecon-migration.xml with "Download and import file attachments"
+// checked:   php repair_migration.php
+//
+// Fixes what the WXR + core importer provably get wrong and no WXR item
+// can carry -- broken re-hosted image URLs, un-copied stock images, and
+// the static-front-page option. Safe to run more than once.
+require_once(__DIR__ . '/wp-load.php');
+require_once(ABSPATH . 'wp-admin/includes/image.php');
+require_once(ABSPATH . 'wp-admin/includes/file.php');
+require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+$uploads = wp_get_upload_dir();
+$all_posts = get_posts(array(
+    'post_type'   => array('page', 'post'),
+    'post_status' => 'any',
+    'numberposts' => -1,
+));
+
+// ---------------------------------------------------------------------
+// 1. Repoint broken /wp-content/uploads/ image URLs at the real file.
+// ---------------------------------------------------------------------
+$img_url_re = '~https?://[^\s\x22\x27<>()]+?/wp-content/uploads/[^\s\x22\x27<>()]+?\.(?:jpe?g|png|gif|webp|avif)(?=[\s\x22\x27>)]|$)~i';
+$fixed_refs = 0;
+foreach ($all_posts as $post) {
+    $content = $post->post_content;
+    if (strpos($content, '/wp-content/uploads/') === false) {
+        continue;
+    }
+    $updated = $content;
+    if (preg_match_all($img_url_re, $content, $m)) {
+        foreach (array_unique($m[0]) as $url) {
+            $rel  = ltrim(str_replace($uploads['baseurl'], '', $url), '/');
+            $path = $uploads['basedir'] . '/' . $rel;
+            if (file_exists($path)) {
+                continue;  // URL already resolves -- nothing to do
+            }
+            $dir  = dirname($path);
+            $stem = preg_replace('/\.[a-z0-9]+$/i', '', basename($path));
+            // Same stem, any real image extension; also tolerate
+            // WordPress's -1/-2 filename-collision suffix on the real
+            // file. Prefer an exact-stem match; fall back to a suffixed
+            // one. Skip WordPress's own -WxH sub-size thumbnails.
+            $candidates = array_merge(
+                (array) glob($dir . '/' . $stem . '.*'),
+                (array) glob($dir . '/' . $stem . '-*.*')
+            );
+            $replacement = null;
+            foreach ($candidates as $cand) {
+                if (preg_match('/-\d+x\d+\.[a-z0-9]+$/i', $cand)) {
+                    continue;  // WordPress sub-size, not the original
+                }
+                if (preg_match('/\.(jpe?g|png|gif|webp|avif)$/i', $cand) && is_file($cand)) {
+                    $replacement = $uploads['baseurl'] . '/' . ltrim(str_replace($uploads['basedir'], '', $cand), '/');
+                    break;
+                }
+            }
+            if ($replacement && $replacement !== $url) {
+                $updated = str_replace($url, $replacement, $updated);
+                $fixed_refs++;
+            }
+        }
+    }
+    if ($updated !== $content) {
+        wp_update_post(array('ID' => $post->ID, 'post_content' => $updated));
+    }
+}
+echo "Broken image URLs repointed: {$fixed_refs}\n";
+
+// ---------------------------------------------------------------------
+// 2. Sideload stock images the importer couldn't, then repoint refs.
+//    These URLs have no extension, so media_sideload_image()'s own
+//    URL-regex can't name the temp file -- download, sniff the real
+//    type, name it ourselves, then hand it to media_handle_sideload().
+// ---------------------------------------------------------------------
+function migr_sideload($src, $alt) {
+    $tmp = download_url($src, 30);
+    if (is_wp_error($tmp)) {
+        return $tmp;
+    }
+    $info = @getimagesize($tmp);
+    $ext  = $info ? ltrim(image_type_to_extension($info[2]), '.') : 'jpg';
+    $file_array = array(
+        'name'     => 'stock-' . substr(md5($src), 0, 12) . '.' . $ext,
+        'tmp_name' => $tmp,
+    );
+    $id = media_handle_sideload($file_array, 0, $alt !== '' ? $alt : null);
+    if (is_wp_error($id)) {
+        @unlink($tmp);
+        return $id;
+    }
+    return wp_get_attachment_url($id);
+}
+
+$stock = array(
+__STOCK_ENTRIES__
+);
+$sideloaded = 0;
+$stock_skipped = 0;
+foreach ($stock as $src => $alt) {
+    $still_used = false;
+    foreach ($all_posts as $post) {
+        if (strpos(get_post_field('post_content', $post->ID), $src) !== false) {
+            $still_used = true;
+            break;
+        }
+    }
+    if (!$still_used) {
+        $stock_skipped++;
+        continue;  // already handled on a previous run, or never referenced
+    }
+    $new_url = migr_sideload($src, $alt);
+    if (is_wp_error($new_url)) {
+        echo "  stock sideload failed ({$src}): " . $new_url->get_error_message() . "\n";
+        continue;
+    }
+    foreach ($all_posts as $post) {
+        $content = get_post_field('post_content', $post->ID);
+        if (strpos($content, $src) !== false) {
+            wp_update_post(array('ID' => $post->ID, 'post_content' => str_replace($src, $new_url, $content)));
+        }
+    }
+    $sideloaded++;
+}
+echo "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)\n";
+
+// ---------------------------------------------------------------------
+// 3. Static front page.
+// ---------------------------------------------------------------------
+$front_slug = __FRONT_SLUG__;
+if ($front_slug) {
+    $front = get_page_by_path($front_slug);
+    if ($front) {
+        update_option('show_on_front', 'page');
+        update_option('page_on_front', $front->ID);
+        echo "Front page set to \"{$front->post_title}\" (slug {$front_slug}, id {$front->ID}).\n";
+    } else {
+        echo "Front-page slug \"{$front_slug}\" not found -- publish the imported pages first.\n";
+    }
+}
+
+echo "Done.\n";
+'''
+    return (
+        template
+        .replace("__STOCK_ENTRIES__", php_stock_entries)
+        .replace("__FRONT_SLUG__", front_slug_literal)
+    )
+
+
 def main():
     with open(SRC) as f:
         data = json.load(f)
@@ -2536,7 +2796,10 @@ def main():
     with open(OUT_QA, "w") as f:
         f.write(build_qa_report(data, brand))
 
-    outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA]
+    with open(OUT_REPAIR, "w") as f:
+        f.write(build_repair_migration_php(data))
+
+    outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA, OUT_REPAIR]
     if brand:
         with open(OUT_THEME, "w") as f:
             f.write(build_theme_json(brand))
