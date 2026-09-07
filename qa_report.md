@@ -1,10 +1,10 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-06 23:21 UTC
+Generated: 2026-09-07 00:03 UTC
 
 ## Summary
 
-- **38 pages** fully extracted, structured, and converted to a ready-to-import WordPress file.
+- **37 pages** fully extracted, structured, and converted to a ready-to-import WordPress file.
 - **0 payment, login, or account features detected** on the pages processed — consistent with an informational-site profile.
 
 ## Items flagged for human review before go-live
@@ -117,6 +117,10 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
 - **Top 5 Security Considerations When Utilizing Generative AI** (`top-5-security-considerations-when-utilizing-generative-ai`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
+- **AI Use Policy Template** (`ai-use-policy-template`):
+  - "Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf" is linked straight from the old site's CDN -- download it, add it to the Media Library, and repoint this button before go-live. The original page showed it in an in-page PDF viewer; a viewer/embed block can be added if that presentation matters.
+- **AI Disclosure Template** (`ai-disclosure-template`):
+  - "Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf" is linked straight from the old site's CDN -- download it, add it to the Media Library, and repoint this button before go-live. The original page showed it in an in-page PDF viewer; a viewer/embed block can be added if that presentation matters.
 - **The Spider-Man* Dilemma: Building an AI Strategy** (`the-spider-mantm-dilemma-building-an-ai-strategy`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin

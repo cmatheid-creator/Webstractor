@@ -5498,24 +5498,12 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "AI Use Policy Template",
-          "typography_role": "HeadingBeta"
-        },
-        {
-          "type": "paragraph",
-          "text": "Laying the Foundation for Responsible AI",
-          "typography_role": "HeadingDelta"
-        },
-        {
-          "type": "paragraph",
-          "text": "Collaborating across key stakeholders to create an official AI Use Policy (AIUP) for your organization is an important first step in the responsible utilization of AI in ways that align with your business goals, values, and regulatory, ethical, privacy, and security standards."
-        },
-        {
-          "type": "paragraph",
-          "text": "1/5",
-          "typography_role": "BodyAlpha"
+          "type": "document_embed",
+          "title": "AI Use Policy Template",
+          "heading": "Laying the Foundation for Responsible AI",
+          "description": "Collaborating across key stakeholders to create an official AI Use Policy (AIUP) for your organization is an important first step in the responsible utilization of AI in ways that align with your business goals, values, and regulatory, ethical, privacy, and security standards.",
+          "url": "https://img1.wsimg.com/blobby/go/65839fec-72de-412d-8280-f55f4e3087d0/Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf",
+          "filename": "Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf"
         }
       ]
     },
@@ -5529,45 +5517,12 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "AI Vendor Disclosure Template",
-          "typography_role": "HeadingBeta"
-        },
-        {
-          "type": "paragraph",
-          "text": "Laying the Foundation for Responsible AI",
-          "typography_role": "HeadingDelta"
-        },
-        {
-          "type": "paragraph",
-          "text": "Collaborating with software vendors to complete or furnish an AI Disclosure Statement enables companies to make informed decisions about the AI solutions they integrate into their business."
-        },
-        {
-          "type": "paragraph",
-          "text": "1/4",
-          "typography_role": "BodyAlpha"
-        }
-      ]
-    },
-    {
-      "old_url": "https://stratecon.tech/contact-us",
-      "slug": "contact-us",
-      "title": "STRATECON TECH",
-      "meta_description": "",
-      "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
-      "type": "page",
-      "is_front_page": false,
-      "blocks": [
-        {
-          "type": "heading",
-          "level": 1,
-          "text": "Page Not Found",
-          "typography_role": "HeadingAlpha"
-        },
-        {
-          "type": "paragraph",
-          "text": "We can\u2019t seem to find the page you\u2019re looking for."
+          "type": "document_embed",
+          "title": "AI Vendor Disclosure Template",
+          "heading": "Laying the Foundation for Responsible AI",
+          "description": "Collaborating with software vendors to complete or furnish an AI Disclosure Statement enables companies to make informed decisions about the AI solutions they integrate into their business.",
+          "url": "https://img1.wsimg.com/blobby/go/65839fec-72de-412d-8280-f55f4e3087d0/Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf",
+          "filename": "Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf"
         }
       ]
     },

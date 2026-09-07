@@ -39,6 +39,10 @@ if (!defined('ABSPATH')) {
 }
 
 register_activation_hook(__FILE__, function () {
+    // Clear any stale report first -- on hosts with a persistent object
+    // cache (SiteGround's Memcached/Redis), a previous run's transient
+    // can outlive the DB reset and be shown instead of this run's.
+    delete_transient('stratecon_migration_repair_report');
     // Stash the report for the admin notice below. No echo here: any
     // output during activation trips WordPress's "plugin generated N
     // characters of unexpected output" warning.

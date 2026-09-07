@@ -579,6 +579,54 @@ def block_to_gutenberg(block):
             ))
         return "\n\n".join(parts)
 
+    if t == "document_embed":
+        # A GoDaddy "PDF" widget (see crawler_agent.py's
+        # extract_pdf_widget()) -- the page's content is a downloadable
+        # multi-page PDF shown in an in-page viewer. Rendered as a
+        # heading + intro + a real Download button pointing at the file on
+        # the old CDN (it stays reachable), flagged for a manual re-host
+        # into the media library before go-live.
+        title = html.escape(block.get("title") or "Document")
+        heading = block.get("heading")
+        desc = block.get("description")
+        url = xml_escape(block.get("url") or "#")
+        fname = block.get("filename") or "the document"
+        # Level 1: on this site a document_embed is the whole page (the
+        # GoDaddy PDF widget), so its title is the page's only real
+        # heading -- without <h1> the migrated page has none.
+        parts = [
+            '<!-- wp:heading {"level":1} -->\n'
+            f'<h1 class="wp-block-heading">{title}</h1>\n'
+            '<!-- /wp:heading -->'
+        ]
+        if heading:
+            parts.append(
+                '<!-- wp:paragraph -->\n'
+                f'<p><strong>{html.escape(heading)}</strong></p>\n'
+                '<!-- /wp:paragraph -->'
+            )
+        if desc:
+            parts.append(
+                '<!-- wp:paragraph -->\n'
+                f'<p>{html.escape(desc)}</p>\n'
+                '<!-- /wp:paragraph -->'
+            )
+        parts.append(
+            '<!-- wp:buttons -->\n'
+            '<div class="wp-block-buttons">\n'
+            '<!-- wp:button -->\n'
+            '<div class="wp-block-button"><a class="wp-block-button__link '
+            f'wp-element-button" href="{url}" download>Download PDF</a></div>\n'
+            '<!-- /wp:button -->\n'
+            '</div>\n'
+            '<!-- /wp:buttons -->\n'
+            f'<!-- QA FLAG: "{fname}" is linked straight from the old site\'s CDN -- '
+            'download it, add it to the Media Library, and repoint this button before '
+            'go-live. The original page showed it in an in-page PDF viewer; a '
+            'viewer/embed block can be added if that presentation matters. -->'
+        )
+        return "\n\n".join(parts)
+
     if t == "image":
         # The <img> src here still points at the original site's CDN --
         # see build_attachment_items()/build_wxr() for how the actual
@@ -2884,6 +2932,10 @@ if (!defined('ABSPATH')) {
 }
 
 register_activation_hook(__FILE__, function () {
+    // Clear any stale report first -- on hosts with a persistent object
+    // cache (SiteGround's Memcached/Redis), a previous run's transient
+    // can outlive the DB reset and be shown instead of this run's.
+    delete_transient('stratecon_migration_repair_report');
     // Stash the report for the admin notice below. No echo here: any
     // output during activation trips WordPress's "plugin generated N
     // characters of unexpected output" warning.

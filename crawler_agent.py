@@ -454,6 +454,55 @@ def extract_post_feed_card(cell, page_url, seen_image_urls):
     return card_data
 
 
+def mark_pdf_widgets(page):
+    """Tag GoDaddy's "PDF" widget (class widget-pdf) so extract_blocks()
+    pulls it as one document_embed block instead of scattering its
+    title/heading/description across the page and leaking its pdf.js
+    viewer chrome -- the page-counter ("1/5"), "Next"/"Previous"
+    buttons -- into the content as stray paragraphs. Confirmed on
+    /ai-use-policy-template and /ai-disclosure-template, whose entire
+    body is one of these widgets wrapping a multi-page PDF."""
+    return page.evaluate(
+        """() => {
+            let n = 0;
+            for (const w of document.querySelectorAll('[class*="widget-pdf"]')) {
+                w.setAttribute('data-migration-pdf-group', String(n++));
+            }
+            return n;
+        }"""
+    )
+
+
+def extract_pdf_widget(widget, page_url):
+    """One GoDaddy PDF widget -> a document_embed dict: its title,
+    heading, description, and the real PDF URL from the "Download PDF"
+    link (data-aid="PDF_DOWNLOAD_LINK_RENDERED"). The pdf.js <canvas>
+    preview and the page-counter / Next-Previous nav are deliberately
+    left out -- they're viewer UI, not content."""
+    def txt(sel):
+        el = widget.query_selector(sel)
+        return element_text(el) if el else ""
+
+    data = {"type": "document_embed"}
+    title = txt('[data-aid="PDF_SECTION_TITLE_RENDERED"]')
+    if title:
+        data["title"] = title
+    heading = txt('[data-aid="PDF_HEADING_RENDERED"]')
+    if heading:
+        data["heading"] = heading
+    desc = txt('[data-aid="PDF_DESCRIPTION_RENDERED"]')
+    if desc:
+        data["description"] = desc
+
+    link = widget.query_selector('a[data-aid="PDF_DOWNLOAD_LINK_RENDERED"]') \
+        or widget.query_selector('a[href*=".pdf"], a[href*="/blobby/"]')
+    href = link.get_attribute("href") if link else None
+    if href:
+        data["url"] = urljoin(page_url, href)
+        data["filename"] = urlparse(data["url"]).path.rsplit("/", 1)[-1] or "document.pdf"
+    return data if (data.get("url") or data.get("title")) else None
+
+
 def resolve_image_src(el, page_url, seen_image_urls):
     """Shared by the normal per-image extraction and the media_text
     pair extraction below, so both apply the exact same lazy-load/
@@ -654,6 +703,7 @@ def extract_blocks(page, page_url):
     mark_media_text_pairs(page)
     mark_content_cards(page)
     mark_post_feeds(page)
+    mark_pdf_widgets(page)
 
     # Headings + paragraphs + lists + images, in document order. Images
     # used to be collected in a separate pass at the end of the function
@@ -665,10 +715,30 @@ def extract_blocks(page, page_url):
     seen_image_urls = set()
     emitted_card_groups = set()
     emitted_post_feed_groups = set()
+    emitted_pdf_groups = set()
     elements = page.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol, img")
     for el in elements:
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
             continue  # inside the header, footer, or a nav -- not page content
+
+        # A GoDaddy PDF widget (see mark_pdf_widgets()) -- emit it once as
+        # a single document_embed block; skip every element inside it so
+        # its title/heading/description aren't re-extracted and its pdf.js
+        # viewer chrome ("1/5", "Next") doesn't leak in as stray text.
+        pdf_group_id = el.evaluate(
+            "e => { const w = e.closest('[data-migration-pdf-group]');"
+            " return w ? w.getAttribute('data-migration-pdf-group') : null; }"
+        )
+        if pdf_group_id is not None:
+            if pdf_group_id not in emitted_pdf_groups:
+                emitted_pdf_groups.add(pdf_group_id)
+                widget = page.query_selector(
+                    f'[data-migration-pdf-group="{pdf_group_id}"]'
+                )
+                doc = extract_pdf_widget(widget, page_url) if widget else None
+                if doc:
+                    blocks.append(doc)
+            continue
 
         # A single GoDaddy blog post (/blog/f/<slug>) renders inside the
         # blog feed widget, which repeats the feed's own section title
@@ -1156,8 +1226,16 @@ def crawl(start_url, max_pages=100):
                 # font loading) never reach -- causing false-negative
                 # timeouts even though the page rendered fine. "load" plus
                 # a short settle delay is more reliable in practice.
-                page.goto(url, wait_until="load", timeout=30000)
+                response = page.goto(url, wait_until="load", timeout=30000)
                 page.wait_for_timeout(1000)
+                # A dead link elsewhere on the site (an old "/contact-us"
+                # that's really "/contact" now) resolves to GoDaddy's 404
+                # page. Without this it got crawled and saved as a real
+                # migrated page whose entire body was "Page Not Found /
+                # We can't seem to find the page you're looking for."
+                if response is not None and response.status >= 400:
+                    print(f"  [skip] {url} -- HTTP {response.status}")
+                    continue
                 # Some GoDaddy Website Builder widgets (confirmed for the
                 # "RSS Feed" widget, see mark_post_feeds()) lazy-mount
                 # their real content only once scrolled into view --

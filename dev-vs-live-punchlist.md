@@ -75,12 +75,29 @@ list, keeping only any real lead-in text; the list is still captured on
 its own iteration. Verified on the dev site: each bullet appears once, as
 a list.
 
-### 6. Spot-check thin pages
+### 6. Spot-check thin pages — DONE
 
-`cyber-risk-assessment`, `ai-use-policy-template`, `ai-disclosure-template`
-show notably less body text than live with a matching heading outline —
-possible capture loss. `contact-us` is near-empty on live too (~580
-chars), probably a non-issue.
+- **`cyber-risk-assessment`** — not a real gap. The "53% of live" flag was
+  the diff heuristic counting the live site's cookie-consent banner; the
+  migrated content matches live. No change.
+- **`contact-us`** — the live URL is a hard **HTTP 404** ("Page Not
+  Found"). The crawler had followed a dead link and saved GoDaddy's 404
+  page as a migrated page. Fixed: `crawl()` now checks `response.status`
+  and skips 4xx; `contact-us` removed from the data (38 → 37 pages).
+- **`ai-use-policy-template` / `ai-disclosure-template`** — real gap.
+  These are a GoDaddy "PDF" widget (`widget-pdf`); only the intro text
+  plus a stray "1/5" / "1/4" page-counter got migrated. Fixed:
+  `mark_pdf_widgets()` / `extract_pdf_widget()` in the crawler emit a
+  `document_embed` block (title, sub-heading, description, and the real
+  PDF URL from the "Download PDF" link); the pdf.js viewer chrome is
+  dropped. The generator renders it as an `<h1>` + intro + a **Download
+  PDF** button pointing at the file on the old CDN (still reachable),
+  QA-flagged for a manual re-host into the Media Library before go-live.
+  Verified on the dev site: both pages have their title as the page
+  `<h1>`, no "1/5" artifact, working download button.
+  (An attempt to have the repair plugin sideload the PDFs automatically
+  was dropped — `download_url()` to the GoDaddy CDN from SiteGround's
+  datacenter IP is blocked/hangs and was killing the activation request.)
 
 ## Tier 3 — cosmetic / low
 
