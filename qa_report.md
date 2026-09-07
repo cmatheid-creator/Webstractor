@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-07 00:59 UTC
+Generated: 2026-09-07 01:49 UTC
 
 ## Summary
 
@@ -48,7 +48,7 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
   - card images still point at the original site -- swap to the re-hosted media-library copy after import.
   - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "Free Cybersecurity eBook" -- fields: Name (text), Email (text), Company (text) -- wire to the real form plugin
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
 - **AI Strategy** (`ai-strategy-1`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **Risk Assessment** (`risk-assessment-1`):
@@ -58,13 +58,13 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat Protection** (`threat-protection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "FREE CYBERSECURITY EBOOK" -- fields: Name (text), Email (text), Company (text) -- wire to the real form plugin
+  - contact form "FREE CYBERSECURITY EBOOK" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
 - **The Importance of Regular Cybersecurity Audits for SMBs** (`the-importance-of-regular-cybersecurity-audits-for-smbs`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat ID & Detection** (`threat-id-%26-detection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "FREE CYBERSECURITY EBOOK" -- fields: Name (text), Email (text), Company (text) -- wire to the real form plugin
+  - contact form "FREE CYBERSECURITY EBOOK" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
 - **Services** (`services`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **AI Solutions** (`ai-solutions`):
@@ -108,7 +108,7 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **IT Advisor Services** (`contact`):
-  - contact form "Contact Us" -- fields: Name (text), Email (text), Message (textarea), Email opt-in (checkbox) -- wire to the real form plugin
+  - contact form "Contact Us" (slot 2) -- fields: Name (text), Email (text), Message (textarea), Email opt-in (checkbox) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
   - newsletter signup -- wire to the real email/newsletter plugin
 - **AI for Customer Service** (`ai-for-customer-service`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.

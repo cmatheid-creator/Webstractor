@@ -245,6 +245,13 @@ function stratecon_migration_repair_run() {
         'https://img1.wsimg.com/isteam/stock/4700/:/cr=t:3.01%25,l:0%25,w:100%25,h:93.98%25/rs=w:600,h:451.12781954887214,cg:true' => 'Compass with the arrow pointing to Quality, referring to Quality Management',
         'https://img1.wsimg.com/isteam/stock/366/:/cr=t:0%25,l:0%25,w:100%25,h:100%25' => 'Digital image with a padlock in the middle and various icons around it representing documents, devic'
     );
+    // Longest URL first. Some of these keys are a strict prefix of
+    // another (the same GoDaddy image referenced once with a
+    // ".../rs=w:600,..." resize suffix and once without): matching the
+    // shorter one first replaces only part of the longer one's <img
+    // src>, leaving a dangling ".../rs=w:600,..." that 404s. Handling
+    // the more specific URL first, then re-checking, avoids that.
+    uksort($stock, function ($a, $b) { return strlen($b) - strlen($a); });
     $sideloaded = 0;
     $stock_skipped = 0;
     foreach ($stock as $src => $alt) {
@@ -272,7 +279,25 @@ function stratecon_migration_repair_run() {
         }
         $sideloaded++;
     }
-    $report[] = "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)";
+
+    // A local uploads image URL is sometimes left with a trailing GoDaddy
+    // transform suffix ("stock-x.jpeg/rs=w:600,..." / ".../:/cr=...") --
+    // e.g. when a shorter stock URL matched as a prefix of a longer one,
+    // or the importer sanitised the URL so the full stock key no longer
+    // matched. Nothing legitimate follows an image extension with "/rs="
+    // or "/cr=" or "/:", so chop any of that off.
+    $trail_re = '~(/wp-content/uploads/[^\s\x22\x27<>()]+?\.(?:jpe?g|png|gif|webp|avif))/(?:rs=|cr=|:)[^\s\x22\x27<>()]*~i';
+    $trimmed = 0;
+    foreach ($all_posts as $post) {
+        $content = get_post_field('post_content', $post->ID);
+        $nc = preg_replace($trail_re, '$1', $content);
+        if ($nc !== null && $nc !== $content) {
+            wp_update_post(array('ID' => $post->ID, 'post_content' => $nc));
+            $trimmed++;
+        }
+    }
+    $report[] = "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)"
+        . ($trimmed ? "; trimmed a stray transform suffix on {$trimmed} page(s)" : "");
 
     // -----------------------------------------------------------------
     // 3. Static front page.

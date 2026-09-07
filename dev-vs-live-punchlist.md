@@ -55,13 +55,29 @@ cards (heading, link, thumbnail, date, categories, excerpt) now render as
 a 3-column grid matching live. The eBook form is a clean placeholder
 panel (per #1); its Name/Email/Company fields are captured.
 
-### 4. Contact page — real contact form gone
+### 4. Contact forms — Fluent Forms — DONE
 
-Live has a contact form (name/email/message) plus a newsletter form. Dev
-keeps the text (phone, hours, "Drop us a line") but both forms are
-`[contact-form-7 id="TBD"]` placeholders. Blocked on a **form-plugin
-decision** (Contact Form 7 / Fluent Forms / WPForms / Gravity) plus real
-per-field capture in the crawler.
+Form plugin chosen: **Fluent Forms**. The crawler already captures each
+contact form's real fields (Name / Email / Message / Company / opt-in).
+The generator now:
+
+- writes **`fluentforms-migration.json`** — a Fluent Forms native import
+  file, one form per unique captured contact form, fields already mapped
+  to Fluent Forms' own field types. Verified on the dev site: imports
+  clean via Fluent Forms → Tools → Import Forms and produces valid,
+  correctly-fielded forms (First/Last Name, Email, Message, Email opt-in
+  checkbox, Send).
+- keeps the clean placeholder panel on each page, now worded for the
+  Fluent Forms workflow: import the JSON, then replace the block with the
+  form's `[fluentform id="N"]` shortcode (Fluent Forms shows the
+  shortcode on its Forms list). QA report lists each form and its pages.
+
+Two remaining manual touches per go-live, both one-click: paste the
+shortcode in place of each placeholder, and add an email notification to
+each form in Fluent Forms. (An attempt to have the repair plugin create
+the forms and swap the shortcodes automatically was dropped — building
+Fluent Forms' form rows by direct DB insert from an activation hook was
+too fragile; the sanctioned Import Forms path is reliable.)
 
 ### 5. `the-spider-mantm-dilemma-building-an-ai-strategy` — body content duplicated — FIXED
 
@@ -111,9 +127,15 @@ a list.
   "Continue Reading". Verified on the dev site (`ai-solutions`,
   `cybersecurity-solutions`): bordered cards matching live, 0
   block-editor validation warnings.
-- **8.** One broken image on `threat-id-%26-detection` — the only page with
-  `&` / `%26` in its slug; likely a URL-encoding edge case in the repair
-  plugin's URL matching or the WXR. *(still open)*
+- **8. Broken image on `threat-id-%26-detection` — DONE.** Nothing to do
+  with the `%26` slug. Two `$stock` entries existed for the same GoDaddy
+  image — one with a `/rs=w:600,…` resize suffix, one without — and the
+  repair plugin matched the shorter URL as a substring of the longer
+  one's `<img src>`, replacing only part of it and leaving a dangling
+  `.../rs=w:600,…` that 404s. Fixed: the repair plugin now `uksort`s
+  `$stock` by URL length descending so the most-specific URL is
+  repointed first. Simulated against the real page content — all 4
+  images repoint cleanly.
 - **9. Text artifacts — DONE (mostly not bugs).**
   - "Contact Us us" — the doubled "us" is **a typo in the live GoDaddy
     content** ("Please Contact Us us if you cannot find an answer…"), not

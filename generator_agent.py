@@ -164,6 +164,7 @@ OUT_REDIRECTS = "redirects.csv"
 OUT_QA = "qa_report.md"
 OUT_THEME = "theme.json"
 OUT_APPLY_BRANDING = "apply_branding.php"
+OUT_FF = "fluentforms-migration.json"
 
 NEW_BASE_URL = "https://staging.stratecon-newsite.example"  # placeholder staging URL
 
@@ -269,17 +270,25 @@ def _role_style_bits(role, brand, include_color=True):
     return {"json_attrs": ",".join(json_attrs), "classes": " ".join(classes)}
 
 
-def _form_placeholder(title, description, qa_note):
+def _form_placeholder(title, description, qa_note, anchor=None):
     """A clearly-labelled, self-explanatory placeholder panel for a form
-    the pipeline can't build yet (no form-plugin decision has been made).
-    Real Gutenberg blocks only -- a bordered group with a heading and an
-    italic note -- never a literal `[contact-form-7 ...]` / `[..._form]`
-    shortcode, which renders as raw bracket text to visitors on any site
-    without that exact plugin installed. The QA note is stripped into
-    qa_report.md like every other QA flag."""
+    the pipeline hasn't wired to a plugin yet. Real Gutenberg blocks only
+    -- a bordered group with a heading and an italic note -- never a
+    literal `[contact-form-7 ...]` / `[..._form]` shortcode, which renders
+    as raw bracket text to visitors on any site without that exact plugin
+    installed. The QA note is stripped into qa_report.md like every other
+    QA flag.
+
+    When `anchor` is given the group carries it as its HTML id, so the
+    migration repair plugin can find and replace this exact panel with a
+    real `[fluentform id="N"]` shortcode once it has built the form (see
+    build_repair_migration_php()'s Fluent Forms section)."""
+    anchor_attr = f',"anchor":"{anchor}"' if anchor else ""
+    anchor_id = f' id="{anchor}"' if anchor else ""
     return (
-        '<!-- wp:group {"className":"migration-form-placeholder","layout":{"type":"constrained"}} -->\n'
-        '<div class="wp-block-group migration-form-placeholder">\n'
+        f'<!-- wp:group {{"className":"migration-form-placeholder"{anchor_attr},'
+        '"layout":{"type":"constrained"}} -->\n'
+        f'<div class="wp-block-group migration-form-placeholder"{anchor_id}>\n'
         '<!-- wp:heading {"level":3} -->\n'
         f'<h3 class="wp-block-heading">{html.escape(title)}</h3>\n'
         '<!-- /wp:heading -->\n'
@@ -290,6 +299,236 @@ def _form_placeholder(title, description, qa_note):
         '<!-- /wp:group -->\n'
         f'<!-- QA FLAG: {qa_note} -->'
     )
+
+
+# ---- Fluent Forms ---------------------------------------------------------
+# The migration repair plugin builds a real Fluent Forms form for each
+# captured contact_form block (see build_repair_migration_php()). These
+# field shapes are lifted verbatim from a real Fluent Forms 6.x export
+# (the "Contact Form Demo" template) so the generated form_fields JSON is
+# exactly what Fluent Forms itself writes -- no schema guesswork.
+
+_FF_SUBMIT_BUTTON = {
+    "uniqElKey": "el_migration_submit",
+    "element": "button",
+    "attributes": {"type": "submit", "class": ""},
+    "settings": {
+        "align": "left", "button_style": "default", "container_class": "",
+        "help_message": "", "background_color": "#1a7efb", "button_size": "md",
+        "color": "#ffffff",
+        "button_ui": {"type": "default", "text": "Send", "img_url": ""},
+    },
+    "editor_options": {"title": "Submit Button"},
+}
+
+
+def _ff_name_field(idx, label):
+    return {
+        "index": idx, "element": "input_name",
+        "attributes": {"name": "names", "data-type": "name-element"},
+        "settings": {"container_class": "", "admin_field_label": label or "Name",
+                     "conditional_logics": []},
+        "fields": {
+            "first_name": {"element": "input_text",
+                "attributes": {"type": "text", "name": "first_name", "value": "", "id": "",
+                               "class": "", "placeholder": "First Name"},
+                "settings": {"container_class": "", "label": "First Name", "help_message": "",
+                             "visible": True,
+                             "validation_rules": {"required": {"value": True, "message": "This field is required"}},
+                             "conditional_logics": []},
+                "editor_options": {"template": "inputText"}},
+            "middle_name": {"element": "input_text",
+                "attributes": {"type": "text", "name": "middle_name", "value": "", "id": "",
+                               "class": "", "placeholder": "", "required": False},
+                "settings": {"container_class": "", "label": "Middle Name", "help_message": "",
+                             "error_message": "", "visible": False,
+                             "validation_rules": {"required": {"value": False, "message": "This field is required"}},
+                             "conditional_logics": []},
+                "editor_options": {"template": "inputText"}},
+            "last_name": {"element": "input_text",
+                "attributes": {"type": "text", "name": "last_name", "value": "", "id": "",
+                               "class": "", "placeholder": "Last Name", "required": False},
+                "settings": {"container_class": "", "label": "Last Name", "help_message": "",
+                             "error_message": "", "visible": True,
+                             "validation_rules": {"required": {"value": True, "message": "This field is required"}},
+                             "conditional_logics": []},
+                "editor_options": {"template": "inputText"}},
+        },
+        "editor_options": {"title": "Name Fields", "element": "name-fields",
+                           "icon_class": "ff-edit-name", "template": "nameFields"},
+        "uniqElKey": f"el_migration_name_{idx}",
+    }
+
+
+def _ff_email_field(idx, label):
+    return {
+        "index": idx, "element": "input_email",
+        "attributes": {"type": "email", "name": "email", "value": "", "id": "", "class": "",
+                       "placeholder": label or "Email"},
+        "settings": {"container_class": "", "label": label or "Email", "label_placement": "",
+                     "help_message": "", "admin_field_label": "",
+                     "validation_rules": {
+                         "required": {"value": True, "message": "This field is required"},
+                         "email": {"value": True, "message": "This field must contain a valid email"}},
+                     "conditional_logics": []},
+        "editor_options": {"title": "Email Address", "icon_class": "ff-edit-email", "template": "inputText"},
+        "uniqElKey": f"el_migration_email_{idx}",
+    }
+
+
+def _ff_text_field(idx, label, name, required=False, field_type="text"):
+    return {
+        "index": idx, "element": "input_text",
+        "attributes": {"type": field_type, "name": name, "value": "", "class": "",
+                       "placeholder": label},
+        "settings": {"container_class": "", "label": label, "label_placement": "",
+                     "admin_field_label": label, "help_message": "",
+                     "validation_rules": {"required": {"value": required, "message": "This field is required"}},
+                     "conditional_logics": {"type": "any", "status": False,
+                                            "conditions": [{"field": "", "value": "", "operator": ""}]}},
+        "editor_options": {"title": "Simple Text", "icon_class": "ff-edit-text", "template": "inputText"},
+        "uniqElKey": f"el_migration_text_{idx}",
+    }
+
+
+def _ff_textarea_field(idx, label, name, required=True):
+    return {
+        "index": idx, "element": "textarea",
+        "attributes": {"name": name, "value": "", "id": "", "class": "",
+                       "placeholder": label, "rows": 4, "cols": 2},
+        "settings": {"container_class": "", "label": label, "admin_field_label": "",
+                     "label_placement": "", "help_message": "",
+                     "validation_rules": {"required": {"value": required, "message": "This field is required"}},
+                     "conditional_logics": {"type": "any", "status": False,
+                                            "conditions": [{"field": "", "value": "", "operator": ""}]}},
+        "editor_options": {"title": "Text Area", "icon_class": "ff-edit-textarea", "template": "inputTextarea"},
+        "uniqElKey": f"el_migration_textarea_{idx}",
+    }
+
+
+def _ff_checkbox_field(idx, label, name):
+    opt = label or "I agree"
+    return {
+        "index": idx, "element": "input_checkbox",
+        "attributes": {"type": "checkbox", "name": name, "value": []},
+        "options": {opt: opt},
+        "settings": {"container_class": "", "label": label or "Consent", "admin_field_label": "",
+                     "description": "", "label_placement": "",
+                     "validation_rules": {"required": {"value": False, "message": "This field is required"}},
+                     "conditional_logics": [], "layout_class": "",
+                     "randomize_options": False, "enable_select_all": False},
+        "editor_options": {"title": "Check Box", "element": "input-radio",
+                           "icon_class": "ff-edit-checkbox-1", "template": "inputCheckable"},
+        "uniqElKey": f"el_migration_checkbox_{idx}",
+    }
+
+
+def build_fluentform_form_fields(fields):
+    """Crawler `[{label, type}]` -> a Fluent Forms `form_fields` object
+    (fields[] + submitButton). Unmapped/odd fields become a simple text
+    input so nothing captured is silently dropped."""
+    ff_fields = []
+    for i, f in enumerate(fields):
+        label = (f.get("label") or "").strip()
+        ftype = (f.get("type") or "text").lower()
+        low = label.lower()
+        name = re.sub(r"[^a-z0-9]+", "_", low).strip("_") or f"field_{i}"
+        if ftype == "checkbox":
+            ff_fields.append(_ff_checkbox_field(i, label or "Consent", name or "consent"))
+        elif ftype == "textarea" or low in ("message", "your message", "comments"):
+            ff_fields.append(_ff_textarea_field(i, label or "Message", name or "message"))
+        elif ftype == "email" or low in ("email", "email address", "your email"):
+            ff_fields.append(_ff_email_field(i, label or "Email"))
+        elif low in ("name", "your name", "full name"):
+            ff_fields.append(_ff_name_field(i, label or "Name"))
+        elif "phone" in low or ftype in ("tel", "phone"):
+            ff_fields.append(_ff_text_field(i, label or "Phone", name or "phone", field_type="tel"))
+        else:
+            ff_fields.append(_ff_text_field(i, label or f"Field {i + 1}", name))
+    if not any(x["element"] == "input_email" for x in ff_fields):
+        ff_fields.append(_ff_email_field(len(ff_fields), "Email"))
+    for j, x in enumerate(ff_fields):
+        x["index"] = j
+    return {"fields": ff_fields, "submitButton": _FF_SUBMIT_BUTTON}
+
+
+_FF_FORM_SETTINGS = {
+    "confirmation": {"redirectTo": "samePage",
+                     "messageToShow": "Thank you for your message. We'll be in touch shortly.",
+                     "customPage": None, "samePageFormBehavior": "hide_form", "customUrl": None},
+    "restrictions": {
+        "limitNumberOfEntries": {"enabled": False, "numberOfEntries": None, "period": "total",
+                                 "limitReachedMsg": "Maximum number of entries exceeded."},
+        "scheduleForm": {"enabled": False, "start": None, "end": None,
+                         "selectedDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                         "pendingMsg": "Form submission is not started yet.",
+                         "expiredMsg": "Form submission is now closed."},
+        "requireLogin": {"enabled": False, "requireLoginMsg": "You must be logged in to submit the form."},
+        "denyEmptySubmission": {"enabled": False, "message": "Sorry, you cannot submit an empty form."}},
+    "layout": {"labelPlacement": "top", "helpMessagePlacement": "with_label",
+               "errorMessagePlacement": "inline", "cssClassName": "", "asteriskPlacement": "asterisk-right"},
+    "delete_entry_on_submission": "no",
+    "appendSurveyResult": {"enabled": False, "showLabel": False, "showCount": False},
+}
+
+
+def _ff_signature(block):
+    return (
+        (block.get("title") or "").strip().lower(),
+        tuple((f.get("label", ""), f.get("type", "")) for f in block.get("fields") or []),
+    )
+
+
+def assign_ff_slots(data):
+    """Stamp `_ff_slot` on every contact_form block, deduped: identical
+    forms (same title + same fields, e.g. the "Free Cybersecurity eBook"
+    form that appears on several pages) share one slot number, so the
+    Fluent Forms export carries one form for them and every page with
+    that form shows the same instructions. Returns {slot: [(page_slug,
+    representative_block)]} keyed 1..N in first-seen order."""
+    slots = {}
+    by_sig = {}
+    for page in data.get("pages", []):
+        for block in page.get("blocks", []):
+            if block.get("type") != "contact_form":
+                continue
+            sig = _ff_signature(block)
+            if sig not in by_sig:
+                by_sig[sig] = len(by_sig) + 1
+                slots[by_sig[sig]] = {"block": block, "pages": []}
+            slots[by_sig[sig]]["pages"].append(page.get("slug", ""))
+            block["_ff_slot"] = by_sig[sig]
+    return slots
+
+
+def build_fluentforms_export(data):
+    """A Fluent Forms native import file (`fluentforms-migration.json`).
+    The client imports it via Fluent Forms -> Tools -> Import Forms -- one
+    form per unique captured contact form, its fields already mapped to
+    Fluent Forms' own field types. The format and field shapes are lifted
+    verbatim from a real Fluent Forms 6.x export, so this is exactly what
+    the plugin's own Export produces."""
+    slots = assign_ff_slots(data)
+    forms = []
+    for slot, info in sorted(slots.items()):
+        block = info["block"]
+        forms.append({
+            "title": block.get("title") or f"Migrated Contact Form {slot}",
+            "status": "published",
+            "appearance_settings": None,
+            "form_fields": build_fluentform_form_fields(block.get("fields") or []),
+            "has_payment": 0,
+            "type": "",
+            "conditions": None,
+            "form_meta": [
+                {"meta_key": "formSettings", "value": json.dumps(_FF_FORM_SETTINGS)},
+                {"meta_key": "template_name", "value": "migrated_contact_form"},
+            ],
+        })
+    return json.dumps(forms, indent=2) + "\n"
+
+
+# ---- end Fluent Forms ---------------------------------------------------
 
 
 def block_to_gutenberg(block):
@@ -553,12 +792,19 @@ def block_to_gutenberg(block):
             )
         else:
             flist = block.get("note") or "fields not captured from the live site"
+        slot = block.get("_ff_slot")
+        anchor = f"migration-ff-{slot}" if slot else None
         return _form_placeholder(
             block.get("title") or "Contact form",
-            f"Contact form — captured fields: {flist}. Connect this to the "
-            "site's form plugin before go-live.",
-            f"contact form \"{block.get('title', '')}\" -- fields: {flist} -- "
-            "wire to the real form plugin",
+            f"Contact form — captured fields: {flist}. This form is in "
+            "fluentforms-migration.json: import it via Fluent Forms → Tools → "
+            "Import Forms, then replace this block with the form's "
+            "[fluentform id=\"…\"] shortcode.",
+            f"contact form \"{block.get('title', '')}\" (slot {slot}) -- fields: "
+            f"{flist} -- import fluentforms-migration.json (Fluent Forms → Tools "
+            "→ Import Forms), then swap this placeholder for [fluentform id=\"N\"] "
+            "and add an email notification to the form",
+            anchor=anchor,
         )
 
     if t == "forms_detected":
@@ -3078,6 +3324,13 @@ function stratecon_migration_repair_run() {
     $stock = array(
 __STOCK_ENTRIES__
     );
+    // Longest URL first. Some of these keys are a strict prefix of
+    // another (the same GoDaddy image referenced once with a
+    // ".../rs=w:600,..." resize suffix and once without): matching the
+    // shorter one first replaces only part of the longer one's <img
+    // src>, leaving a dangling ".../rs=w:600,..." that 404s. Handling
+    // the more specific URL first, then re-checking, avoids that.
+    uksort($stock, function ($a, $b) { return strlen($b) - strlen($a); });
     $sideloaded = 0;
     $stock_skipped = 0;
     foreach ($stock as $src => $alt) {
@@ -3105,7 +3358,25 @@ __STOCK_ENTRIES__
         }
         $sideloaded++;
     }
-    $report[] = "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)";
+
+    // A local uploads image URL is sometimes left with a trailing GoDaddy
+    // transform suffix ("stock-x.jpeg/rs=w:600,..." / ".../:/cr=...") --
+    // e.g. when a shorter stock URL matched as a prefix of a longer one,
+    // or the importer sanitised the URL so the full stock key no longer
+    // matched. Nothing legitimate follows an image extension with "/rs="
+    // or "/cr=" or "/:", so chop any of that off.
+    $trail_re = '~(/wp-content/uploads/[^\s\x22\x27<>()]+?\.(?:jpe?g|png|gif|webp|avif))/(?:rs=|cr=|:)[^\s\x22\x27<>()]*~i';
+    $trimmed = 0;
+    foreach ($all_posts as $post) {
+        $content = get_post_field('post_content', $post->ID);
+        $nc = preg_replace($trail_re, '$1', $content);
+        if ($nc !== null && $nc !== $content) {
+            wp_update_post(array('ID' => $post->ID, 'post_content' => $nc));
+            $trimmed++;
+        }
+    }
+    $report[] = "Stock images sideloaded: {$sideloaded} (skipped {$stock_skipped} already done/unused)"
+        . ($trimmed ? "; trimmed a stray transform suffix on {$trimmed} page(s)" : "");
 
     // -----------------------------------------------------------------
     // 3. Static front page.
@@ -3166,6 +3437,11 @@ def main():
     except FileNotFoundError:
         pass
 
+    # Stamp `_ff_slot` on every contact_form block before anything renders
+    # it, so the page markup, the QA report, and fluentforms-migration.json
+    # all agree on which placeholder maps to which Fluent Forms form.
+    ff_slots = assign_ff_slots(data)
+
     with open(OUT_WXR, "w") as f:
         f.write(build_wxr(data, brand))
 
@@ -3178,6 +3454,10 @@ def main():
     repair_paths = write_repair_migration_plugin(data)
 
     outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA, *repair_paths]
+    if ff_slots:
+        with open(OUT_FF, "w") as f:
+            f.write(build_fluentforms_export(data))
+        outputs.append(OUT_FF)
     if brand:
         with open(OUT_THEME, "w") as f:
             f.write(build_theme_json(brand))
