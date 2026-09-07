@@ -6,3 +6,6 @@ __pycache__/
 *credentials*
 .env
 .env.*
+
+# Content Structuring Agent keeps a pristine copy of the crawl here
+structured_content.raw.json

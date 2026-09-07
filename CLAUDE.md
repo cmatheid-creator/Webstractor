@@ -219,23 +219,60 @@ The "no hero, no `<h1>` on the home page" issue below is **fixed**:
   the hero background is served from `dev.stratecon.tech` (sideloaded), not
   hot-linked.
 
-## Known issues still open (crawler / extraction side — next batch)
+## dev-vs-live punch list — CLOSED (see `dev-vs-live-punchlist.md`)
 
-These are all in `crawler_agent.py` / the extraction step, not the
-generator: the generator faithfully renders an incomplete capture.
+A structured diff of all ~37 migrated pages against the live site drove a
+nine-item punch list; **#1–#9 are all done and verified on the dev site**.
+Headlines: sitewide `[contact-form-7]` placeholder text removed; blog
+posts now carry their real title as the only page `<h1>`; the missing
+"Cybersecurity Insights" post-feed recovered (lazy-load settle); the
+"Spider-Man" post's duplicated bullets fixed (`<ul>`-inside-`<p>`); the
+`/contact-us` 404 dropped; GoDaddy PDF-widget pages captured as a
+`document_embed` with a real download button; post-feed cards styled to
+match live; citation links wrapped in `<sup>`; contact forms delivered as
+`fluentforms-migration.json` (a Fluent Forms import file); and the one
+broken image on `threat-id-%26-detection` (a `$stock` prefix-match bug)
+fixed. Full detail and the "not a bug, faithful to the live site" notes
+(the "Contact Us us" typo, the inline "source" links) are in
+`dev-vs-live-punchlist.md`.
 
-- **FAQ accordion is flattened.** `extract_blocks()`'s FAQ detection emits a
-  `faq_raw_unverified` block: questions captured, **no answers paired**, and
-  the whole thing concatenated once then repeated. Renders on the page as
-  duplicated FAQ text plus orphan questions. This is what the LLM Content
-  Structuring Agent (pipeline step 5) is for.
-- **Contact form / newsletter.** `forms_detected` captured one empty field.
-  Contact page shows no real form and a literal `[contact-form-7 id="TBD"]`
-  placeholder. Needs a form-plugin decision + real field capture.
-- **`post_feed` ("AI Insights") layout.** Large vertical whitespace in the
-  card grid; thumbnails often absent (client-JS-loaded on the source, not
-  seen by the crawler; the og:image fallback is the bogus `stock/2646`).
-- Minor text artifacts from link extraction: "Please Contact Us us if…"
-  (double "us"), trailing literal "source" after each stat on AI Solutions.
-- The Qualification Agent is still regex-based — fine for stratecon.tech but
-  needs hardening before an unseen client site.
+## Content Structuring Agent — started (pipeline step 5)
+
+`content_structuring_agent.py` — runs after the crawl, before the
+generator, rewriting `structured_content.json` in place (pristine crawl
+copied to `structured_content.raw.json` first; `_structured_raw_hash` per
+page makes re-runs skip unless `--force`). Two jobs so far:
+
+- **FAQ restructuring.** GoDaddy's FAQ accordion renders questions as
+  toggle controls and answers in separate panels, so the crawl leaves a
+  `faq_raw_unverified` block (questions) plus loose answer paragraphs
+  under the "Frequently Asked Questions" heading. The agent detects that
+  region deterministically and pairs each question with its answer into a
+  single `faq` block (generator renders it as `<h3>`/`<p>` pairs). With
+  the LLM (Claude via the Anthropic SDK) it also handles reordered or
+  multi-paragraph answers and fixes obvious typos; `--offline` does naive
+  in-order pairing, which is correct for stratecon.tech. Verified offline:
+  the home page's FAQ is now one clean `faq` block, no orphan paragraphs,
+  no duplicated blob.
+- **Meta title + description.** Per-page LLM generation of an SEO title
+  (`meta_title` -> Yoast `_yoast_wpseo_title` postmeta, added to
+  `generator_agent.py`) and a 150–160-char meta description drawn only
+  from the page's own content. **Needs `ANTHROPIC_API_KEY` (or
+  `ant auth login`) to run — not yet exercised end to end.**
+
+Still to add: image alt-text generation; a proper staleness check;
+per-page prompt caching once the run is bigger.
+
+## Still open
+
+- **Newsletter signup** still renders as a placeholder panel — needs an
+  email-tool / ESP decision (separate from the Fluent Forms contact-form
+  work).
+- The **Qualification Agent** is still regex-based — fine for
+  stratecon.tech, needs hardening before an unseen client site.
+- Crawler nondeterminism: a full re-crawl re-discovers duplicate
+  `/ai-solutions/f/…` and `/cybersecurity-solutions/f/…` paths for the
+  same blog posts, so every regeneration this project has needed a manual
+  merge back down to the canonical page set.
+- Minor: the "FREE CYBERSECURITY EBOOK" all-caps form title (crawler
+  grabbed a CSS-uppercased hero heading as the form's region title).

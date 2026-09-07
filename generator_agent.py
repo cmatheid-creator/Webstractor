@@ -1220,6 +1220,20 @@ def build_item_xml(page, post_id, parent_post_id=0):
 
     title = xml_escape(clean_title(page["title"]))
     meta_desc = xml_escape(page.get("meta_description", ""))
+    # meta_title is set by the Content Structuring Agent (pipeline step 5);
+    # absent on a raw crawl. Emitted as Yoast's SEO-title postmeta so it
+    # doesn't disturb the WordPress page title / nav label (which stay
+    # `title`).
+    meta_title = xml_escape(page.get("meta_title", ""))
+    meta_title_postmeta = (
+        f"""
+    <wp:postmeta>
+      <wp:meta_key><![CDATA[_yoast_wpseo_title]]></wp:meta_key>
+      <wp:meta_value><![CDATA[{meta_title}]]></wp:meta_value>
+    </wp:postmeta>"""
+        if meta_title
+        else ""
+    )
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -1247,7 +1261,7 @@ def build_item_xml(page, post_id, parent_post_id=0):
     <wp:postmeta>
       <wp:meta_key><![CDATA[_yoast_wpseo_metadesc]]></wp:meta_key>
       <wp:meta_value><![CDATA[{meta_desc}]]></wp:meta_value>
-    </wp:postmeta>
+    </wp:postmeta>{meta_title_postmeta}
   </item>"""
 
 

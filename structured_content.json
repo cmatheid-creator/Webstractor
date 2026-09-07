@@ -137,20 +137,21 @@
           "typography_role": "HeadingBeta"
         },
         {
-          "type": "paragraph",
-          "text": "Please <a href=\"https://stratecon.tech/contact\">Contact Us</a> us if you cannot find an answer to your questions, below."
-        },
-        {
-          "type": "paragraph",
-          "text": "Stratecon Tech Advisors is an IT advisory company that provides services to businesses of all sizes. We specialize in helping businesses improve their technology infrastructure and streamline their operations."
-        },
-        {
-          "type": "paragraph",
-          "text": "Stratecon Tech Advisors helps clients assess where technology can accomplish key business goals, then we recommend best-in-class technology solutions to meet those goals. We can make tailor-fit recommendations, or we can provide several options that fit our client's unique business needs."
-        },
-        {
-          "type": "paragraph",
-          "text": "The cost of Stratecon Tech Advisor's services varies depending on the specific needs of each client. In many cases, there is no direct cost to the client, as we are paid commissions by the vendors our clients select. <a href=\"https://stratecon.tech/contact\">Contact us</a> today to learn more about our pricing and to discuss your specific needs."
+          "type": "faq",
+          "items": [
+            {
+              "q": "Who is Stratecon Tech Advisors?",
+              "a": "Stratecon Tech Advisors is an IT advisory company that provides services to businesses of all sizes. We specialize in helping businesses improve their technology infrastructure and streamline their operations."
+            },
+            {
+              "q": "What services does Stratecon Tech Advisors offer?",
+              "a": "Stratecon Tech Advisors helps clients assess where technology can accomplish key business goals, then we recommend best-in-class technology solutions to meet those goals. We can make tailor-fit recommendations, or we can provide several options that fit our client's unique business needs."
+            },
+            {
+              "q": "How much do Stratecon Tech Advisors services cost?",
+              "a": "The cost of Stratecon Tech Advisor's services varies depending on the specific needs of each client. In many cases, there is no direct cost to the client, as we are paid commissions by the vendors our clients select. Contact us today to learn more about our pricing and to discuss your specific needs."
+            }
+          ]
         },
         {
           "type": "heading",
@@ -164,21 +165,12 @@
           "typography_role": "BodyAlpha"
         },
         {
-          "type": "faq_raw_unverified",
-          "note": "Low-confidence FAQ extraction -- review before publishing.",
-          "raw_text_blocks": [
-            "Frequently Asked Questions Please Contact Us us if you cannot find an answer to your questions, below. Who is Stratecon Tech Advisors? What services does Stratecon Tech Advisors offer? How much do Stratecon Tech Advisors services cost?",
-            "Who is Stratecon Tech Advisors?",
-            "What services does Stratecon Tech Advisors offer?",
-            "How much do Stratecon Tech Advisors services cost?"
-          ]
-        },
-        {
           "type": "newsletter_signup",
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "0aad679c737e98a8"
     },
     {
       "old_url": "https://stratecon.tech/connectivity",
@@ -387,7 +379,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "bb9faed1daebb538"
     },
     {
       "old_url": "https://stratecon.tech/blog",
@@ -493,7 +486,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "0659618091e1a67d"
     },
     {
       "old_url": "https://stratecon.tech/terms-of-service",
@@ -814,7 +808,8 @@
           "type": "paragraph",
           "text": "Questions about the Terms of Service should be sent via email to <a href=\"mailto:info@stratecon.tech\">info@stratecon.tech</a>."
         }
-      ]
+      ],
+      "_structured_raw_hash": "e02328dc22773d12"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-insurance-is-it-right-for-your-smb",
@@ -1043,7 +1038,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "6337a82f57984a27"
     },
     {
       "old_url": "https://stratecon.tech/ai-for-sales-1",
@@ -1174,7 +1170,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "219b5bd162c3591b"
     },
     {
       "old_url": "https://stratecon.tech/cybersecurity-solutions",
@@ -1451,7 +1448,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "7db51d0bfedde4a9"
     },
     {
       "old_url": "https://stratecon.tech/ai-strategy-1",
@@ -1619,7 +1617,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "2729ab298153d3fb"
     },
     {
       "old_url": "https://stratecon.tech/risk-assessment-1",
@@ -1762,7 +1761,8 @@
           "type": "paragraph",
           "text": "Take advantage of our Free Cyber Risk Self Assessment to identify potential gaps in your cybersecurity defenses."
         }
-      ]
+      ],
+      "_structured_raw_hash": "0a5f99162ce1bc7e"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/creating-and-testing-a-business-continuitydisaster-recovery-plan",
@@ -2071,7 +2071,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "2e72e636e2c46633"
     },
     {
       "old_url": "https://stratecon.tech/threat-protection",
@@ -2296,7 +2297,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "d30a3bf341e2cc2a"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-importance-of-regular-cybersecurity-audits-for-smbs",
@@ -2412,7 +2414,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "ddb61bac33433b35"
     },
     {
       "old_url": "https://stratecon.tech/threat-id-%26-detection",
@@ -2585,7 +2588,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "f9252bfcf03d6f67"
     },
     {
       "old_url": "https://stratecon.tech/services",
@@ -2707,7 +2711,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "237e429459d51b30"
     },
     {
       "old_url": "https://stratecon.tech/ai-solutions",
@@ -2857,7 +2862,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "55b76356f5bb78d2"
     },
     {
       "old_url": "https://stratecon.tech/privacy-policy",
@@ -3058,7 +3064,8 @@
           "type": "paragraph",
           "text": "Effective as of August 9, 2023"
         }
-      ]
+      ],
+      "_structured_raw_hash": "78e87efd291c4045"
     },
     {
       "old_url": "https://stratecon.tech/communications-solutions",
@@ -3167,7 +3174,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "81d53b51a23f2152"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/ai-and-data-analytics-uncovering-business-insights-for-smbs",
@@ -3338,7 +3346,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "932efdd0727fe80d"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/supporting-hybrid-work-with-effective-collaboration-tools",
@@ -3470,7 +3479,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "b11937bf09a9efdb"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/preventing-data-breaches-8-essential-strategies-for-smbs",
@@ -3561,7 +3571,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "5ef4599be451ced1"
     },
     {
       "old_url": "https://stratecon.tech/unified-communications",
@@ -3698,7 +3709,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "015d3fbaaab476e1"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/building-a-cybersecurity-aware-culture-in-your-business",
@@ -3848,7 +3860,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "4a4a5156a4efb104"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-to-optimize-your-marketing-strategies",
@@ -3973,7 +3986,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "0043cb79463665ea"
     },
     {
       "old_url": "https://stratecon.tech/customer-experience",
@@ -4228,7 +4242,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "5bb673cffc721b5a"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-compliance-for-smbs-what-you-need-to-know",
@@ -4468,7 +4483,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "98089682cf9530db"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/managing-communications-in-a-multi-generational-workforce",
@@ -4665,7 +4681,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "791ab825f10191b2"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-for-enhanced-customer-service",
@@ -4862,7 +4879,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "a6fdb69f5fea7f69"
     },
     {
       "old_url": "https://stratecon.tech/about",
@@ -4971,7 +4989,8 @@
           "text": "Connect with Us",
           "typography_role": "HeadingBeta"
         }
-      ]
+      ],
+      "_structured_raw_hash": "52fab98dd71e6f42"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/10-essential-cybersecurity-practices-for-smbs-in-2024",
@@ -5121,7 +5140,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "9e54b6da0de5d7e8"
     },
     {
       "old_url": "https://stratecon.tech/contact",
@@ -5227,7 +5247,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "46777198504748d0"
     },
     {
       "old_url": "https://stratecon.tech/ai-for-customer-service",
@@ -5352,7 +5373,8 @@
             }
           ]
         }
-      ]
+      ],
+      "_structured_raw_hash": "28c39be258a46ef6"
     },
     {
       "old_url": "https://stratecon.tech/cyber-risk-assessment",
@@ -5394,7 +5416,8 @@
           "type": "paragraph",
           "text": "Our Advisors are standing by to discuss your Cyber Risk Self Assessment results, at your convenience. We look forward to working with you to build the customized cybersecurity strategy that will secure your business, and your brand."
         }
-      ]
+      ],
+      "_structured_raw_hash": "3a4d09416f648a67"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/top-5-security-considerations-when-utilizing-generative-ai",
@@ -5513,7 +5536,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "c841155b087024c9"
     },
     {
       "old_url": "https://stratecon.tech/ai-use-policy-template",
@@ -5532,7 +5556,8 @@
           "url": "https://img1.wsimg.com/blobby/go/65839fec-72de-412d-8280-f55f4e3087d0/Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf",
           "filename": "Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf"
         }
-      ]
+      ],
+      "_structured_raw_hash": "40c10e1f7679993f"
     },
     {
       "old_url": "https://stratecon.tech/ai-disclosure-template",
@@ -5551,7 +5576,8 @@
           "url": "https://img1.wsimg.com/blobby/go/65839fec-72de-412d-8280-f55f4e3087d0/Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf",
           "filename": "Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf"
         }
-      ]
+      ],
+      "_structured_raw_hash": "054684c4c42c46d9"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-spider-mantm-dilemma-building-an-ai-strategy",
@@ -5671,7 +5697,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "c7d2ecbae396ccdf"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/how-ai-can-transform-your-small-to-medium-business",
@@ -5864,7 +5891,8 @@
           "label": "Newsletter signup",
           "text": "Sign up to receive updates and blog posts by email."
         }
-      ]
+      ],
+      "_structured_raw_hash": "e78d52eef183a3c4"
     }
   ],
   "navigation": [
