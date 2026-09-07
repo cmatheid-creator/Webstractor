@@ -101,13 +101,31 @@ a list.
 
 ## Tier 3 — cosmetic / low
 
-- **7.** `ai-solutions` / `blog` "AI Insights" feed renders more images than
-  live plus the known vertical-whitespace/layout issue.
+- **7. Post-feed layout — DONE.** The live "Insights" grid uses equal-height
+  cards *with a white background + 1px `#e2e2e2` border*, so the space
+  under a short card's text reads as card padding. Ours had no card
+  styling and also pinned "Continue Reading" to the bottom with
+  `margin-top:auto`, doubling the gap. Fixed: added
+  `.migration-post-feed-card` (white bg, `#e2e2e2` border, radius,
+  padding, image flush to the top edge) and dropped the bottom-pin on
+  "Continue Reading". Verified on the dev site (`ai-solutions`,
+  `cybersecurity-solutions`): bordered cards matching live, 0
+  block-editor validation warnings.
 - **8.** One broken image on `threat-id-%26-detection` — the only page with
   `&` / `%26` in its slug; likely a URL-encoding edge case in the repair
-  plugin's URL matching or the WXR.
-- **9.** "Contact Us us" double word; "Click here to take our free cyber
-  risk assessment" bare-link phrasing.
+  plugin's URL matching or the WXR. *(still open)*
+- **9. Text artifacts — DONE (mostly not bugs).**
+  - "Contact Us us" — the doubled "us" is **a typo in the live GoDaddy
+    content** ("Please Contact Us us if you cannot find an answer…"), not
+    a migration artifact. Faithfully reproduced. Fix at the source, or
+    the LLM Content Structuring Agent (step 5) would catch it.
+  - Trailing "source" citation links — the live site renders these inline
+    at body size too, so it's faithful. Small polish applied: the crawler
+    now wraps a link whose text is just "source" in `<sup>` so it reads
+    as a superscript reference. Also added `<sup>`/`<sub>` to the
+    preserved inline tags generally. Verified on the dev site.
+  - "Click here to take our free cyber risk assessment" — no longer
+    present in the data (gone after the #5 re-crawl).
 
 ## Already solid (verified this pass)
 

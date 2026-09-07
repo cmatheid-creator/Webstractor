@@ -59,14 +59,23 @@ def element_text(el):
 
 def element_inline_html(el, base_url):
     """An element's content as a small, safe HTML fragment -- preserves
-    bold (<strong>/<b>), italic (<em>/<i>), and links (<a href>) instead
-    of flattening everything to plain text like element_text() does.
-    GoDaddy Website Builder content commonly leans on exactly this kind
-    of inline formatting to carry meaning the plain text alone loses --
-    e.g. a bolded stat plus a "source" citation link inside one list
-    item. Everything else (spans, classes, inline styles -- GoDaddy's
-    own generated wrapper markup) is unwrapped down to its own inner
-    content rather than kept, since none of it is meaningful here.
+    bold (<strong>/<b>), italic (<em>/<i>), super/subscript (<sup>/<sub>),
+    and links (<a href>) instead of flattening everything to plain text
+    like element_text() does. GoDaddy Website Builder content commonly
+    leans on exactly this kind of inline formatting to carry meaning the
+    plain text alone loses -- e.g. a bolded stat plus a "source" citation
+    link inside one list item. Everything else (spans, classes, inline
+    styles -- GoDaddy's own generated wrapper markup) is unwrapped down
+    to its own inner content rather than kept, since none of it is
+    meaningful here.
+
+    A trailing citation link -- an <a> whose visible text is just the
+    word "source" -- is wrapped in <sup> so it reads as a superscript
+    reference instead of a stray word dangling off the end of the
+    sentence ("...in the previous year source"). The live site renders
+    these at body size inline; superscript is the small, safe
+    presentation fix a human doing this migration would make.
+
     Falls back to plain text (via element_text()) if this fails for any
     reason -- some formatting lost beats losing the block entirely."""
     try:
@@ -90,12 +99,16 @@ def element_inline_html(el, base_url):
                     if (tag === 'em' || tag === 'i') {
                         return `<em>${inner}</em>`;
                     }
+                    if (tag === 'sup' || tag === 'sub') {
+                        return `<${tag}>${inner}</${tag}>`;
+                    }
                     if (tag === 'a') {
                         const href = node.getAttribute('href');
                         if (!href) return inner;
                         let abs;
                         try { abs = new URL(href, baseUrl).href; } catch (e) { abs = href; }
-                        return `<a href="${esc(abs)}">${inner}</a>`;
+                        const link = `<a href="${esc(abs)}">${inner}</a>`;
+                        return /^\\s*source\\s*$/i.test(node.textContent) ? `<sup>${link}</sup>` : link;
                     }
                     if (tag === 'br') {
                         return ' ';

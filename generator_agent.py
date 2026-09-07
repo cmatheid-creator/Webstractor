@@ -901,32 +901,31 @@ def block_to_gutenberg(block):
                     )
 
                 if url_escaped:
-                    # margin-top:auto -- same reasoning as card_group's
-                    # button: pins "Continue Reading" to the bottom of the
-                    # column regardless of how long this particular post's
-                    # excerpt happens to be, instead of it landing right
-                    # after wherever the text above it ends.
-                    # "migration-push-bottom" carries this via className --
-                    # see _role_style_bits()'s docstring for why an inline
-                    # style with no matching JSON attribute fails
-                    # Gutenberg's block validation.
+                    # "Continue Reading" follows the excerpt naturally --
+                    # confirmed against the live "Insights" grid, which
+                    # does NOT pin it to the bottom of the card. The
+                    # leftover space in an equal-height card sits below
+                    # it, inside the card border (added by
+                    # "migration-post-feed-card"), reading as card padding
+                    # rather than a stray gap.
                     parts.append(
-                        '<!-- wp:paragraph {"className":"migration-push-bottom"} -->\n'
-                        f'<p class="migration-push-bottom"><a href="{url_escaped}">Continue Reading</a></p>\n'
+                        '<!-- wp:paragraph -->\n'
+                        f'<p><a href="{url_escaped}">Continue Reading</a></p>\n'
                         '<!-- /wp:paragraph -->'
                     )
 
-                # Explicit width + flex column, same reasoning as
-                # card_group: without it, a trailing row with fewer posts
-                # than a full row of 3 (7 posts = rows of 3, 3, 1) has its
-                # last column stretch to the full row width instead of
-                # staying the same size as every other card.
-                # "migration-flex-column" carries this via className --
-                # see card_group's identical fix for why.
+                # "migration-flex-column": explicit 33.33% width + flex
+                # column, same reasoning as card_group (keeps a lone
+                # trailing card the same size as the rest).
+                # "migration-post-feed-card": the white background + 1px
+                # #e2e2e2 border + padding the live "Insights" cards have
+                # -- without it, the whitespace under a short card's text
+                # (the cards are equal height) looked like a random gap
+                # instead of card padding.
                 column_content = "\n\n".join(parts)
                 column_blocks.append(
-                    '<!-- wp:column {"className":"migration-flex-column"} -->\n'
-                    f'<div class="wp-block-column migration-flex-column">\n{column_content}\n</div>\n'
+                    '<!-- wp:column {"className":"migration-flex-column migration-post-feed-card"} -->\n'
+                    f'<div class="wp-block-column migration-flex-column migration-post-feed-card">\n{column_content}\n</div>\n'
                     '<!-- /wp:column -->'
                 )
 
@@ -2387,7 +2386,6 @@ def _extra_css_rules(brand):
         "display:flex!important;flex-direction:column!important}"
         ".migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}"
         ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
-        ".migration-push-bottom{margin-top:auto}"
         ".migration-text-center{text-align:center}"
     )
 
@@ -2418,6 +2416,18 @@ def _extra_css_rules(brand):
         "margin:1.5rem 0}"
         ".migration-form-placeholder .migration-form-note{opacity:.75;"
         "font-size:.95em;margin:.25rem 0 0}"
+    )
+
+    # post_feed ("AI Insights" / "Cybersecurity Insights") card grid --
+    # match the live widget's bordered white cards so the equal-height
+    # columns' leftover space reads as card padding, not a gap. The image
+    # sits flush to the card's top edge (negative margins cancel the
+    # card padding on three sides).
+    rules.append(
+        ".migration-post-feed-card{background:#ffffff;border:1px solid #e2e2e2;"
+        "border-radius:4px;padding:1.25rem}"
+        ".migration-post-feed-card .wp-block-image:first-child{margin:-1.25rem -1.25rem 1rem}"
+        ".migration-post-feed-card .wp-block-image:first-child img{border-radius:4px 4px 0 0;width:100%}"
     )
     return rules
 
