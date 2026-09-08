@@ -328,8 +328,7 @@ reset → import → publish → activate Yoast SEO (`wordpress-seo`, needed
 so the meta tags render) → repair plugin → verify. On the live front
 end: `<title>` and `<meta name="description">` match the generated
 values on every sampled page (8/8), all three re-described images render
-with their `alt`, the home FAQ renders as heading + three question
-`<h3>`s. No regressions: repair report repointed 17 broken image URLs,
+with their `alt`. No regressions: repair report repointed 17 broken image URLs,
 sideloaded 71 stock images, set the front page and the logo (attachment
 40004); 0 broken images on the home page. `cmatheid` recreated (the
 reset wiped it, per the workflow note). Yoast's "you're blocking access
@@ -342,6 +341,26 @@ image pass skipped it). Fixed 2026-09-08: re-described in
 `structured_content.json` and pushed to the live dev page (id 135, a
 `page` — note the migration imports blog posts as pages) via the REST
 API. The disclaimer text stays on the page as its own paragraph.
+
+## FAQ accordion + card-row wrap (2026-09-08)
+
+Two rendering fixes in `generator_agent.py`, both verified on the dev
+site (logged out, cache purged, `x-proxy-cache: MISS`, 0 block-editor
+validation warnings):
+
+- **FAQ renders as a real accordion.** The `faq` block now emits
+  `core/details` blocks (WP 6.7+), collapsed by default, instead of
+  flat `<h3>`/`<p>` pairs — restoring the click-to-expand behaviour of
+  the original GoDaddy accordion. `.migration-faq-item` CSS adds the
+  dividers / pointer cursor / focus ring. Verified: 3 `<details>` on the
+  home page, all closed on load, first one opens on click.
+- **`card_group` wraps at 3 columns per row.** It was emitting one
+  `wp:columns` row with every card, which renders as N skinny columns
+  (`core/columns` is a non-wrapping flex row on desktop) — the
+  Communications Solutions page showed one row of 6 where the live site
+  has 2×3. Now chunked into rows of ≤3, like `post_feed`. Verified:
+  `communications-solutions` renders two rows of three equal 399px
+  columns; pages with ≤3 cards per group (home, ai-solutions) unchanged.
 
 ## Site logo now applied by the repair plugin (no manual step, no shell)
 
