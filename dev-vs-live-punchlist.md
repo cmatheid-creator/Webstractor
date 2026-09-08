@@ -185,17 +185,22 @@ generator. Where it stands against this list:
   re-processes only pages whose blocks changed or that an older agent
   version structured. `--force` overrides; `--pages` always re-does the
   named pages.
-- **Meta title + description — implemented, not yet run.** Per-page LLM
-  generation → Yoast `_yoast_wpseo_title` / `_yoast_wpseo_metadesc`.
-  Needs an Anthropic API key (`ANTHROPIC_API_KEY` / `ant auth login`),
-  which this environment doesn't have. The QA report flags every page
-  that still lacks a generated meta title.
-- **Image alt text — implemented, not yet run.** Only three images
-  sitewide lack alt (all `image` blocks on blog posts — cards, hero and
-  media+text images already carry GoDaddy's stock-photo alt). The agent
-  fetches each, sends it to Claude with the page for context, and writes
-  literal alt text back. Same API-key blocker; the QA report lists the
-  three pages.
+- **Meta title + description — done.** All 37 pages now carry a
+  hand-reviewed SEO title (≤60 chars) and a 147–164-char meta
+  description drawn from the page's own content, imported as Yoast
+  `_yoast_wpseo_title` / `_yoast_wpseo_metadesc`. Because this
+  environment has no Anthropic API key, the semantic pass was run *in
+  the Claude Code session* (Pro subscription covers it) rather than by
+  `content_structuring_agent.py`'s API call — output is identical, just
+  produced by hand this once. The automated agent takes over for the
+  next (unknown) client site once an API key is available.
+- **Image alt text — done.** The three `image` blocks that lacked alt
+  (`ai-and-data-analytics…`, `top-5-security-considerations…`,
+  `how-ai-can-transform…`) now have literal alt text written from the
+  actual images, viewed in-session. Cards, hero, and media+text images
+  already carried GoDaddy's stock-photo alt.
 
-Not yet re-verified on the dev site through a full crawl → structure →
-generate → import cycle with the LLM pass enabled.
+Verified: `generator_agent.py` regenerated, XML well-formed, 37/37
+`_yoast_wpseo_title` + `_yoast_wpseo_metadesc` items, 0 images missing
+alt, `&` correctly escaped in titles. **Not yet re-verified on the dev
+site** through a full import/publish/repair pass with the step-5 output.

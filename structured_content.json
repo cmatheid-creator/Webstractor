@@ -10,7 +10,7 @@
       "old_url": "https://stratecon.tech",
       "slug": "home",
       "title": "Trusted Technology Advisers | Cybersecurity Solutions",
-      "meta_description": "Stratecon Tech Advisors offers trusted technology advice for responsible AI, comprehensive cybersecurity, and communications solutions to  grow your business.",
+      "meta_description": "Stratecon Tech Advisors helps businesses assess where technology can meet key goals and recommends best-in-class AI, cybersecurity, and communications solutions.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1535,m",
       "type": "page",
       "is_front_page": true,
@@ -170,13 +170,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "0aad679c737e98a8"
+      "meta_title": "Trusted Technology Advice | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "924b96aacd1bbc06"
     },
     {
       "old_url": "https://stratecon.tech/connectivity",
       "slug": "connectivity",
       "title": "- Connectivity",
-      "meta_description": "",
+      "meta_description": "Managed connectivity for a connected, secure, and resilient business: multi-location networking, business internet access, secure access, and cloud migrations.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -380,13 +382,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "bb9faed1daebb538"
+      "meta_title": "Secure Business Connectivity Solutions | Stratecon",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "bb9faed1daebb538"
     },
     {
       "old_url": "https://stratecon.tech/blog",
       "slug": "blog",
       "title": "Blog",
-      "meta_description": "Discover Stratecon Tech Insights for the latest in AI Solutions, Communications Solutions, and Cybersecurity Solutions.",
+      "meta_description": "The Stratecon Tech Advisors blog covers AI, communications, and cybersecurity for SMBs: strategy, tool selection, vendor evaluation, and emerging technology trends.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -487,13 +491,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "0659618091e1a67d"
+      "meta_title": "Stratecon Tech Insights Blog",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "0659618091e1a67d"
     },
     {
       "old_url": "https://stratecon.tech/terms-of-service",
       "slug": "terms-of-service",
       "title": "Terms of Service",
-      "meta_description": "",
+      "meta_description": "Terms and conditions for using the Stratecon Tech Advisors website, operated by Sustainable Investments, LLC: acceptable use, liability limits, and governing law.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -809,13 +815,15 @@
           "text": "Questions about the Terms of Service should be sent via email to <a href=\"mailto:info@stratecon.tech\">info@stratecon.tech</a>."
         }
       ],
-      "_structured_raw_hash": "e02328dc22773d12"
+      "meta_title": "Terms of Service | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "e02328dc22773d12"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-insurance-is-it-right-for-your-smb",
       "slug": "cybersecurity-insurance-is-it-right-for-your-smb",
       "title": "Cybersecurity Insurance: Is It Right for Your SMB?",
-      "meta_description": "Many small to medium-sized business (SMB) owners falsely believe they are too small to be targeted by cyber criminals. Unfortunately, SMBs are increasingly becoming the primary targets for cyber criminals. According to t...",
+      "meta_description": "Cyber liability insurance can offset breach, ransomware, and legal costs, but coverage limits, deductibles, and claim denials mean SMBs should weigh it carefully.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/3d-internet-secuirty-badge.jpg",
       "type": "page",
       "is_front_page": false,
@@ -1039,13 +1047,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "6337a82f57984a27"
+      "meta_title": "Cybersecurity Insurance: Is It Right for Your SMB?",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "6337a82f57984a27"
     },
     {
       "old_url": "https://stratecon.tech/ai-for-sales-1",
       "slug": "ai-for-sales-1",
       "title": "- AI for Sales",
-      "meta_description": "Transform your sales with AI for Sales solutions, enhancing engagement and efficiency for your team.",
+      "meta_description": "AI-driven sales solutions handle manual tasks so your team can focus on clients and closing: AI meeting assistants, sales coaching, and virtual sales agents.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -1171,13 +1181,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "219b5bd162c3591b"
+      "meta_title": "AI for Sales | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "219b5bd162c3591b"
     },
     {
       "old_url": "https://stratecon.tech/cybersecurity-solutions",
       "slug": "cybersecurity-solutions",
       "title": "Cybersecurity Solutions",
-      "meta_description": "",
+      "meta_description": "Safeguard your digital assets with risk assessment, threat detection, threat protection, incident response, disaster recovery, and cybersecurity education.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -1449,13 +1461,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "7db51d0bfedde4a9"
+      "meta_title": "Cybersecurity Solutions | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "7db51d0bfedde4a9"
     },
     {
       "old_url": "https://stratecon.tech/ai-strategy-1",
       "slug": "ai-strategy-1",
       "title": "- AI Strategy",
-      "meta_description": "",
+      "meta_description": "Build a responsible AI roadmap: start with business alignment, develop an AI use policy, create vendor disclosure statements, and train your team on AI.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -1618,13 +1632,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "2729ab298153d3fb"
+      "meta_title": "AI Strategy | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "2729ab298153d3fb"
     },
     {
       "old_url": "https://stratecon.tech/risk-assessment-1",
       "slug": "risk-assessment-1",
       "title": "- Risk Assessment",
-      "meta_description": "",
+      "meta_description": "Cyber risk assessments identify vulnerabilities and quantify risk so you can take proactive steps to protect your assets, reputation, and bottom line.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -1762,13 +1778,15 @@
           "text": "Take advantage of our Free Cyber Risk Self Assessment to identify potential gaps in your cybersecurity defenses."
         }
       ],
-      "_structured_raw_hash": "0a5f99162ce1bc7e"
+      "meta_title": "Cyber Risk Assessment | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "0a5f99162ce1bc7e"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/creating-and-testing-a-business-continuitydisaster-recovery-plan",
       "slug": "creating-and-testing-a-business-continuitydisaster-recovery-plan",
       "title": "Creating and Testing a Business Continuity/Disaster Recovery Plan",
-      "meta_description": "Whether natural disasters, cyberattacks, local civil disturbances, a defective software patch, or loss of a key employee, unforeseen business disruptions can occur at any time, and businesses must be prepared to respond ...",
+      "meta_description": "How to build and test a Business Continuity and Disaster Recovery plan: assess your assets, define your risks, and develop and drill your BCP and DRP.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/hurricane-58025_1280.jpg",
       "type": "page",
       "is_front_page": false,
@@ -2072,13 +2090,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "2e72e636e2c46633"
+      "meta_title": "Creating & Testing a Business Continuity/DR Plan",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "2e72e636e2c46633"
     },
     {
       "old_url": "https://stratecon.tech/threat-protection",
       "slug": "threat-protection",
       "title": "- Threat Protection",
-      "meta_description": "Leading provider of cyber threat protection and cybersecurity solutions, ensuring your business stays secure and efficient.",
+      "meta_description": "Industry-leading cyber threat protection: 24x7 monitoring, multi-layered defense, threat prevention, and incident response to safeguard your corporate assets.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -2298,13 +2318,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "d30a3bf341e2cc2a"
+      "meta_title": "Cyber Threat Protection | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "d30a3bf341e2cc2a"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-importance-of-regular-cybersecurity-audits-for-smbs",
       "slug": "the-importance-of-regular-cybersecurity-audits-for-smbs",
       "title": "The Importance of Regular Cybersecurity Audits for SMBs",
-      "meta_description": "In an era where cyber threats evolve with alarming speed, small and medium-sized businesses (SMBs) find themselves in a particularly vulnerable position. Unlike large corporations with vast resources at their disposal, S...",
+      "meta_description": "A cybersecurity audit reviews your IT infrastructure, policies, and operations to find vulnerabilities, confirm compliance, and strengthen your security posture.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/SMB%20Cybersecurity%202.webp",
       "type": "page",
       "is_front_page": false,
@@ -2415,13 +2437,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "ddb61bac33433b35"
+      "meta_title": "Why Regular Cybersecurity Audits Matter for SMBs",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "ddb61bac33433b35"
     },
     {
       "old_url": "https://stratecon.tech/threat-id-%26-detection",
       "slug": "threat-id-%26-detection",
       "title": "- Threat ID & Detection",
-      "meta_description": "Effective cyber threat detection to protect your digital assets and enhance cybersecurity awareness training.",
+      "meta_description": "Advanced threat identification and detection using the NIST model, plus cybersecurity awareness training that turns employees into strong defenders.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -2589,13 +2613,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "f9252bfcf03d6f67"
+      "meta_title": "Cyber Threat ID & Detection | Stratecon Tech",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "f9252bfcf03d6f67"
     },
     {
       "old_url": "https://stratecon.tech/services",
       "slug": "services",
       "title": "Services",
-      "meta_description": "Stratecon Tech Advisors offers expert technology services, including IT staff augmentation and virtual CIO, to streamline your business operations.",
+      "meta_description": "Fill your IT gaps with Stratecon Tech Advisors: Technology Concierge procurement, Virtual CIO leadership, and IT staff augmentation to help your business grow.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -2712,13 +2738,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "237e429459d51b30"
+      "meta_title": "Technology Advisory Services | Stratecon Tech",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "237e429459d51b30"
     },
     {
       "old_url": "https://stratecon.tech/ai-solutions",
       "slug": "ai-solutions",
       "title": "AI Solutions",
-      "meta_description": "",
+      "meta_description": "AI is transforming the way we work. Stratecon Tech Advisors helps you put it to work across AI strategy, AI for sales, and AI for customer service.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -2863,13 +2891,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "55b76356f5bb78d2"
+      "meta_title": "AI Solutions | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "55b76356f5bb78d2"
     },
     {
       "old_url": "https://stratecon.tech/privacy-policy",
       "slug": "privacy-policy",
       "title": "Privacy Policy",
-      "meta_description": "",
+      "meta_description": "How Stratecon Tech Advisors collects, uses, shares, and protects the personal information you provide, plus cookie use and your right to request deletion.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -3065,13 +3095,15 @@
           "text": "Effective as of August 9, 2023"
         }
       ],
-      "_structured_raw_hash": "78e87efd291c4045"
+      "meta_title": "Privacy Policy | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "78e87efd291c4045"
     },
     {
       "old_url": "https://stratecon.tech/communications-solutions",
       "slug": "communications-solutions",
       "title": "Stratecon Tech Advisors - Unified Communications, Contact Center, Workforce Management",
-      "meta_description": "We help our clients select unified communications, contact center, and workforce management solutions that will improve collaboration and customer experiences.",
+      "meta_description": "Select unified communications, contact center, connectivity, and workforce management solutions that improve collaboration and the customer experience.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -3175,13 +3207,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "81d53b51a23f2152"
+      "meta_title": "Communications Solutions | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "81d53b51a23f2152"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/ai-and-data-analytics-uncovering-business-insights-for-smbs",
       "slug": "ai-and-data-analytics-uncovering-business-insights-for-smbs",
       "title": "AI and Data Analytics: Uncovering Business Insights for SMBs",
-      "meta_description": "Traditionally, large corporations have dominated the market when it comes to utilizing advanced technology due to their resources. Businesses that adopt data-driven decision-making experience a significant increase in pr...",
+      "meta_description": "Affordable AI and data analytics let SMBs move from gut-based to data-driven decisions across customer insight, personalization, supply chain, and risk.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Woman%20analyzing%20data.jpg",
       "type": "page",
       "is_front_page": false,
@@ -3195,7 +3229,7 @@
         {
           "type": "image",
           "src": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Woman%20analyzing%20data.jpg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
-          "alt": ""
+          "alt": "A businesswoman writes notes at a boardroom table in front of wall-mounted screens showing financial charts and stock data"
         },
         {
           "type": "paragraph",
@@ -3347,13 +3381,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "932efdd0727fe80d"
+      "meta_title": "AI & Data Analytics: Business Insights for SMBs",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "c12ba07c735e1b02"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/supporting-hybrid-work-with-effective-collaboration-tools",
       "slug": "supporting-hybrid-work-with-effective-collaboration-tools",
       "title": "Supporting Hybrid Work with Effective Collaboration Tools",
-      "meta_description": "Since 2020 when many companies were rapidly forced to embrace remote work, there has been an ongoing tug-of-war between a workforce that has embraced the advantages of working from home, and some company leaders that wan...",
+      "meta_description": "The right communication, project management, file-sharing, and security tools, plus clear policies and training, let hybrid teams collaborate from anywhere.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Woman%20remote%20worker.webp",
       "type": "page",
       "is_front_page": false,
@@ -3480,13 +3516,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "b11937bf09a9efdb"
+      "meta_title": "Supporting Hybrid Work with Collaboration Tools",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "b11937bf09a9efdb"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/preventing-data-breaches-8-essential-strategies-for-smbs",
       "slug": "preventing-data-breaches-8-essential-strategies-for-smbs",
       "title": "Preventing Data Breaches: 8 Essential Strategies for SMBs",
-      "meta_description": "Data breaches pose a significant threat to businesses of all sizes, with small and medium-sized businesses (SMBs) being particularly vulnerable. While large corporations often have extensive resources dedicated to cybers...",
+      "meta_description": "Eight practical ways SMBs can cut data-breach risk: employee training, multi-factor authentication, network security, encryption, access controls, and backups.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/privacy-5400383_1280.jpg",
       "type": "page",
       "is_front_page": false,
@@ -3572,13 +3610,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "5ef4599be451ced1"
+      "meta_title": "Preventing Data Breaches: 8 Strategies for SMBs",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "5ef4599be451ced1"
     },
     {
       "old_url": "https://stratecon.tech/unified-communications",
       "slug": "unified-communications",
       "title": "- Unified Communications",
-      "meta_description": "Explore our unified communications solutions to enhance business communication, streamline workflows, and elevate productivity today!",
+      "meta_description": "Unified Communications as a Service brings your calling, messaging, and meetings onto one secure, scalable platform for better collaboration at lower cost.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -3710,13 +3750,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "015d3fbaaab476e1"
+      "meta_title": "Unified Communications (UCaaS) | Stratecon Tech",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "015d3fbaaab476e1"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/building-a-cybersecurity-aware-culture-in-your-business",
       "slug": "building-a-cybersecurity-aware-culture-in-your-business",
       "title": "Building a Cybersecurity-Aware Culture in Your Business",
-      "meta_description": "With over 70% of cyber breaches attributed to human factors, building a cybersecurity-aware culture is a business imperative. Cybersecurity is not just a technical issue - it also encompasses people, policy, and process ...",
+      "meta_description": "Over 70% of breaches trace to human factors. Build a security-aware culture: lead from the top, train regularly, set clear policies, and hold everyone accountable.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Cyber%20Training%20example.webp",
       "type": "page",
       "is_front_page": false,
@@ -3861,13 +3903,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "4a4a5156a4efb104"
+      "meta_title": "Building a Cybersecurity-Aware Culture",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "4a4a5156a4efb104"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-to-optimize-your-marketing-strategies",
       "slug": "leveraging-ai-to-optimize-your-marketing-strategies",
       "title": "Leveraging AI to Optimize Your Marketing Strategies",
-      "meta_description": "With consumers becoming more discerning and competition fiercer than ever, businesses must continually refine and adapt their marketing strategies to remain relevant and effective. Fortunately, the advent of artificial i...",
+      "meta_description": "How businesses use AI to sharpen marketing: personalization at scale, predictive analytics for targeted campaigns, and real-time advertising optimization.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/entrepreneur-marketing.jpg",
       "type": "page",
       "is_front_page": false,
@@ -3987,13 +4031,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "0043cb79463665ea"
+      "meta_title": "Using AI to Optimize Your Marketing Strategies",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "0043cb79463665ea"
     },
     {
       "old_url": "https://stratecon.tech/customer-experience",
       "slug": "customer-experience",
       "title": "- Customer Experience",
-      "meta_description": "Explore our customer experience solutions to enhance customer satisfaction and drive revenue through AI-driven customer service.",
+      "meta_description": "Integrated contact center, CRM, quality, and workforce management that pair AI and automation with secure cloud access to drive revenue and satisfaction.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -4243,13 +4289,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "5bb673cffc721b5a"
+      "meta_title": "Customer Experience (CX) Solutions | Stratecon",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "5bb673cffc721b5a"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-compliance-for-smbs-what-you-need-to-know",
       "slug": "cybersecurity-compliance-for-smbs-what-you-need-to-know",
       "title": "Cybersecurity Compliance for SMBs: What You Need to Know",
-      "meta_description": "An important element of building a comprehensive cybersecurity strategy is ensuring compliance with regulations related to information privacy and data security. Where large corporations may have entire departments respo...",
+      "meta_description": "What SMBs need to know about cybersecurity compliance: key regulations like CCPA, HIPAA, PCI DSS, and GDPR, plus practical steps to reach and keep compliance.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/compliance-5899194_1280.jpg",
       "type": "page",
       "is_front_page": false,
@@ -4484,13 +4532,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "98089682cf9530db"
+      "meta_title": "Cybersecurity Compliance for SMBs",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "98089682cf9530db"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/managing-communications-in-a-multi-generational-workforce",
       "slug": "managing-communications-in-a-multi-generational-workforce",
       "title": "Managing Communications in a Multi-Generational Workforce",
-      "meta_description": "For the first time in modern history, companies are now composed of up to five generations of employees: the Silent Generation/Traditionalists, Baby Boomers, Gen X, Millennials, and Gen Z. This poses unique challenges fo...",
+      "meta_description": "Today's workplace spans five generations. Learn what shaped each, adapt your leadership and channels, and choose technology that reaches across all of them.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/Multiple%20People%20network.jpg",
       "type": "page",
       "is_front_page": false,
@@ -4682,13 +4732,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "791ab825f10191b2"
+      "meta_title": "Communicating Across a Multi-Generational Workforce",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "791ab825f10191b2"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-for-enhanced-customer-service",
       "slug": "leveraging-ai-for-enhanced-customer-service",
       "title": "Leveraging AI for Enhanced Customer Service",
-      "meta_description": "Customer service has emerged as a critical differentiator for businesses across many industries, and artificial intelligence (AI) has become a powerful tool to elevate customer service by offering personalized, efficient...",
+      "meta_description": "How AI improves customer service through 24/7 chatbots, personalization, and scale, plus a five-step plan to add it alongside, not instead of, your human team.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/AI%20Customer%20Service.webp",
       "type": "page",
       "is_front_page": false,
@@ -4880,13 +4932,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "a6fdb69f5fea7f69"
+      "meta_title": "Leveraging AI for Enhanced Customer Service",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "a6fdb69f5fea7f69"
     },
     {
       "old_url": "https://stratecon.tech/about",
       "slug": "about",
       "title": "Stratecon Tech Advisors | Technology Advisory Services",
-      "meta_description": "Stratecon Tech Advisors offers technology advisory services to enhance your business through cybersecurity solutions and digital transformation.",
+      "meta_description": "Founder Carver Matheidas brings 30+ years in networking, UCaaS, CCaaS, and AI. Our mission: help businesses of every size reach their potential through technology.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -4990,13 +5044,15 @@
           "typography_role": "HeadingBeta"
         }
       ],
-      "_structured_raw_hash": "52fab98dd71e6f42"
+      "meta_title": "About Stratecon Tech Advisors & Our Founder",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "52fab98dd71e6f42"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/10-essential-cybersecurity-practices-for-smbs-in-2024",
       "slug": "10-essential-cybersecurity-practices-for-smbs-in-2024",
       "title": "10 Essential Cybersecurity Practices for SMBs in 2024",
-      "meta_description": "In an era where digital transformation is not just an option but a necessity, small to medium businesses (SMBs) are increasingly finding themselves at the crossroads of innovation and vulnerability. Cybersecurity, once a...",
+      "meta_description": "Ten cybersecurity practices to protect your SMB: awareness training, access controls, patching, secure remote work, backups, Zero Trust, and incident response.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/cybersecurity%20criminal.webp",
       "type": "page",
       "is_front_page": false,
@@ -5141,13 +5197,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "9e54b6da0de5d7e8"
+      "meta_title": "10 Essential Cybersecurity Practices for SMBs",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "9e54b6da0de5d7e8"
     },
     {
       "old_url": "https://stratecon.tech/contact",
       "slug": "contact",
       "title": "IT Advisor Services",
-      "meta_description": "IT vendor procurement, selection, vetting. IT Roadmap development. AI strategy, policy, documentation.",
+      "meta_description": "Reach Stratecon Tech Advisors about IT vendor selection, IT roadmap development, and AI strategy. Call or text (469) 960-6243, or email info@stratecon.tech.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -5248,13 +5306,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "46777198504748d0"
+      "meta_title": "Contact Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "46777198504748d0"
     },
     {
       "old_url": "https://stratecon.tech/ai-for-customer-service",
       "slug": "ai-for-customer-service",
       "title": "- AI for Customer Service",
-      "meta_description": "",
+      "meta_description": "AI-driven customer service automates key processes and speeds resolution, giving live agents the information they need to deliver world-class experiences.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -5374,13 +5434,15 @@
           ]
         }
       ],
-      "_structured_raw_hash": "28c39be258a46ef6"
+      "meta_title": "AI for Customer Service | Stratecon Tech Advisors",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "28c39be258a46ef6"
     },
     {
       "old_url": "https://stratecon.tech/cyber-risk-assessment",
       "slug": "cyber-risk-assessment",
       "title": "Cyber Risk Assessment",
-      "meta_description": "Comprehensive cyber risk assessment services for enhancing your cybersecurity strategy and digital security.",
+      "meta_description": "Take a free 5-10 minute Cyber Risk Self-Assessment to spot gaps in your processes, procedures, and technology, then review the results with a Stratecon advisor.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -5417,13 +5479,15 @@
           "text": "Our Advisors are standing by to discuss your Cyber Risk Self Assessment results, at your convenience. We look forward to working with you to build the customized cybersecurity strategy that will secure your business, and your brand."
         }
       ],
-      "_structured_raw_hash": "3a4d09416f648a67"
+      "meta_title": "Free Cyber Risk Self-Assessment | Stratecon Tech",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "3a4d09416f648a67"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/top-5-security-considerations-when-utilizing-generative-ai",
       "slug": "top-5-security-considerations-when-utilizing-generative-ai",
       "title": "Top 5 Security Considerations When Utilizing Generative AI",
-      "meta_description": "In the continual drive to boost growth and productivity, organizations are increasingly turning to generative artificial intelligence (AI) to streamline processes, boost creativity, and enhance decision-making. However, ...",
+      "meta_description": "Five ways to use generative AI safely: user education, robust data protection, ethical guidelines, continuous monitoring and auditing, and rigorous model testing.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/tech%20hands%20touching.jpg",
       "type": "page",
       "is_front_page": false,
@@ -5437,7 +5501,7 @@
         {
           "type": "image",
           "src": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/tech%20hands%20touching.jpg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
-          "alt": ""
+          "alt": "A white robotic hand and a human hand reach toward each other over a glowing blue circular circuit pattern"
         },
         {
           "type": "paragraph",
@@ -5537,13 +5601,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "c841155b087024c9"
+      "meta_title": "Top 5 Security Considerations for Generative AI",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "14779cfc0420ea2a"
     },
     {
       "old_url": "https://stratecon.tech/ai-use-policy-template",
       "slug": "ai-use-policy-template",
       "title": "AI Use Policy Template",
-      "meta_description": "Download our comprehensive AI Use Policy template to ensure responsible AI practices that align with your business goals and regulatory standards.",
+      "meta_description": "Download a free AI Use Policy template to set your company's principles, guidelines, and best practices for developing, deploying, and using AI responsibly.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -5557,13 +5623,15 @@
           "filename": "Stratecon%20Tech%20Advisors_Company%20AI%20Use%20Policy%20.pdf"
         }
       ],
-      "_structured_raw_hash": "40c10e1f7679993f"
+      "meta_title": "Free AI Use Policy Template | Stratecon Tech",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "40c10e1f7679993f"
     },
     {
       "old_url": "https://stratecon.tech/ai-disclosure-template",
       "slug": "ai-disclosure-template",
       "title": "AI Disclosure Template",
-      "meta_description": "Download our AI Disclosure Template to ensure transparency and responsibility in your AI solutions.",
+      "meta_description": "Download a free AI Disclosure Statement template to capture how a vendor's AI works, what data it uses, its limitations, and who controls its features.",
       "featured_image": "https://img1.wsimg.com/isteam/stock/2646",
       "type": "page",
       "is_front_page": false,
@@ -5577,13 +5645,15 @@
           "filename": "Stratecon%20Tech%20Advisors_AI%20Vendor%20Disclosure%20S.pdf"
         }
       ],
-      "_structured_raw_hash": "054684c4c42c46d9"
+      "meta_title": "Free AI Vendor Disclosure Template | Stratecon",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "054684c4c42c46d9"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-spider-mantm-dilemma-building-an-ai-strategy",
       "slug": "the-spider-mantm-dilemma-building-an-ai-strategy",
       "title": "The Spider-Man* Dilemma: Building an AI Strategy",
-      "meta_description": "From customer service virtual agents to sophisticated data analytics, AI has already become an integral part of many business operations, but adoption of this seismic-shift technology is still in the early stages. Althou...",
+      "meta_description": "Why an AI strategy needs AI Use Policies and AI Disclosure Statements to balance AI's power with your duties to security, privacy, ethics, and compliance.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/spiderman-5561671_1280.jpg",
       "type": "page",
       "is_front_page": false,
@@ -5698,13 +5768,15 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "c7d2ecbae396ccdf"
+      "meta_title": "The Spider-Man Dilemma: Building an AI Strategy",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "c7d2ecbae396ccdf"
     },
     {
       "old_url": "https://stratecon.tech/blog/f/how-ai-can-transform-your-small-to-medium-business",
       "slug": "how-ai-can-transform-your-small-to-medium-business",
       "title": "How AI Can Transform Your Small to Medium Business",
-      "meta_description": "In the rapidly evolving landscape of technology, artificial intelligence (AI) has emerged as a pivotal force driving innovation and efficiency across various industries. For small and medium-sized businesses (SMBs), the ...",
+      "meta_description": "How SMBs can adopt AI for efficiency, better decisions, and customer experience: identify needs, set an AI use policy, start small, and build on quality data.",
       "featured_image": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/AI%20for%20SMB.jpg",
       "type": "page",
       "is_front_page": false,
@@ -5718,7 +5790,7 @@
         {
           "type": "image",
           "src": "https://img1.wsimg.com/isteam/ip/65839fec-72de-412d-8280-f55f4e3087d0/AI%20for%20SMB.jpg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1280",
-          "alt": ""
+          "alt": "A smiling business owner with a tablet stands beside a friendly humanoid robot in a stockroom with holographic data displays"
         },
         {
           "type": "paragraph",
@@ -5892,7 +5964,9 @@
           "text": "Sign up to receive updates and blog posts by email."
         }
       ],
-      "_structured_raw_hash": "e78d52eef183a3c4"
+      "meta_title": "How AI Can Transform Your Small or Medium Business",
+      "_structured_agent_version": 2,
+      "_structured_blocks_hash": "0e3effcc269bd150"
     }
   ],
   "navigation": [

@@ -293,12 +293,24 @@ prefix. It's short enough now that it won't clear the model's minimum
 cacheable size, so it's a no-op until the instructions grow — the hook
 is in place.
 
-**Not yet exercised end to end:** everything that needs the LLM (meta
-text, image alt) — this environment has no `ANTHROPIC_API_KEY` /
-`ant auth login`. The call shape (SDK 1.x `messages.create` with
-`output_config.format` json_schema + adaptive thinking) is verified
-against the installed `anthropic` package; the offline path and the
-generator hand-off are verified.
+**Step 5 run once, in-session (2026-09-08).** This environment has no
+`ANTHROPIC_API_KEY` / `ant auth login` (the Claude Code login is a Pro
+subscription, which doesn't grant API access), so the semantic pass was
+done *by this Claude Code session* instead of by
+`content_structuring_agent.py`'s API call: all 37 pages got a
+hand-reviewed `meta_title` (≤60 chars) + 147–164-char `meta_description`
+from their own content, and the three alt-less `image` blocks
+(`ai-and-data-analytics…`, `top-5-security-considerations…`,
+`how-ai-can-transform…`) got alt text written from the actual images.
+Applied via a scratch script that reuses the agent's own
+`structure_page()` / marker logic; `structured_content.json` now carries
+`_structured_agent_version: 2` + `_structured_blocks_hash` on every page.
+Output is byte-compatible with what the automated agent would produce —
+the agent takes over for the next client site once an API key exists.
+The call shape (SDK 1.x `messages.create` with `output_config.format`
+json_schema + adaptive thinking) is verified against the installed
+`anthropic` package but the agent's *own* API path is still unexercised.
+Not yet re-verified on the dev site with this output.
 
 ## Site logo now applied by the repair plugin (no manual step, no shell)
 
