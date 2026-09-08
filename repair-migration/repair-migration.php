@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Stratecon Migration Repair
- * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, sets the static front page, and sets the site logo. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
+ * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, sets the static front page, sets the site logo, and reclaims the /privacy-policy/ slug from WordPress's sample page. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
  * Version:     1.0.0
  * Author:      Webstractor migration pipeline (auto-generated)
  */
@@ -343,6 +343,42 @@ function stratecon_migration_repair_run() {
         } else {
             $report[] = "Site logo NOT set -- logo attachment not found. Import the WXR with \"Download and import file attachments\" checked, then activate this plugin again, or set it by hand in Appearance -> Editor -> Styles.";
         }
+    }
+
+    // -----------------------------------------------------------------
+    // 5. Reclaim the /privacy-policy/ slug. WordPress (and a WP Reset)
+    //    seed a sample "Privacy Policy" page, so the WXR import can't
+    //    claim that slug and the migrated page lands at
+    //    /privacy-policy-2/. Detect that -- the sample page always carries
+    //    the "Suggested text:" boilerplate -- and swap them: trash the
+    //    sample (which frees the slug), move the migrated page onto
+    //    /privacy-policy/, and repoint the privacy-policy option.
+    //    Idempotent: once done there's no /privacy-policy-2/ to find.
+    // -----------------------------------------------------------------
+    $pp_pages = get_posts(array(
+        'post_type'   => 'page',
+        'post_status' => 'any',
+        'title'       => 'Privacy Policy',
+        'numberposts' => 10,
+    ));
+    $pp_sample = null;
+    $pp_migrated = null;
+    foreach ($pp_pages as $pp) {
+        if (strpos((string) $pp->post_content, 'Suggested text:') !== false) {
+            $pp_sample = $pp;
+        } elseif (!$pp_migrated) {
+            $pp_migrated = $pp;
+        }
+    }
+    if ($pp_migrated && $pp_sample && (int) $pp_migrated->ID !== (int) $pp_sample->ID
+        && $pp_migrated->post_name !== 'privacy-policy') {
+        wp_trash_post($pp_sample->ID);                 // appends __trashed, frees the slug
+        wp_update_post(array('ID' => $pp_migrated->ID, 'post_name' => 'privacy-policy'));
+        if ((int) get_option('wp_page_for_privacy_policy') === (int) $pp_sample->ID) {
+            update_option('wp_page_for_privacy_policy', $pp_migrated->ID);
+        }
+        $report[] = "Privacy Policy: trashed the WordPress sample page (id {$pp_sample->ID}); "
+                  . "moved the migrated page to /privacy-policy/.";
     }
 
     return $report;

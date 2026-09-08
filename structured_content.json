@@ -1348,6 +1348,24 @@
           "text": "By submitting this form, you confirm that you have read and agreed to the Stratecon Tech Advisors <a href=\"https://stratecon.tech/privacy-policy\">Privacy Policy</a> and <a href=\"https://stratecon.tech/terms-of-service\">Terms of Service</a>."
         },
         {
+          "type": "contact_form",
+          "title": "Free Cybersecurity eBook",
+          "fields": [
+            {
+              "label": "Name",
+              "type": "text"
+            },
+            {
+              "label": "Email",
+              "type": "text"
+            },
+            {
+              "label": "Company",
+              "type": "text"
+            }
+          ]
+        },
+        {
           "type": "post_feed",
           "posts": [
             {
@@ -1441,29 +1459,11 @@
               "excerpt": "In the continual drive to boost growth and productivity, organizations are increasingly turning to generative artificial intelligence (AI) to streamline processes, boost creativity, and enhance decision-making. However, ..."
             }
           ]
-        },
-        {
-          "type": "contact_form",
-          "title": "Free Cybersecurity eBook",
-          "fields": [
-            {
-              "label": "Name",
-              "type": "text"
-            },
-            {
-              "label": "Email",
-              "type": "text"
-            },
-            {
-              "label": "Company",
-              "type": "text"
-            }
-          ]
         }
       ],
       "meta_title": "Cybersecurity Solutions | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "7db51d0bfedde4a9"
+      "_structured_blocks_hash": "a8959d547bb3765f"
     },
     {
       "old_url": "https://stratecon.tech/ai-strategy-1",

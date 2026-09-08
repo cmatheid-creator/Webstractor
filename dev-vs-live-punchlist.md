@@ -16,15 +16,17 @@ of by-design differences:
 
 ### Open — real gaps
 
-- **`/privacy-policy/` serves WordPress's boilerplate, not the migrated
-  content.** WP Reset re-seeds a default "Privacy Policy" page (post id
-  3, `wp_page_for_privacy_policy`) every cycle, so the WXR import can't
-  claim the `privacy-policy` slug — the migrated page lands at
-  `/privacy-policy-2/` (post 115, content correct there) and
-  `/privacy-policy/` shows "Who we are / Suggested text: …". Terms of
-  Service is unaffected (WordPress doesn't auto-create one). **Fix
-  belongs in the repair plugin**: trash the WP sample page and re-slug
-  the migrated page to `privacy-policy` (+ repoint the option).
+- **`/privacy-policy/` slug collision — DONE.** WP Reset re-seeds a
+  sample "Privacy Policy" page every cycle, so the WXR import can't claim
+  the slug and the migrated page lands at `/privacy-policy-2/`. The
+  repair plugin now has a step 5: it identifies the sample page by its
+  "Suggested text:" boilerplate, trashes it (freeing the slug), moves
+  the migrated page onto `/privacy-policy/`, and repoints
+  `wp_page_for_privacy_policy`. Idempotent. Verified on the dev site by
+  re-activating the plugin: report read "trashed the WordPress sample
+  page (id 3); moved the migrated page to /privacy-policy/",
+  `/privacy-policy/` now serves the real Stratecon policy (~9.7k chars,
+  no boilerplate), `/privacy-policy-2/` 404s.
 
 - **`cyber-risk-assessment` is missing its self-assessment form.** The
   live page embeds a 20-question Cognito Forms questionnaire (Network
@@ -51,9 +53,12 @@ of by-design differences:
   form pages; their instruction text literally contains
   `[fluentform id="…"]` (by design, punchlist #4 — one-time shortcode
   swap at go-live). On `cybersecurity-solutions` the eBook placeholder
-  is **orphaned at the very bottom** of the page instead of in the
-  "Free Cybersecurity eBook" section where live has it — a block-order
-  bug in the generator worth fixing.
+  was **orphaned at the very bottom** of the page instead of in the
+  "Free Cybersecurity eBook" section. **DONE** — reordered the blocks in
+  `structured_content.json` so `contact_form` sits before `post_feed`;
+  the placeholder now renders in the eBook section, Insights feed after.
+  Verified on the dev site (section order:  Free Cybersecurity eBook →
+  eBook placeholder → post-feed grid).
 - **Post-feed grids are 3-up on dev vs 2-up on live** (Cybersecurity
   Insights / AI Insights); the live "All Posts | <category>" filter tabs
   aren't reproduced.

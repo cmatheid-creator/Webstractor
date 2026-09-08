@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-08 16:23 UTC
+Generated: 2026-09-08 16:57 UTC
 
 ## Summary
 
@@ -47,8 +47,8 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
 - **Cybersecurity Solutions** (`cybersecurity-solutions`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
   - card images still point at the original site -- swap to the re-hosted media-library copy after import.
-  - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
   - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
 - **AI Strategy** (`ai-strategy-1`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **Risk Assessment** (`risk-assessment-1`):
@@ -132,6 +132,6 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
 
 - `stratecon-migration.xml` — import via **Tools → Import → WordPress** on any WordPress site (install the free WordPress Importer plugin if prompted). Pages import as **drafts** so nothing goes live automatically.
 - `redirects.csv` — import into the free **Redirection** plugin to preserve old URLs once the new site goes live.
-- `repair-migration.zip` — the **Stratecon Migration Repair** plugin. After importing and publishing the pages, upload **`repair-migration.zip`** via Plugins → Add New → Upload Plugin and click Activate — it runs once, shows a report, then deactivates itself. Repoints broken re-hosted image URLs at the file WordPress actually saved, pulls media-library copies of the stock images the importer couldn't, sets the static front page, and sets the site logo. No server/shell access needed; safe to activate again — re-run it after any full site reset, which wipes the front-page and logo settings. (A shell, where available, can instead run `php wp-content/plugins/repair-migration/repair-migration.php` directly.)
+- `repair-migration.zip` — the **Stratecon Migration Repair** plugin. After importing and publishing the pages, upload **`repair-migration.zip`** via Plugins → Add New → Upload Plugin and click Activate — it runs once, shows a report, then deactivates itself. Repoints broken re-hosted image URLs at the file WordPress actually saved, pulls media-library copies of the stock images the importer couldn't, sets the static front page, sets the site logo, and reclaims the `/privacy-policy/` slug from WordPress's sample page. No server/shell access needed; safe to activate again — re-run it after any full site reset, which wipes the front-page and logo settings. (A shell, where available, can instead run `php wp-content/plugins/repair-migration/repair-migration.php` directly.)
 - `theme.json` — the extracted color palette and font list in WordPress's block-theme format.
 - `apply_branding.php` — the shell-based equivalent of the repair plugin's logo step plus brand-font loading (`php apply_branding.php` from the WordPress root), for hosts where a shell is available. Run once after each fresh import; see the notes above.
