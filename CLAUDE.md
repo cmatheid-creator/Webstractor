@@ -324,10 +324,12 @@ reset wiped it, per the workflow note). Yoast's "you're blocking access
 to robots" warning is just the staging site's deliberate "Discourage
 search engines" setting.
 
-Known minor, not step-5 scope: the Spider-Man blog post's image `alt`
-is the trademark-disclaimer caption the crawler grabbed (that image
-already had *an* alt, so the step-5 image pass didn't touch it) —
-re-describe it on a future content pass.
+The Spider-Man post's image `alt` was the trademark-disclaimer caption
+the crawler grabbed (that image already had *an* alt, so the step-5
+image pass skipped it). Fixed 2026-09-08: re-described in
+`structured_content.json` and pushed to the live dev page (id 135, a
+`page` — note the migration imports blog posts as pages) via the REST
+API. The disclaimer text stays on the page as its own paragraph.
 
 ## Site logo now applied by the repair plugin (no manual step, no shell)
 
