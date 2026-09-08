@@ -759,17 +759,22 @@ def block_to_gutenberg(block):
         )
 
     if t == "faq":
+        # Real click-to-expand accordion via core/details (WP 6.7+),
+        # collapsed by default (no `open` attr). Restores the interaction
+        # of the GoDaddy FAQ accordion the Content Structuring Agent
+        # flattened into paired question/answer text.
         parts = []
         for item in block["items"]:
             q = html.escape(item["q"])
             a = html.escape(item["a"])
             parts.append(
-                '<!-- wp:heading {"level":3} -->\n'
-                f'<h3 class="wp-block-heading">{q}</h3>\n'
-                '<!-- /wp:heading -->\n'
+                '<!-- wp:details {"className":"migration-faq-item"} -->\n'
+                f'<details class="wp-block-details migration-faq-item"><summary>{q}</summary>\n'
                 '<!-- wp:paragraph -->\n'
                 f'<p>{a}</p>\n'
-                '<!-- /wp:paragraph -->'
+                '<!-- /wp:paragraph -->\n'
+                '</details>\n'
+                '<!-- /wp:details -->'
             )
         return "\n\n".join(parts)
 
@@ -1028,22 +1033,28 @@ def block_to_gutenberg(block):
                 '<!-- /wp:column -->'
             )
 
-        columns_content = "\n\n".join(column_blocks)
-        # Explicit blockGap -- confirmed against the live site's own card
-        # row: its gutters between cards are noticeably wider than
-        # WordPress's small default column gap, which (combined with each
-        # column's explicit 33.33% width leaving it almost no slack) made
-        # columns here read as wider than the live site's and wrap its
-        # paragraph text differently/less evenly. "migration-columns-gap"
-        # carries this via className -- see the column fix above for why.
+        # Wrap the cards in rows of at most 3 columns -- matching the live
+        # site (which lays 6 cards out 2x3) and post_feed below. A single
+        # wp:columns row of 6 renders as 6 skinny columns: core/columns is
+        # a non-wrapping flex row on desktop, so 6 children each declared
+        # flex-basis:33.33% just shrink to share one line. Explicit
+        # blockGap ("migration-columns-gap") widens the gutter to match
+        # the live card row -- see the column fix above for why via
+        # className.
+        row_blocks = []
+        for i in range(0, len(column_blocks), 3):
+            columns_content = "\n\n".join(column_blocks[i:i + 3])
+            row_blocks.append(
+                '<!-- wp:columns {"align":"wide","className":"migration-columns-gap"} -->\n'
+                '<div class="wp-block-columns alignwide migration-columns-gap">\n'
+                f"{columns_content}\n"
+                '</div>\n'
+                '<!-- /wp:columns -->'
+            )
         return (
-            '<!-- wp:columns {"align":"wide","className":"migration-columns-gap"} -->\n'
-            '<div class="wp-block-columns alignwide migration-columns-gap">\n'
-            f"{columns_content}\n"
-            '</div>\n'
-            '<!-- /wp:columns -->\n'
-            '<!-- QA FLAG: card images still point at the original site -- swap to the '
-            're-hosted media-library copy after import. -->'
+            "\n\n".join(row_blocks)
+            + "\n\n<!-- QA FLAG: card images still point at the original site -- "
+            "swap to the re-hosted media-library copy after import. -->"
         )
 
     if t == "post_feed":
@@ -2347,8 +2358,9 @@ def build_qa_report(data, brand=None):
             f"- **FAQ sections rebuilt** ({faq_clean_count} page(s)): the GoDaddy accordion "
             "renders its questions as toggle controls and its answers in separate panels, so "
             "the crawl captured them as loose text. The Content Structuring Agent (pipeline "
-            "step 5) paired each question with its answer into a clean Q&A block (rendered as "
-            "`<h3>`/`<p>` pairs). Skim the pairings before publishing."
+            "step 5) paired each question with its answer; the generator renders the pairs as "
+            "a real click-to-expand accordion (`core/details` blocks, collapsed by default, "
+            "WP 6.7+). Skim the pairings before publishing."
         )
     if meta_title_count == extracted:
         lines.append(
@@ -2729,6 +2741,13 @@ def _extra_css_rules(brand):
         ".migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}"
         ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
         ".migration-text-center{text-align:center}"
+        # FAQ accordion (core/details): a divider between items, a little
+        # breathing room, and a pointer cursor + weight on the question.
+        ".migration-faq-item{border-top:1px solid #e2e2e2;padding:1rem 0}"
+        ".migration-faq-item:last-of-type{border-bottom:1px solid #e2e2e2}"
+        ".migration-faq-item>summary{cursor:pointer;font-weight:600;list-style-position:outside}"
+        ".migration-faq-item>summary:focus-visible{outline:2px solid currentColor;outline-offset:2px}"
+        ".migration-faq-item[open]>summary{margin-bottom:.75rem}"
     )
 
     # The hero cover (see block_to_gutenberg()'s "hero" branch). The
