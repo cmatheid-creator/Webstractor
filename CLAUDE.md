@@ -394,16 +394,45 @@ Settings → Reading shows the static front page set. Carver's `cmatheid`
 admin account (wiped by the reset, per the workflow note above) was
 recreated in the same run.
 
-## Still open
+## Session handoff — 2026-09-08
 
-- **Newsletter signup** still renders as a placeholder panel — needs an
-  email-tool / ESP decision (separate from the Fluent Forms contact-form
-  work).
-- The **Qualification Agent** is still regex-based — fine for
-  stratecon.tech, needs hardening before an unseen client site.
-- Crawler nondeterminism: a full re-crawl re-discovers duplicate
+**State:** All work is committed and pushed to
+`origin/claude/stratecon-crawler-generator-faki7f` (working tree clean).
+The dev site (dev.stratecon.tech) reflects the latest: step-5 meta/alt,
+FAQ accordion, 2×3 card rows, logo, privacy-policy slug reclaimed, eBook
+placeholder reordered. A full dev-vs-live visual pass was run 2026-09-08
+— results in `dev-vs-live-punchlist.md` ("Pass 2"). 0 broken images on
+any page; body text 90–98% of live everywhere.
+
+**Blocked on a decision from Carver (do these next once he answers):**
+1. `cyber-risk-assessment` is missing its 20-question Cognito Forms
+   self-assessment embed entirely (no placeholder). Rebuild in Fluent
+   Forms / embed Cognito / link out?
+2. Blog posts (×16) drop the GoDaddy right sidebar (Categories, Recent
+   Posts, blog-signup) and social-share icons. Accept, or add a Recent
+   Posts / Categories block to the post template?
+3. **Newsletter / "Stay Informed"** — still a placeholder on the home
+   page, contact, and 17 blog posts. Needs an ESP choice (Mailchimp,
+   etc.) before it can be wired.
+
+**Can be done without Carver (offered, not yet greenlit):**
+- Add the "Cybersecurity Insights" section heading above that post feed.
+- Make post-feed grids 2-up (match live) instead of 3-up; the live
+  "All Posts | <category>" filter tabs aren't reproduced.
+- Harden the **Qualification Agent** (still regex-only — fine for
+  stratecon.tech, not for an unseen client site).
+- Fix **crawler nondeterminism**: a full re-crawl re-discovers duplicate
   `/ai-solutions/f/…` and `/cybersecurity-solutions/f/…` paths for the
-  same blog posts, so every regeneration this project has needed a manual
-  merge back down to the canonical page set.
+  same blog posts, so every regeneration needs a manual merge to the
+  canonical page set.
 - Minor: the "FREE CYBERSECURITY EBOOK" all-caps form title (crawler
-  grabbed a CSS-uppercased hero heading as the form's region title).
+  grabbed a CSS-uppercased hero heading as the region title).
+- The **Content Structuring Agent's own API path** has still never run
+  end to end (this environment is Claude Pro, no API key — step 5 was
+  done in-session). Exercise it whenever an `ANTHROPIC_API_KEY` exists.
+
+**To resume:** `cd ~/Webstractor`, start Claude Code (`claude --continue`
+to reattach this session, or a fresh `claude`), and read this file +
+`dev-vs-live-punchlist.md`. The Playwright dev-site automation scripts
+from this session are gone (scratchpad is session-scoped) but the
+patterns are documented in the "Dev site workflow" section above.
