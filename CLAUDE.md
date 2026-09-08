@@ -310,7 +310,24 @@ the agent takes over for the next client site once an API key exists.
 The call shape (SDK 1.x `messages.create` with `output_config.format`
 json_schema + adaptive thinking) is verified against the installed
 `anthropic` package but the agent's *own* API path is still unexercised.
-Not yet re-verified on the dev site with this output.
+
+**Verified on the dev site (2026-09-08, direct-access session).** Full
+reset → import → publish → activate Yoast SEO (`wordpress-seo`, needed
+so the meta tags render) → repair plugin → verify. On the live front
+end: `<title>` and `<meta name="description">` match the generated
+values on every sampled page (8/8), all three re-described images render
+with their `alt`, the home FAQ renders as heading + three question
+`<h3>`s. No regressions: repair report repointed 17 broken image URLs,
+sideloaded 71 stock images, set the front page and the logo (attachment
+40004); 0 broken images on the home page. `cmatheid` recreated (the
+reset wiped it, per the workflow note). Yoast's "you're blocking access
+to robots" warning is just the staging site's deliberate "Discourage
+search engines" setting.
+
+Known minor, not step-5 scope: the Spider-Man blog post's image `alt`
+is the trademark-disclaimer caption the crawler grabbed (that image
+already had *an* alt, so the step-5 image pass didn't touch it) —
+re-describe it on a future content pass.
 
 ## Site logo now applied by the repair plugin (no manual step, no shell)
 

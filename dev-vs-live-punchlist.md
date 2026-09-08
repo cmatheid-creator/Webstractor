@@ -202,5 +202,16 @@ generator. Where it stands against this list:
 
 Verified: `generator_agent.py` regenerated, XML well-formed, 37/37
 `_yoast_wpseo_title` + `_yoast_wpseo_metadesc` items, 0 images missing
-alt, `&` correctly escaped in titles. **Not yet re-verified on the dev
-site** through a full import/publish/repair pass with the step-5 output.
+alt, `&` correctly escaped in titles.
+
+**Verified on the dev site (2026-09-08).** Full reset → import → publish
+→ activate Yoast SEO → repair plugin → verify. On the live front end:
+`<title>` and `<meta name="description">` match the generated values on
+every sampled page (8/8, incl. the `&`-escaped "AI & Data Analytics"
+title); all three images render with their generated `alt`; the home
+FAQ renders as heading + three question `<h3>`s. No regressions — repair
+report: 17 broken image URLs repointed, 71 stock images sideloaded,
+front page set, site logo set (attachment 40004); 0 broken images on
+the home page; `cmatheid` admin recreated. (Incidental: Yoast warns
+"you're blocking access to robots" — that's the staging site's
+deliberate "Discourage search engines" setting, not a migration issue.)
