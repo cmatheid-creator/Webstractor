@@ -165,3 +165,37 @@ a list.
 #1 + #2 together — both are crawler-extraction fixes, both sitewide, and
 they account for most of the remaining gap. #3 and #5 fall out of the same
 "post-feed vs form" confusion. #4 is blocked on the plugin choice.
+
+(All of #1–#9 are since closed — see the per-item "DONE" notes above.)
+
+## Content Structuring Agent (step 5) — status
+
+`content_structuring_agent.py` runs after the crawl, before the
+generator. Where it stands against this list:
+
+- **FAQ restructuring — done, verified offline.** The home page's
+  accordion (questions as toggles, answers in loose paragraphs) is now
+  one clean `faq` block, no orphan paragraphs, no duplicated blob.
+  `--offline` does deterministic in-order pairing, which is correct for
+  stratecon.tech; the LLM pass additionally handles reordered /
+  multi-paragraph answers and copy-edits obvious typos (e.g. the
+  "Contact Us us" doubling noted in #9).
+- **Incremental re-runs — done.** Each page carries
+  `_structured_agent_version` + `_structured_blocks_hash`; a normal run
+  re-processes only pages whose blocks changed or that an older agent
+  version structured. `--force` overrides; `--pages` always re-does the
+  named pages.
+- **Meta title + description — implemented, not yet run.** Per-page LLM
+  generation → Yoast `_yoast_wpseo_title` / `_yoast_wpseo_metadesc`.
+  Needs an Anthropic API key (`ANTHROPIC_API_KEY` / `ant auth login`),
+  which this environment doesn't have. The QA report flags every page
+  that still lacks a generated meta title.
+- **Image alt text — implemented, not yet run.** Only three images
+  sitewide lack alt (all `image` blocks on blog posts — cards, hero and
+  media+text images already carry GoDaddy's stock-photo alt). The agent
+  fetches each, sends it to Claude with the page for context, and writes
+  literal alt text back. Same API-key blocker; the QA report lists the
+  three pages.
+
+Not yet re-verified on the dev site through a full crawl → structure →
+generate → import cycle with the LLM pass enabled.

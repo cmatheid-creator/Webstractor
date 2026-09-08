@@ -2179,9 +2179,30 @@ def build_qa_report(data, brand=None):
         collect_unique_images(pages)
     )
     faq_unverified_count = count_blocks("faq_raw_unverified")
+    faq_clean_count = count_blocks("faq")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
     hero_count = count_blocks("hero")
+
+    # Content Structuring Agent (pipeline step 5) coverage. meta_title is
+    # only ever set by step 5, so it's the honest "did step 5's LLM pass
+    # run" signal; meta_description can also carry a weak value straight
+    # from the crawl. Alt text absent here is an accessibility gap step 5
+    # is meant to close.
+    meta_title_count = sum(1 for p in pages if (p.get("meta_title") or "").strip())
+    images_missing_alt = []
+    for p in pages:
+        for b in p["blocks"]:
+            t = b["type"]
+            if t in ("image", "media_text") and b.get("src") and not (b.get("alt") or "").strip():
+                images_missing_alt.append(p["slug"])
+            elif t == "hero" and (b.get("image") or {}).get("src") and not (b["image"].get("alt") or "").strip():
+                images_missing_alt.append(p["slug"])
+            elif t == "card_group":
+                for c in b.get("cards", []) or []:
+                    im = c.get("image") or {}
+                    if im.get("src") and not (im.get("alt") or "").strip():
+                        images_missing_alt.append(p["slug"])
 
     known_slugs = {p["slug"] for p in pages}
     menu_items_xml, _, skipped_nav_labels = build_nav_menu_items_xml(
@@ -2321,6 +2342,42 @@ def build_qa_report(data, brand=None):
         )
     if faq_unverified_count:
         lines.append(f"- **Low-confidence FAQ/accordion extraction** ({faq_unverified_count} page(s)): pulled via a broad DOM selector rather than verified Q&A structure — review before publishing.")
+    if faq_clean_count:
+        lines.append(
+            f"- **FAQ sections rebuilt** ({faq_clean_count} page(s)): the GoDaddy accordion "
+            "renders its questions as toggle controls and its answers in separate panels, so "
+            "the crawl captured them as loose text. The Content Structuring Agent (pipeline "
+            "step 5) paired each question with its answer into a clean Q&A block (rendered as "
+            "`<h3>`/`<p>` pairs). Skim the pairings before publishing."
+        )
+    if meta_title_count == extracted:
+        lines.append(
+            f"- **SEO title + meta description set on all {extracted} page(s)** by the Content "
+            "Structuring Agent (imported as the Yoast `_yoast_wpseo_title` / "
+            "`_yoast_wpseo_metadesc` fields) — review the wording before go-live."
+        )
+    elif meta_title_count:
+        lines.append(
+            f"- **SEO titles set on {meta_title_count}/{extracted} page(s)**; the rest fall "
+            "back to the page title. Re-run the Content Structuring Agent (step 5, needs an "
+            "API key) to complete them, or set them per page in Yoast."
+        )
+    else:
+        lines.append(
+            "- **SEO titles / descriptions not generated yet**: the Content Structuring Agent "
+            "(pipeline step 5) writes a per-page meta title and 150–160-char description but "
+            "needs an Anthropic API key to run. Until it does, each page uses its own title "
+            "and whatever `<meta name=\"description\">` the crawl captured. Run step 5, or set "
+            "the fields in Yoast per page."
+        )
+    if images_missing_alt:
+        uniq = sorted(set(images_missing_alt))
+        lines.append(
+            f"- **{len(images_missing_alt)} image(s) with no alt text** on {len(uniq)} page(s) "
+            f"({', '.join(uniq)}): the crawl found no alt attribute. The Content Structuring "
+            "Agent's image pass (step 5, needs an API key) writes literal alt text from the "
+            "image itself; until it runs, add alt text by hand for accessibility."
+        )
     if flags:
         lines.append(f"- **{len(flags)} page(s) excluded** by the qualification check:")
         for url, reasons in flags.items():
