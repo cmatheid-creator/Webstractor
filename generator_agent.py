@@ -1331,7 +1331,7 @@ def partition_images_by_importability(images):
     return importable, not_importable
 
 
-def build_attachment_item_xml(url, alt, attachment_id):
+def build_attachment_item_xml(url, alt, attachment_id, is_site_logo=False):
     """A WXR attachment item pointing at the original image URL. This is
     WordPress's own native mechanism for re-hosting external media: when
     "Download and import file attachments" is checked during import (the
@@ -1351,6 +1351,22 @@ def build_attachment_item_xml(url, alt, attachment_id):
     pub_date = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
     post_date = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     src = xml_escape(canonical_attachment_url(url))
+
+    # A stable marker on the logo attachment. The classic WP Importer
+    # normally honours the WXR wp:post_id (via wp_insert_post's import_id),
+    # so LOGO_ATTACHMENT_ID survives a fresh import -- but on a non-empty
+    # DB, or a re-import over existing rows, that ID can be taken and the
+    # logo lands on some other auto-increment id. This postmeta lets the
+    # repair plugin find the logo attachment by identity, not by a guessed
+    # id or by fuzzy alt-text matching.
+    logo_meta = (
+        "\n    <wp:postmeta>\n"
+        "      <wp:meta_key><![CDATA[_webstractor_site_logo]]></wp:meta_key>\n"
+        "      <wp:meta_value><![CDATA[1]]></wp:meta_value>\n"
+        "    </wp:postmeta>"
+        if is_site_logo
+        else ""
+    )
 
     return f"""  <item>
     <title>{title}</title>
@@ -1377,7 +1393,7 @@ def build_attachment_item_xml(url, alt, attachment_id):
     <wp:postmeta>
       <wp:meta_key><![CDATA[_wp_attachment_image_alt]]></wp:meta_key>
       <wp:meta_value><![CDATA[{alt_escaped}]]></wp:meta_value>
-    </wp:postmeta>
+    </wp:postmeta>{logo_meta}
   </item>"""
 
 
@@ -2071,15 +2087,18 @@ def build_wxr(data, brand=None):
 
     items_xml.append(build_page_template_item_xml(40003, build_page_template_content()))
 
-    # The site logo, at a fixed post_id (see LOGO_ATTACHMENT_ID) so
-    # build_apply_branding_php() can reference it directly without any
+    # The site logo, at a fixed post_id (see LOGO_ATTACHMENT_ID) and with a
+    # `_webstractor_site_logo` marker so the repair plugin (and
+    # build_apply_branding_php()) can reference it directly without any
     # fuzzy matching-by-URL after import. WXR has no mechanism to set the
-    # site_logo option/custom_logo theme mod itself -- that's what the
-    # generated apply_branding.php companion script is for.
+    # site_logo option/custom_logo theme mod itself -- the repair plugin's
+    # step 4 does that on activation; apply_branding.php does it from a shell.
     logo = (brand or {}).get("logo") or {}
     if logo.get("url") and canonical_attachment_url(logo["url"]):
         items_xml.append(
-            build_attachment_item_xml(logo["url"], logo.get("alt", ""), LOGO_ATTACHMENT_ID)
+            build_attachment_item_xml(
+                logo["url"], logo.get("alt", ""), LOGO_ATTACHMENT_ID, is_site_logo=True
+            )
         )
 
     channel_title = xml_escape(site["title"])
@@ -2325,10 +2344,13 @@ def build_qa_report(data, brand=None):
         if logo and logo.get("url") and canonical_attachment_url(logo["url"]):
             lines.append(
                 f"- **Logo** found at {logo['url']} -- included in the WXR as a real media-"
-                f"library attachment (post_id {LOGO_ATTACHMENT_ID}). Setting it as the site's "
-                "active logo (the `site_logo` option/`custom_logo` theme mod) isn't something "
-                f"WXR can do on its own, though -- run `php {OUT_APPLY_BRANDING}` once after "
-                "importing (from the WordPress root) to finish the job."
+                f"library attachment (post_id {LOGO_ATTACHMENT_ID}, also stamped with a "
+                "`_webstractor_site_logo` marker). Setting it as the site's active logo "
+                "(the `site_logo` option/`custom_logo` theme mod) isn't something WXR can "
+                f"do on its own -- **the {REPAIR_PLUGIN_NAME} plugin does it for you** on "
+                f"activation ({REPAIR_HOWTO}); or, from a shell, `php {OUT_APPLY_BRANDING}` "
+                "does the same. A full site reset wipes this option, so re-run whichever "
+                "of the two you use after every reset."
             )
         elif logo:
             lines.append(
@@ -2380,17 +2402,20 @@ def build_qa_report(data, brand=None):
         f"- `{OUT_REPAIR}` — the **{REPAIR_PLUGIN_NAME}** plugin. After importing and "
         f"publishing the pages, {REPAIR_HOWTO}. Repoints broken re-hosted image URLs at the "
         "file WordPress actually saved, pulls media-library copies of the stock images the "
-        "importer couldn't, and sets the static front page. No server/shell access needed; "
-        "safe to activate again. (A shell, where available, can instead run "
+        "importer couldn't, sets the static front page, and sets the site logo. No "
+        "server/shell access needed; safe to activate again — re-run it after any full "
+        "site reset, which wipes the front-page and logo settings. (A shell, where "
+        "available, can instead run "
         "`php wp-content/plugins/repair-migration/repair-migration.php` directly.)"
     )
     if brand:
         lines.append(f"- `{OUT_THEME}` — the extracted color palette and font list in WordPress's block-theme format.")
         if build_apply_branding_php(brand):
             lines.append(
-                f"- `{OUT_APPLY_BRANDING}` — run once after each fresh import "
-                f"(`php {OUT_APPLY_BRANDING}` from the WordPress root) to set the site logo and "
-                "load the real brand fonts; see the notes above."
+                f"- `{OUT_APPLY_BRANDING}` — the shell-based equivalent of the repair "
+                f"plugin's logo step plus brand-font loading (`php {OUT_APPLY_BRANDING}` "
+                "from the WordPress root), for hosts where a shell is available. Run once "
+                "after each fresh import; see the notes above."
             )
     return "\n".join(lines) + "\n"
 
@@ -3033,18 +3058,27 @@ def build_apply_branding_php(brand):
     ]
 
     if has_logo:
-        alt = logo.get("alt", "").replace("'", "\\'")
         parts.append(
             f"\n"
-            f"// Site logo -- the file itself already came in as attachment\n"
-            f"// post_id {LOGO_ATTACHMENT_ID} via the WXR import.\n"
+            f"// Site logo -- the file itself already came in as an attachment\n"
+            f"// via the WXR import, normally at post_id {LOGO_ATTACHMENT_ID} (the WXR\n"
+            f"// wp:post_id, which the importer honours on a clean import). Fall back\n"
+            f"// to the '_webstractor_site_logo' marker meta if that id isn't the logo.\n"
             f"$logo_id = {LOGO_ATTACHMENT_ID};\n"
-            f"if (get_post($logo_id)) {{\n"
+            f"if (get_post_type($logo_id) !== 'attachment') {{\n"
+            f"    $marked = get_posts(array(\n"
+            f"        'post_type' => 'attachment', 'post_status' => 'inherit',\n"
+            f"        'numberposts' => 1, 'fields' => 'ids',\n"
+            f"        'meta_key' => '_webstractor_site_logo', 'meta_value' => '1',\n"
+            f"    ));\n"
+            f"    $logo_id = $marked ? (int) $marked[0] : 0;\n"
+            f"}}\n"
+            f"if ($logo_id && get_post_type($logo_id) === 'attachment') {{\n"
             f"    update_option('site_logo', $logo_id);       // block themes' core/site-logo\n"
             f"    set_theme_mod('custom_logo', $logo_id);     // classic-theme fallback\n"
-            f"    echo \"Site logo set (attachment {LOGO_ATTACHMENT_ID}).\\n\";\n"
+            f"    echo \"Site logo set (attachment {{$logo_id}}).\\n\";\n"
             f"}} else {{\n"
-            f"    echo \"Attachment {LOGO_ATTACHMENT_ID} not found -- import the WXR file first"
+            f"    echo \"Logo attachment not found -- import the WXR file first"
             f" (with 'Download and import file attachments' checked) before running this"
             f" script.\\n\";\n"
             f"}}\n"
@@ -3103,7 +3137,7 @@ def _php_single_quoted(value):
     return "'" + str(value).replace("\\", "\\\\").replace("'", "\\'") + "'"
 
 
-def build_repair_migration_php(data):
+def build_repair_migration_php(data, brand=None):
     """The post-import repair, as an installable WordPress plugin -- the
     client uploads `repair-migration.zip` via Plugins -> Add New -> Upload
     Plugin and clicks Activate; it does its work once on activation,
@@ -3141,6 +3175,13 @@ def build_repair_migration_php(data):
          no WXR item can set it, so a migrated home page otherwise
          imports as a normal page and `/` shows the blog listing.
 
+      4. The site logo. The logo file rides in as a WXR attachment, but
+         "which attachment is the site logo" is the site_logo option /
+         custom_logo theme mod -- again not page content, and wiped by
+         every full reset. The plugin re-points it at the logo
+         attachment (found by the fixed WXR post id, falling back to the
+         `_webstractor_site_logo` marker meta the generator writes on it).
+
     Idempotent: activating it again re-checks the same conditions and
     no-ops on anything already fixed (a stock URL no longer present in
     any post is skipped rather than re-downloaded).
@@ -3157,6 +3198,9 @@ def build_repair_migration_php(data):
     front_slug_literal = (
         _php_single_quoted(front_page["slug"]) if front_page else "null"
     )
+    logo = (brand or {}).get("logo") or {}
+    has_logo = bool(logo.get("url") and canonical_attachment_url(logo["url"]))
+    logo_id_literal = str(LOGO_ATTACHMENT_ID) if has_logo else "0"
 
     # Raw string: every backslash below is for PHP/PCRE, not Python. The
     # dynamic values are spliced in via sentinel replace so nothing needs
@@ -3164,7 +3208,7 @@ def build_repair_migration_php(data):
     template = r'''<?php
 /**
  * Plugin Name: __PLUGIN_NAME__
- * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, and sets the static front page. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
+ * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, sets the static front page, and sets the site logo. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
  * Version:     1.0.0
  * Author:      Webstractor migration pipeline (auto-generated)
  */
@@ -3408,6 +3452,36 @@ __STOCK_ENTRIES__
         }
     }
 
+    // -----------------------------------------------------------------
+    // 4. Site logo. The file came in as a WXR attachment; "which
+    //    attachment is the logo" is the site_logo option + custom_logo
+    //    theme mod, which no WXR item can carry and a full reset wipes.
+    // -----------------------------------------------------------------
+    $logo_id = __LOGO_ATTACHMENT_ID__;  // the WXR wp:post_id; 0 if the site has no logo
+    if ($logo_id) {
+        if (get_post_type($logo_id) !== 'attachment') {
+            // The fixed WXR post id didn't survive import (id already
+            // taken, or this wasn't a clean import over an empty DB).
+            // Fall back to the marker the generator stamps on the logo.
+            $marked = get_posts(array(
+                'post_type'   => 'attachment',
+                'post_status' => 'inherit',
+                'numberposts' => 1,
+                'fields'      => 'ids',
+                'meta_key'    => '_webstractor_site_logo',
+                'meta_value'  => '1',
+            ));
+            $logo_id = $marked ? (int) $marked[0] : 0;
+        }
+        if ($logo_id && get_post_type($logo_id) === 'attachment') {
+            update_option('site_logo', $logo_id);    // block themes (core/site-logo)
+            set_theme_mod('custom_logo', $logo_id);  // classic-theme fallback
+            $report[] = "Site logo set (attachment {$logo_id}).";
+        } else {
+            $report[] = "Site logo NOT set -- logo attachment not found. Import the WXR with \"Download and import file attachments\" checked, then activate this plugin again, or set it by hand in Appearance -> Editor -> Styles.";
+        }
+    }
+
     return $report;
 }
 '''
@@ -3416,15 +3490,16 @@ __STOCK_ENTRIES__
         .replace("__PLUGIN_NAME__", REPAIR_PLUGIN_NAME)
         .replace("__STOCK_ENTRIES__", php_stock_entries)
         .replace("__FRONT_SLUG__", front_slug_literal)
+        .replace("__LOGO_ATTACHMENT_ID__", logo_id_literal)
     )
 
 
-def write_repair_migration_plugin(data):
+def write_repair_migration_plugin(data, brand=None):
     """Write the repair plugin to disk as both an unpacked
     `repair-migration/repair-migration.php` (for a shell / SFTP drop-in)
     and a `repair-migration.zip` the client uploads via Plugins -> Add
     New -> Upload Plugin. Returns the list of paths written."""
-    php = build_repair_migration_php(data)
+    php = build_repair_migration_php(data, brand)
     os.makedirs(OUT_REPAIR_DIR, exist_ok=True)
     with open(OUT_REPAIR_PHP_REL, "w") as f:
         f.write(php)
@@ -3465,7 +3540,7 @@ def main():
     with open(OUT_QA, "w") as f:
         f.write(build_qa_report(data, brand))
 
-    repair_paths = write_repair_migration_plugin(data)
+    repair_paths = write_repair_migration_plugin(data, brand)
 
     outputs = [OUT_WXR, OUT_REDIRECTS, OUT_QA, *repair_paths]
     if ff_slots:

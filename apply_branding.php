@@ -6,15 +6,25 @@
 // stylesheet link, not posts or terms.
 require_once(__DIR__ . '/wp-load.php');
 
-// Site logo -- the file itself already came in as attachment
-// post_id 40004 via the WXR import.
+// Site logo -- the file itself already came in as an attachment
+// via the WXR import, normally at post_id 40004 (the WXR
+// wp:post_id, which the importer honours on a clean import). Fall back
+// to the '_webstractor_site_logo' marker meta if that id isn't the logo.
 $logo_id = 40004;
-if (get_post($logo_id)) {
+if (get_post_type($logo_id) !== 'attachment') {
+    $marked = get_posts(array(
+        'post_type' => 'attachment', 'post_status' => 'inherit',
+        'numberposts' => 1, 'fields' => 'ids',
+        'meta_key' => '_webstractor_site_logo', 'meta_value' => '1',
+    ));
+    $logo_id = $marked ? (int) $marked[0] : 0;
+}
+if ($logo_id && get_post_type($logo_id) === 'attachment') {
     update_option('site_logo', $logo_id);       // block themes' core/site-logo
     set_theme_mod('custom_logo', $logo_id);     // classic-theme fallback
-    echo "Site logo set (attachment 40004).\n";
+    echo "Site logo set (attachment {$logo_id}).\n";
 } else {
-    echo "Attachment 40004 not found -- import the WXR file first (with 'Download and import file attachments' checked) before running this script.\n";
+    echo "Logo attachment not found -- import the WXR file first (with 'Download and import file attachments' checked) before running this script.\n";
 }
 
 // Real brand fonts -- theme.json/wp_global_styles only *register*

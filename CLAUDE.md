@@ -92,7 +92,10 @@ Carver's real WordPress dev/staging site, hosted on SiteGround, used to
 validate each generated WXR before anything goes near the real
 stratecon.tech. The manual reset→reimport→verify loop, in order:
 
-1. Full WP Reset (WP Reset plugin)
+1. Full WP Reset (WP Reset plugin). **This deletes every WordPress user
+   except the account running the reset** (`claude-agent`). Carver's own
+   admin account (`cmatheid` / `cmatheid@gmail.com`) is wiped every cycle
+   and must be recreated — see step 10 — or he can't log in.
 2. Reactivate theme (Twenty Twenty-Four) — usually already stays active
 3. Reactivate WordPress Importer plugin — usually already stays active
 4. Settings → Permalinks → **Post name** → Save Changes (a full reset drops
@@ -103,20 +106,33 @@ stratecon.tech. The manual reset→reimport→verify loop, in order:
 7. Install the **Stratecon Migration Repair** plugin — Plugins → Add New →
    Upload Plugin → `repair-migration.zip` → Activate. It runs once on
    activation (repoints broken re-hosted image URLs, sideloads the ~70
-   GoDaddy stock images the importer can't take, and **sets the static
-   front page** from the crawler's `is_front_page` flag), shows a report
+   GoDaddy stock images the importer can't take, **sets the static
+   front page** from the crawler's `is_front_page` flag, and **sets the
+   site logo** — `site_logo` option + `custom_logo` theme mod — from the
+   imported logo attachment, found by its fixed WXR post id 40004 or, as
+   a fallback, its `_webstractor_site_logo` marker meta), shows a report
    in an admin notice, then deactivates itself. Must run *after* step 6 —
    it can only point `/` at a page that already exists and is published.
-   Idempotent; safe to activate again.
-8. Set Site Logo: Appearance → Editor → Styles → (or the identity/logo
-   picker) → select the already-imported logo attachment from Media
-   Library — **do this only after step 5**, never before. Touching the Site
-   Editor before importing has previously caused WordPress to lazily create a
-   stub row for the theme's own header/footer template parts or global
-   styles, which collides with the real imported ones on a slug/singleton
-   basis and silently keeps the stub active instead. Import first, always.
+   Idempotent; safe to activate again. A full reset wipes both the
+   front-page and the logo settings, so this step is not optional on a
+   re-run.
+8. Confirm the logo — the repair plugin's report line should read
+   "Site logo set (attachment N)". Only if it says "Site logo NOT set"
+   do it by hand: Appearance → Editor → Styles → (or the identity/logo
+   picker) → select the imported logo attachment from the Media Library.
+   Never touch the Site Editor *before* step 5 — it makes WordPress
+   lazily create a stub row for the theme's own header/footer template
+   parts or global styles, which then collides with the real imported
+   ones on a slug/singleton basis and silently stays active instead.
+   Import first, always.
 9. Verify — screenshots or, if this session has direct site access (see
    below), a real Playwright pass across the pages that changed.
+10. Recreate Carver's admin account, destroyed by the step-1 reset:
+    Users → Add New → `cmatheid` / `cmatheid@gmail.com`, role
+    Administrator. Ask him for the password to set, or use the
+    "send the user a set-password link" option. `claude-agent` working
+    is not evidence that Carver still has access — his account is a
+    separate row and it is gone after every reset.
 
 If this Claude Code session has real credentials for dev.stratecon.tech (a
 dedicated `claude-agent` WordPress admin account — check for a local,
@@ -262,6 +278,38 @@ page makes re-runs skip unless `--force`). Two jobs so far:
 
 Still to add: image alt-text generation; a proper staleness check;
 per-page prompt caching once the run is bigger.
+
+## Site logo now applied by the repair plugin (no manual step, no shell)
+
+Setting the active site logo (`site_logo` option + `custom_logo` theme
+mod) used to be a manual Site Editor click, or a shell run of
+`apply_branding.php` — and it is wiped by every full WP Reset, so it had
+to be redone by hand each dev-site cycle. `repair-migration.zip` now
+does it as step 4 of its activation run, alongside the front-page fix:
+
+- `generator_agent.py` stamps the logo attachment with a
+  `_webstractor_site_logo` = `1` postmeta in the WXR (in addition to its
+  fixed `wp:post_id` 40004, which the classic WP Importer normally
+  honours via `wp_insert_post`'s `import_id` on a clean import).
+- The repair plugin resolves the logo attachment by that fixed id, falls
+  back to the marker meta if the id isn't an attachment, and then sets
+  both `site_logo` and `custom_logo`. Its report gains a "Site logo set
+  (attachment N)" / "Site logo NOT set …" line. Idempotent.
+- `apply_branding.php` got the same fixed-id-then-marker fallback so the
+  two paths stay equivalent.
+
+**Verified on the real dev site (2026-09-08, direct-access session).** A
+full WP Reset → reactivate importer → permalinks → import
+`stratecon-migration.xml` (with attachments) → publish all 39 pages + 1
+post → upload/activate `repair-migration.zip` cycle, driven headless-free
+via real Chrome. The plugin's activation report read: "Front page set to
+… id 100" and "**Site logo set (attachment 40004)**" — the fixed WXR post
+id resolved on the clean import, so the marker fallback wasn't exercised
+this run but is in place. Front end: `img.custom-logo` renders from a
+local `wp-content/uploads/` copy, 0 broken images on the home page,
+Settings → Reading shows the static front page set. Carver's `cmatheid`
+admin account (wiped by the reset, per the workflow note above) was
+recreated in the same run.
 
 ## Still open
 

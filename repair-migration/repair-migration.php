@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Stratecon Migration Repair
- * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, and sets the static front page. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
+ * Description: One-time post-import cleanup the WXR import can't do itself -- repoints broken re-hosted image URLs, sideloads the GoDaddy stock images the importer can't take, sets the static front page, and sets the site logo. Runs once on activation, shows a report, then deactivates itself. Safe to activate again.
  * Version:     1.0.0
  * Author:      Webstractor migration pipeline (auto-generated)
  */
@@ -312,6 +312,36 @@ function stratecon_migration_repair_run() {
             $report[] = "Front page set to \"{$front->post_title}\" (slug {$front_slug}, id {$front->ID}){$note}.";
         } else {
             $report[] = "Front-page slug \"{$front_slug}\" not found -- publish the imported pages first, then activate this plugin again.";
+        }
+    }
+
+    // -----------------------------------------------------------------
+    // 4. Site logo. The file came in as a WXR attachment; "which
+    //    attachment is the logo" is the site_logo option + custom_logo
+    //    theme mod, which no WXR item can carry and a full reset wipes.
+    // -----------------------------------------------------------------
+    $logo_id = 40004;  // the WXR wp:post_id; 0 if the site has no logo
+    if ($logo_id) {
+        if (get_post_type($logo_id) !== 'attachment') {
+            // The fixed WXR post id didn't survive import (id already
+            // taken, or this wasn't a clean import over an empty DB).
+            // Fall back to the marker the generator stamps on the logo.
+            $marked = get_posts(array(
+                'post_type'   => 'attachment',
+                'post_status' => 'inherit',
+                'numberposts' => 1,
+                'fields'      => 'ids',
+                'meta_key'    => '_webstractor_site_logo',
+                'meta_value'  => '1',
+            ));
+            $logo_id = $marked ? (int) $marked[0] : 0;
+        }
+        if ($logo_id && get_post_type($logo_id) === 'attachment') {
+            update_option('site_logo', $logo_id);    // block themes (core/site-logo)
+            set_theme_mod('custom_logo', $logo_id);  // classic-theme fallback
+            $report[] = "Site logo set (attachment {$logo_id}).";
+        } else {
+            $report[] = "Site logo NOT set -- logo attachment not found. Import the WXR with \"Download and import file attachments\" checked, then activate this plugin again, or set it by hand in Appearance -> Editor -> Styles.";
         }
     }
 
