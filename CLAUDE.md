@@ -125,8 +125,20 @@ stratecon.tech. The manual reset→reimport→verify loop, in order:
    parts or global styles, which then collides with the real imported
    ones on a slug/singleton basis and silently stays active instead.
    Import first, always.
-9. Verify — screenshots or, if this session has direct site access (see
-   below), a real Playwright pass across the pages that changed.
+9. **Purge the cache, then verify logged out.** SiteGround serves a
+   server-side page cache to anonymous visitors (`x-proxy-cache: HIT`
+   in the response headers); a logged-in admin bypasses it entirely.
+   So a Playwright pass run while logged in as `claude-agent` will show
+   the new logo / meta / content while a logged-out visitor (Carver in
+   a normal browser) still sees the pre-change cached HTML — this bit us
+   on 2026-09-08 (home page showed no logo and the old generic
+   `<title>` for days). After any import / repair-plugin run / edit:
+   purge WP-Optimize's cache **and** SiteGround's cache (the SG
+   Optimizer plugin `sg-cachepress` is normally inactive here — briefly
+   activate it, hit "Purge SG Cache" from the admin bar, deactivate it
+   again; re-saving a page also busts that one URL), then verify in a
+   **fresh, logged-out** browser context and confirm `x-proxy-cache` is
+   `MISS`. A browser hard-refresh does not touch the server cache.
 10. Recreate Carver's admin account, destroyed by the step-1 reset:
     Users → Add New → `cmatheid` / `cmatheid@gmail.com`, role
     Administrator. Ask him for the password to set, or use the
