@@ -5,6 +5,64 @@ counts + broken-image detection, form/placeholder flags, full-page
 screenshots of every pair), run 2026-09-06 against the current dev site
 (fresh reset → import → publish → repair plugin → front page set).
 
+## Pass 2 — full dev-vs-live pass 2026-09-08
+
+Re-ran the structured + visual diff across all 37 pairs (logged out,
+cache purged) after step 5, the FAQ accordion, and the card-row wrap.
+**0 broken images on any page**; body text 90–98% of live everywhere;
+logo/nav/fonts/footer/brand consistent; FAQ accordion and the
+Communications 2×3 card layout now match live. Two real gaps and a set
+of by-design differences:
+
+### Open — real gaps
+
+- **`/privacy-policy/` serves WordPress's boilerplate, not the migrated
+  content.** WP Reset re-seeds a default "Privacy Policy" page (post id
+  3, `wp_page_for_privacy_policy`) every cycle, so the WXR import can't
+  claim the `privacy-policy` slug — the migrated page lands at
+  `/privacy-policy-2/` (post 115, content correct there) and
+  `/privacy-policy/` shows "Who we are / Suggested text: …". Terms of
+  Service is unaffected (WordPress doesn't auto-create one). **Fix
+  belongs in the repair plugin**: trash the WP sample page and re-slug
+  the migrated page to `privacy-policy` (+ repoint the option).
+
+- **`cyber-risk-assessment` is missing its self-assessment form.** The
+  live page embeds a 20-question Cognito Forms questionnaire (Network
+  Security / Endpoint Protection / … rated 1–5, plus Submit) — the whole
+  point of the page. Dev shows only the intro media+text and the "What
+  Next?" line, with **no form and no placeholder**. Pass 1 (#6) called
+  this "not a real gap" — that was wrong; the embed was never captured.
+  Needs a decision (rebuild in Fluent Forms / embed Cognito Forms / link
+  out) and, at minimum, a flagged placeholder so it isn't silently
+  dropped. Same root cause affects any GoDaddy third-party form embed
+  the crawler doesn't see.
+
+### By-design / cosmetic — confirm acceptable
+
+- **Blog posts (16) lose the right sidebar** — GoDaddy's Categories nav,
+  Recent Posts widget, and inline "Sign up for blog updates" form. Body
+  content is complete and correct. "Share this post:" has no social
+  icons on dev (text only). Decide: accept, or add a Recent
+  Posts/Categories block to the post template.
+- **Newsletter / "Stay Informed" is a placeholder** on the home page,
+  contact, and 17 blog posts — live has a designed inline signup (the
+  home one sits in a bokeh-background band). Blocked on the ESP choice.
+- **Contact / eBook forms are dashed placeholder panels** on the 4
+  form pages; their instruction text literally contains
+  `[fluentform id="…"]` (by design, punchlist #4 — one-time shortcode
+  swap at go-live). On `cybersecurity-solutions` the eBook placeholder
+  is **orphaned at the very bottom** of the page instead of in the
+  "Free Cybersecurity eBook" section where live has it — a block-order
+  bug in the generator worth fixing.
+- **Post-feed grids are 3-up on dev vs 2-up on live** (Cybersecurity
+  Insights / AI Insights); the live "All Posts | <category>" filter tabs
+  aren't reproduced.
+- **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
+  — dev shows title + intro + Download button; live shows an in-page PDF
+  viewer. Known trade-off from pass 1 (#6).
+- **Hero** rebuilt as a full-bleed navy cover with centered text vs
+  live's translucent white box over the globe image. Deliberate.
+
 ## Tier 1 — systemic, many pages
 
 ### 1. `[contact-form-7 id="TBD" title="Form"]` renders as literal body text (~20 pages)
