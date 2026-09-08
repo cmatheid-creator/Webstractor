@@ -252,12 +252,10 @@ fixed. Full detail and the "not a bug, faithful to the live site" notes
 (the "Contact Us us" typo, the inline "source" links) are in
 `dev-vs-live-punchlist.md`.
 
-## Content Structuring Agent — started (pipeline step 5)
+## Content Structuring Agent — pipeline step 5
 
 `content_structuring_agent.py` — runs after the crawl, before the
-generator, rewriting `structured_content.json` in place (pristine crawl
-copied to `structured_content.raw.json` first; `_structured_raw_hash` per
-page makes re-runs skip unless `--force`). Two jobs so far:
+generator, rewriting `structured_content.json` in place. Three jobs:
 
 - **FAQ restructuring.** GoDaddy's FAQ accordion renders questions as
   toggle controls and answers in separate panels, so the crawl leaves a
@@ -271,13 +269,36 @@ page makes re-runs skip unless `--force`). Two jobs so far:
   the home page's FAQ is now one clean `faq` block, no orphan paragraphs,
   no duplicated blob.
 - **Meta title + description.** Per-page LLM generation of an SEO title
-  (`meta_title` -> Yoast `_yoast_wpseo_title` postmeta, added to
-  `generator_agent.py`) and a 150–160-char meta description drawn only
-  from the page's own content. **Needs `ANTHROPIC_API_KEY` (or
-  `ant auth login`) to run — not yet exercised end to end.**
+  (`meta_title` -> Yoast `_yoast_wpseo_title` postmeta) and a 150–160-char
+  meta description drawn only from the page's own content.
+- **Image alt text.** Any image the crawl left without alt text (only
+  three across this site, all `image` blocks on blog posts — cards, hero,
+  and media+text images already carry GoDaddy's stock-photo alt) is
+  fetched, sent to Claude with the page for context, and given concise
+  literal alt text written back onto the block. Handled inside the same
+  per-page call — the images are added as content blocks and the JSON
+  schema gains an `image_alt: [{src, alt}]` field.
 
-Still to add: image alt-text generation; a proper staleness check;
-per-page prompt caching once the run is bigger.
+**Staleness check (done).** Each page carries `_structured_agent_version`
+(constant `AGENT_VERSION` in the script, bump on a logic change) and
+`_structured_blocks_hash` (a hash of its blocks *after* structuring). A
+normal run skips a page only when both still match — so a re-crawl, a
+hand edit, or a version bump re-processes just the affected pages, and a
+clean re-run is a no-op. `--force` ignores the check; `--pages` always
+re-does the named pages. `structured_content.raw.json` is refreshed
+whenever the input is an unstructured fresh crawl.
+
+**Prompt caching:** the system prompt is sent as a `cache_control`
+prefix. It's short enough now that it won't clear the model's minimum
+cacheable size, so it's a no-op until the instructions grow — the hook
+is in place.
+
+**Not yet exercised end to end:** everything that needs the LLM (meta
+text, image alt) — this environment has no `ANTHROPIC_API_KEY` /
+`ant auth login`. The call shape (SDK 1.x `messages.create` with
+`output_config.format` json_schema + adaptive thinking) is verified
+against the installed `anthropic` package; the offline path and the
+generator hand-off are verified.
 
 ## Site logo now applied by the repair plugin (no manual step, no shell)
 
