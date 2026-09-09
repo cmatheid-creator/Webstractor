@@ -36,6 +36,17 @@ Verified logged out on all 10: banner cover present, `<h1>` correct,
 background image re-hosted to `dev.stratecon.tech/wp-content/uploads/`
 (not hot-linked), 0 broken images.
 
+Opening the pages in the block editor first caught that `core/cover`
+was `isValid=false` — a latent bug the home hero had all along, which
+the new banner inherited. Checked the correct markup against
+`wp.blocks.getBlockContent()` and fixed it in a shared `_cover_block()`
+helper: the `<img class="wp-block-cover__image-background">` goes
+*before* the `<span>` overlay (not after); the dim class is
+`has-background-dim-N has-background-dim` only for a non-50 ratio; and
+the `alt` must be in the block's JSON attributes, not only the `<img>`
+tag. Re-verified: all 11 affected pages (10 banners + home hero) open in
+the editor with **0 invalid blocks**.
+
 ### Section CTA buttons — DONE (~33 buttons, 10 pages)
 
 The pill CTA that closes almost every side-by-side section on the
