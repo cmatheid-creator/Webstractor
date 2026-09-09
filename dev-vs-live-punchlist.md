@@ -76,11 +76,15 @@ of by-design differences:
 
 ### By-design / cosmetic — confirm acceptable
 
-- **Blog posts (16) lose the right sidebar** — GoDaddy's Categories nav,
-  Recent Posts widget, and inline "Sign up for blog updates" form. Body
-  content is complete and correct. "Share this post:" has no social
-  icons on dev (text only). Decide: accept, or add a Recent
-  Posts/Categories block to the post template.
+- **Blog posts (16) lose the right sidebar — ACCEPTED (Carver, 2026-09-09).**
+  GoDaddy's Categories nav, Recent Posts widget, and inline "Sign up for
+  blog updates" form are intentionally not reproduced. Body content is
+  complete and correct, and the blog posts import as WordPress *pages*
+  (not posts), so core Recent Posts/Categories blocks wouldn't populate
+  anyway — reproducing the rail would mean a hand-maintained link list.
+  Carver's call: drop it. "Share this post:" stays as text (no social
+  icons on dev). If a real blog is stood up later on the WP `post` type,
+  the theme's own sidebar/widgets cover this.
 - **Newsletter / "Stay Informed" is a placeholder** on the home page,
   contact, and 17 blog posts — live has a designed inline signup (the
   home one sits in a bokeh-background band). Blocked on the ESP choice.

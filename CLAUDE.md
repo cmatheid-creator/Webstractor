@@ -409,16 +409,19 @@ placeholder reordered. A full dev-vs-live visual pass was run 2026-09-08
 — results in `dev-vs-live-punchlist.md` ("Pass 2"). 0 broken images on
 any page; body text 90–98% of live everywhere.
 
-**Blocked on a decision from Carver (do these next once he answers):**
-1. `cyber-risk-assessment` is missing its 20-question Cognito Forms
-   self-assessment embed entirely (no placeholder). Rebuild in Fluent
-   Forms / embed Cognito / link out?
+**Blocked on a decision from Carver:**
+1. `cyber-risk-assessment` Cognito Forms embed — **RESOLVED 2026-09-09**:
+   rebuilt in Fluent Forms (see "Done" below).
 2. Blog posts (×16) drop the GoDaddy right sidebar (Categories, Recent
-   Posts, blog-signup) and social-share icons. Accept, or add a Recent
-   Posts / Categories block to the post template?
+   Posts, blog-signup) and social-share icons — **RESOLVED 2026-09-09**:
+   Carver's call is to drop it. Blog posts import as WP *pages*, not
+   posts, so core Recent Posts/Categories blocks wouldn't populate
+   anyway; reproducing the rail would be a hand-maintained link list.
+   Accepted as-is; "Share this post:" stays text-only.
 3. **Newsletter / "Stay Informed"** — still a placeholder on the home
    page, contact, and 17 blog posts. Needs an ESP choice (Mailchimp,
-   etc.) before it can be wired.
+   etc.) before it can be wired. **Still open** — the last remaining
+   punch-list item, and it can't move without the ESP name.
 
 **Done 2026-09-09:**
 - **`cyber-risk-assessment` self-assessment form rebuilt in Fluent
