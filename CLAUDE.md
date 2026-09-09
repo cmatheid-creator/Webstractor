@@ -466,6 +466,24 @@ any page; body text 90–98% of live everywhere.
   noted: WP Reset's confirm is a custom in-page modal ("Reset
   WordPress" button), not a native `confirm()` dialog — a
   `page.on("dialog")` handler alone doesn't dismiss it.
+- **Page banners + section CTA buttons (full dev-vs-live re-diff).** A
+  clean re-diff over all 37 pairs (the first attempt's text extraction
+  was broken — `innerText` on a detached clone returns `""`) confirmed
+  **no content loss**; the only systemic gaps were two widgets the
+  crawler dropped across the solution/landing pages. (1) GoDaddy's
+  body-level `data-ux="WidgetBanner"` — a title-over-photo band —
+  became a bare `<h1>`; `extract_page_banner()` now emits a
+  `page_banner` block (title, bg-image URL, aria-label alt), rendered as
+  a short full-width `core/cover`, its stock image sideloaded by the
+  repair plugin (71 → 75). (2) The pill CTA closing most `media_text`
+  sections (`<a data-ux-btn="secondary">`) was dropped; the text-cell
+  extractor captures it as a `button` item (raw `textContent`, not
+  `inner_text`), rendered as a real `core/button` with slug-remapped
+  href. `structured_content.json` merged surgically over the 10 banner
+  pages (page_banner replaces the leading `<h1>`, CTAs appended to
+  media_text by heading) — no other block touched. Verified logged out
+  on all 10: banner cover + `<h1>` + re-hosted image + 3–7 CTA groups,
+  0 broken images.
 - **Generic third-party form-embed detection.** The crawler now
   auto-detects the class of problem the cyber-risk-assessment fix solved
   by hand. `EMBED_FORM_PROVIDERS` + `detect_embedded_forms()` in

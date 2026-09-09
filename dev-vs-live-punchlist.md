@@ -5,6 +5,55 @@ counts + broken-image detection, form/placeholder flags, full-page
 screenshots of every pair), run 2026-09-06 against the current dev site
 (fresh reset → import → publish → repair plugin → front page set).
 
+## Pass 4 — full dev-vs-live re-diff + page banners / CTAs 2026-09-09
+
+Re-ran the structured diff across all 37 pairs with **working text
+extraction** (the first attempt read every live page as empty — it
+called `innerText` on a detached DOM clone, which returns `""`). Result:
+**no content loss anywhere** — every page's dev body text ≥ live (the
+higher ratios are the newsletter/form placeholder panels plus
+chrome-subtraction noise). The one flagged "missing heading" on 16 blog
+pages is the crawler's *intentional* strip of the blog-listing header
+("Stratecon Tech Insights", Tier 1 #2). The only real systemic gaps were
+two widgets the crawler had been dropping:
+
+### Page banners — DONE (10 pages)
+
+GoDaddy's body-level `<div data-ux="WidgetBanner">` — a ~210px
+full-width band with a stock background photo and the page title in
+white — was reduced to a bare `<h1>` on `connectivity`, `services`,
+`ai-for-sales-1`, `ai-strategy-1`, `risk-assessment-1`,
+`threat-protection`, `threat-id-%26-detection`, `unified-communications`,
+`customer-experience`, `ai-for-customer-service`. New
+`extract_page_banner()` in `crawler_agent.py` pulls the title, the
+`background-image` URL, and the `aria-label` as alt, and tags the
+widget's subtree so the document-order pass skips the now-duplicate
+heading; it emits a `page_banner` block. The generator renders a short
+full-width `core/cover` (dimRatio 50, `.migration-page-banner`) carrying
+the page `<h1>`; `collect_unique_images()` walks `page_banner` blocks so
+the repair plugin sideloads the stock image (71 → 75 entries).
+Verified logged out on all 10: banner cover present, `<h1>` correct,
+background image re-hosted to `dev.stratecon.tech/wp-content/uploads/`
+(not hot-linked), 0 broken images.
+
+### Section CTA buttons — DONE (~33 buttons, 10 pages)
+
+The pill CTA that closes almost every side-by-side section on the
+solution pages ("Get a Quote", "Let's Talk", "Schedule a Call", …),
+`<a data-ux-btn="secondary">`, was dropped. The `media_text` text-cell
+extractor now captures these (raw `textContent`, not `inner_text`, so
+GoDaddy's `text-transform:uppercase` isn't baked into the label) as
+`button` items; the generator renders a real left-aligned `core/button`,
+its href remapped to the migrated slug when it targets another migrated
+page, lowercase-authored labels smart-titled. Verified logged out: 3–7
+CTA groups per page in the right sections.
+
+`structured_content.json` was updated by a **surgical merge** over the 10
+banner pages (re-crawl → replace the leading bare `<h1>` with the
+`page_banner`, append matched CTA buttons to each `media_text` section by
+heading text) — every other block and all prior hand edits (e.g. the
+normalized "Free Cybersecurity eBook" title) left untouched.
+
 ## Pass 3 — full reset→import→verify pass 2026-09-09
 
 Ran the whole dev-site workflow end to end against `dev.stratecon.tech`
