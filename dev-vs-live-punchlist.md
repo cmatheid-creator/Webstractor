@@ -48,8 +48,31 @@ of by-design differences:
   consent, Submit); placed on `/cyber-risk-assessment/` it matches the
   live page's structure. Import ships a default admin-email
   notification.
-  Note: this is still a per-site manual model — the crawler doesn't yet
-  auto-detect Cognito/JotForm/Typeform embeds (the generic fix).
+
+- **Generic third-party form-embed detection — DONE.** The
+  cyber-risk-assessment fix above was per-site and manual; the crawler
+  now auto-detects the class of problem. `EMBED_FORM_PROVIDERS` +
+  `detect_embedded_forms()` in `crawler_agent.py` scan every page for an
+  `<iframe>` / loader `<script>` / builder placeholder `<div>` from ~20
+  external form builders (Cognito Forms, JotForm, Typeform, Google Forms,
+  Microsoft Forms, HubSpot, Wufoo, Formstack, Tally, Paperform, …), skip
+  site chrome, and collapse to one hit per provider per page (a builder's
+  embed matches two–three times on one page — loader, placeholder, and
+  injected iframe). `extract_blocks()` emits an `embedded_form` block
+  (`provider`, `src`, `title`); the generator renders it as a labelled
+  `_form_placeholder` panel with a QA flag saying to rebuild the form in
+  Fluent Forms (the cyber-risk-assessment questionnaire is the worked
+  example) or re-embed via the provider's own block, and `qa_report.md`
+  gets a "Third-party form embeds" callout listing the pages + providers.
+  Verified: unit test over a fixture (Cognito iframe + Typeform
+  script/div + JotForm + Google Forms detected; nav/footer embeds and a
+  non-provider iframe correctly ignored; three Cognito matches collapse
+  to one, keeping the real iframe URL + title), and the `embedded_form`
+  block renders a clean placeholder with no literal shortcode. The
+  current `structured_content.json` isn't re-crawled, so
+  `cyber-risk-assessment` keeps its hand-built Fluent Forms model; a
+  future re-crawl of this site (or a first crawl of the next client's)
+  now surfaces every such embed instead of dropping it silently.
 
 ### By-design / cosmetic — confirm acceptable
 

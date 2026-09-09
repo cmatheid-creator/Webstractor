@@ -957,6 +957,31 @@ def block_to_gutenberg(block):
             anchor=anchor,
         )
 
+    if t == "embedded_form":
+        # A third-party form/survey embed (Cognito Forms, JotForm,
+        # Typeform, ...) dropped into the live page via GoDaddy's Embed
+        # widget. It's cross-origin, so the crawler sees only that it
+        # exists and which provider serves it -- never its fields.
+        # Rendered as a labelled placeholder; the QA flag tells the
+        # operator to rebuild it in Fluent Forms or re-embed it via the
+        # provider's own WordPress block before go-live. This is the
+        # generic form of the manual cyber-risk-assessment rebuild.
+        provider = block.get("provider") or "third-party"
+        src = (block.get("src") or "").strip()
+        title = block.get("title") or f"{provider} form"
+        src_note = f" ({src})" if src else ""
+        return _form_placeholder(
+            title,
+            f"{provider} form embed — the live page loads this form from "
+            f"{provider}{src_note}. Its fields aren't visible to the migration "
+            "(cross-origin). Rebuild it in Fluent Forms, or re-embed it with "
+            f"{provider}'s official WordPress block, before go-live.",
+            f"third-party form embed — {provider}{src_note} — fields not "
+            "captured (cross-origin). Rebuild in Fluent Forms (the "
+            "cyber-risk-assessment questionnaire is the worked example) or "
+            f"re-embed via {provider}'s own block before go-live.",
+        )
+
     if t == "forms_detected":
         # Legacy block shape (older structured_content.json); newer crawls
         # emit contact_form / newsletter_signup instead. Same clean
@@ -2356,6 +2381,11 @@ def build_qa_report(data, brand=None):
     faq_clean_count = count_blocks("faq")
     newsletter_count = count_blocks("newsletter_signup")
     contact_form_count = count_blocks("contact_form")
+    embedded_form_count = count_blocks("embedded_form")
+    embedded_form_pages = sorted({
+        f"{p['slug']} ({b.get('provider', 'third-party')})"
+        for p in pages for b in p["blocks"] if b["type"] == "embedded_form"
+    })
     hero_count = count_blocks("hero")
 
     # Content Structuring Agent (pipeline step 5) coverage. meta_title is
@@ -2443,6 +2473,16 @@ def build_qa_report(data, brand=None):
         )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
+    if embedded_form_count:
+        lines.append(
+            f"- **Third-party form embeds** ({embedded_form_count} on "
+            f"{len(embedded_form_pages)} page(s): {', '.join(embedded_form_pages)}): "
+            "the live page loads a form/survey from an external builder (Cognito "
+            "Forms, JotForm, Typeform, …) via an iframe/script the crawler can't see "
+            "into. Each is a labelled placeholder — rebuild the form in Fluent Forms "
+            "(the cyber-risk-assessment questionnaire is the worked example) or "
+            "re-embed it with the provider's own WordPress block before go-live."
+        )
     if forms_count:
         lines.append(f"- **Forms detected** ({forms_count} page(s)): field names/types were captured from the live DOM and noted in an HTML comment on each generated page — confirm against the live site and wire to the real form plugin before publishing.")
     if newsletter_count:

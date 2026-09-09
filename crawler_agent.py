@@ -80,6 +80,171 @@ def canonical_feed_item_url(url):
     return f"{parts.scheme}://{parts.netloc}/blog/f/{slug}"
 
 
+# Third-party form / survey / questionnaire embeds. GoDaddy Website
+# Builder's "Embed" / "Custom HTML" widget lets an editor drop an
+# <iframe> or loader <script> from an external form builder straight into
+# a page -- the live stratecon.tech /cyber-risk-assessment page does
+# exactly this with a 20-question Cognito Forms questionnaire, and that
+# was the whole point of the page. These embeds are cross-origin, so
+# their fields are invisible to the crawler; all we can capture is that
+# one exists, which provider serves it, and its URL. The generator turns
+# each into a labelled placeholder carrying a QA flag that tells the
+# operator to rebuild the form in Fluent Forms (or re-embed it via the
+# provider's own WordPress block) before go-live -- the generic form of
+# the manual cyber-risk-assessment rebuild.
+#
+# Matched as case-folded substrings, so a bare registrable domain covers
+# its subdomains and paths. GoDaddy's Custom-HTML widget renders the
+# pasted embed code inside an <iframe srcdoc="..."> (a nested browsing
+# context), so the needle has to be searched in the srcdoc HTML string
+# and the page's child frames too, not just top-level <iframe src> /
+# <script src>. The live cyber-risk-assessment page is exactly this
+# shape: <iframe srcdoc='... <script src="https://www.cognitoforms.com/
+# f/seamless.js" data-key="..." data-form="1"></script> ...'>.
+EMBED_FORM_PROVIDERS = (
+    ("cognitoforms.com", "Cognito Forms"),
+    ("jotform.com", "JotForm"),
+    ("jotform.co", "JotForm"),
+    ("form.jotform.com", "JotForm"),
+    ("typeform.com", "Typeform"),
+    ("docs.google.com/forms", "Google Forms"),
+    ("forms.gle", "Google Forms"),
+    ("forms.office.com", "Microsoft Forms"),
+    ("wufoo.com", "Wufoo"),
+    ("formstack.com", "Formstack"),
+    ("js.hsforms.net", "HubSpot Forms"),
+    ("hsforms.com", "HubSpot Forms"),
+    ("hsforms.net", "HubSpot Forms"),
+    ("airtable.com/embed", "Airtable Form"),
+    ("paperform.co", "Paperform"),
+    ("tally.so", "Tally"),
+    ("zohopublic.com/forms", "Zoho Forms"),
+    ("forms.zohopublic", "Zoho Forms"),
+    ("surveymonkey.com", "SurveyMonkey"),
+    ("123formbuilder.com", "123FormBuilder"),
+    ("formsite.com", "Formsite"),
+    ("gravityforms.com", "Gravity Forms"),
+    ("involve.me", "involve.me"),
+    ("feathery.io", "Feathery"),
+    ("fillout.com", "Fillout"),
+    ("getform.io", "Getform"),
+)
+
+
+_EMBED_SCAN_JS = r"""(args) => {
+    const providers = args.providers;
+    const rootIsFrame = args.rootIsFrame;
+    const CH = 'nav,[data-ux="Header"],[role="contentinfo"],[data-aid="FOOTER_COOKIE_BANNER_RENDERED"]';
+    const match = (u) => {
+        if (!u) return null;
+        const low = ('' + u).toLowerCase();
+        for (const nn of providers) {
+            if (low.indexOf(nn[0]) !== -1) return nn[1];
+        }
+        return null;
+    };
+    // Pull the first provider-matching URL out of a blob of embed HTML
+    // (a srcdoc string, an innerHTML), so a QA note can point somewhere.
+    const urlFromHtml = (html, name) => {
+        const re = /(?:src|href|data-[a-z-]+)\s*=\s*["']([^"']+)["']/gi;
+        let m;
+        while ((m = re.exec(html)) !== null) {
+            if (match(m[1]) === name) return m[1];
+        }
+        return '';
+    };
+    const hits = [];
+    const push = (name, src, title) => { if (name) hits.push({ provider: name, src: src || '', title: (title || '').trim() }); };
+
+    for (const f of document.querySelectorAll('iframe')) {
+        if (!rootIsFrame && f.closest(CH)) continue;
+        const src = f.getAttribute('src') || f.getAttribute('data-src') || '';
+        let name = match(src);
+        if (name) { push(name, src, f.getAttribute('title')); continue; }
+        // GoDaddy's Custom-HTML widget: the real embed is in srcdoc.
+        const sd = f.getAttribute('srcdoc') || '';
+        if (sd) {
+            name = match(sd);
+            if (name) push(name, urlFromHtml(sd, name), f.getAttribute('title'));
+        }
+    }
+    for (const s of document.querySelectorAll('script[src]')) {
+        if (!rootIsFrame && s.closest(CH)) continue;
+        const name = match(s.getAttribute('src'));
+        if (name) push(name, s.getAttribute('src'), '');
+    }
+    // Some builders inject the form from a placeholder element + their
+    // loader script rather than a bare <iframe>.
+    const DIVS = 'div[class*="cognito"], [data-paperform-id], [data-tally-src], [data-tf-widget], [data-tf-live], [data-hs-forms-root], [data-region][data-form-id], .jotform-form';
+    for (const d of document.querySelectorAll(DIVS)) {
+        if (!rootIsFrame && d.closest(CH)) continue;
+        const src = d.getAttribute('data-tally-src') || d.getAttribute('data-tf-widget') || d.getAttribute('data-tf-live') || d.getAttribute('data-paperform-id') || '';
+        let name = match(src) || match(d.getAttribute('src'));
+        if (!name) {
+            const cls = ('' + (d.className || '')).toLowerCase();
+            if (cls.indexOf('cognito') !== -1) name = 'Cognito Forms';
+            else if (d.hasAttribute('data-paperform-id')) name = 'Paperform';
+            else if (d.hasAttribute('data-tally-src')) name = 'Tally';
+            else if (d.hasAttribute('data-tf-widget') || d.hasAttribute('data-tf-live')) name = 'Typeform';
+            else if (d.hasAttribute('data-hs-forms-root')) name = 'HubSpot Forms';
+            else if (cls.indexOf('jotform') !== -1) name = 'JotForm';
+        }
+        push(name, src, '');
+    }
+    return hits;
+}"""
+
+
+def detect_embedded_forms(page):
+    """Find third-party form / survey embeds (<iframe>, loader <script>,
+    a builder's placeholder <div>, or an embed pasted into GoDaddy's
+    Custom-HTML widget, which wraps it in an <iframe srcdoc>) from an
+    external form builder -- see EMBED_FORM_PROVIDERS. Site chrome is
+    excluded. Returns a list of {"provider", "src", "title"} dicts,
+    collapsed to one per provider."""
+    args = {"providers": [list(p) for p in EMBED_FORM_PROVIDERS], "rootIsFrame": False}
+    raw = list(page.evaluate(_EMBED_SCAN_JS, args))
+    # Also scan every child browsing context (GoDaddy's Custom-HTML
+    # widget renders into an about:srcdoc frame; some builders nest a
+    # real provider iframe). Cross-origin frames throw on DOM access --
+    # skip those, the srcdoc-attribute pass above already covered them.
+    frame_args = {"providers": args["providers"], "rootIsFrame": True}
+    for fr in page.frames:
+        if fr is page.main_frame:
+            continue
+        try:
+            raw.extend(fr.evaluate(_EMBED_SCAN_JS, frame_args))
+        except Exception:
+            continue
+    # Collapse to one hit per provider. A builder's embed routinely shows
+    # up two or three times on one page -- its loader <script>, a
+    # placeholder <div>, and the <iframe> it injects all match -- and a
+    # single page embedding two *different* forms from the same builder
+    # is vanishingly rare. Keep the most informative row: prefer a real
+    # URL over a bare widget id, and a titled row over an untitled one.
+    def _score(h):
+        src = h.get("src") or ""
+        first = h["provider"].split()[0].lower()
+        return (
+            1 if ("/" in src and first in src.lower()) else 0,
+            1 if "/" in src else 0,
+            1 if src else 0,
+            1 if h.get("title") else 0,
+        )
+
+    best = {}
+    for h in raw:
+        h = {
+            "provider": h["provider"],
+            "src": (h.get("src") or "").strip(),
+            "title": (h.get("title") or "").strip(),
+        }
+        cur = best.get(h["provider"])
+        if cur is None or _score(h) > _score(cur):
+            best[h["provider"]] = h
+    return [best[k] for k in sorted(best)]
+
+
 def element_text(el):
     """Get an element's text, tolerating nodes inner_text() rejects (e.g.
     an SVG icon matched by a broad selector isn't an HTMLElement)."""
@@ -1056,6 +1221,18 @@ def extract_blocks(page, page_url):
             "type": "newsletter_signup",
             "label": "Newsletter signup",
             "text": "Sign up to receive updates and blog posts by email.",
+        })
+
+    # Third-party form / survey embeds (Cognito Forms, JotForm, Typeform,
+    # ...). Cross-origin, so only the fact of the embed and its provider
+    # are visible -- the generator renders a placeholder + QA flag. See
+    # detect_embedded_forms() / EMBED_FORM_PROVIDERS.
+    for emb in detect_embedded_forms(page):
+        blocks.append({
+            "type": "embedded_form",
+            "provider": emb["provider"],
+            "src": emb["src"],
+            "title": emb["title"] or f"{emb['provider']} form",
         })
 
     return blocks

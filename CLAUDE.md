@@ -432,8 +432,23 @@ any page; body text 90–98% of live everywhere.
   tool ignores a `form_meta`-only export, so the migrated forms had been
   importing with no `formSettings` and rendering nothing via
   `[fluentform]`. Verified end to end on the dev site (import → shortcode
-  renders the full 95-radio form → matches live). Still per-site: the
-  crawler doesn't auto-detect third-party form embeds yet.
+  renders the full 95-radio form → matches live). - **Generic third-party form-embed detection.** The crawler now
+  auto-detects the class of problem the cyber-risk-assessment fix solved
+  by hand. `EMBED_FORM_PROVIDERS` + `detect_embedded_forms()` in
+  `crawler_agent.py` scan each page for an `<iframe>` / loader `<script>`
+  / builder placeholder `<div>` from ~20 external form builders (Cognito
+  Forms, JotForm, Typeform, Google/Microsoft Forms, HubSpot, Wufoo,
+  Formstack, Tally, Paperform, …), skip site chrome, and collapse to one
+  hit per provider per page. `extract_blocks()` emits an `embedded_form`
+  block; the generator renders it as a labelled placeholder with a QA
+  flag (rebuild in Fluent Forms — cyber-risk-assessment is the worked
+  example — or re-embed via the provider's own block), and `qa_report.md`
+  gains a "Third-party form embeds" callout. Verified by a fixture unit
+  test (correct providers detected, chrome + non-provider iframes
+  ignored, multi-match collapse) and the block render. The current
+  `structured_content.json` is not re-crawled, so `cyber-risk-assessment`
+  keeps its hand-built model; a future re-crawl surfaces every embed
+  instead of silently dropping it.
 - **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
   now render `document_embed` as a `core/file` block with
   `displayPreview` — an inline `<object>` PDF viewer + Download button,
