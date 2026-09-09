@@ -1,11 +1,11 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-09 08:08 UTC
+Generated: 2026-09-09 08:26 UTC
 
 ## Summary
 
 - **37 pages** fully extracted, structured, and converted to a ready-to-import WordPress file.
-- **0 payment, login, or account features detected** on the pages processed — consistent with an informational-site profile.
+- **Qualification gate: site in scope.** No store/payment, login/account, forum, booking, or donation functionality detected on any page — an informational-site profile.
 
 ## Items flagged for human review before go-live
 

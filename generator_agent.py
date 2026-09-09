@@ -2245,10 +2245,29 @@ def build_qa_report(data, brand=None):
     lines.append(f"- **{extracted} pages** fully extracted, structured, and converted to a ready-to-import WordPress file.")
     if pending:
         lines.append(f"- **{pending} pages** in the site navigation were not yet crawled and are not included in this file.")
+
+    qual = data.get("qualification") or {}
+    review_slugs = list(qual.get("review") or [])
     if flags:
-        lines.append(f"- **{len(flags)} pages** were flagged by the qualification check (possible login/payment/forum area) and excluded from this file — see below.")
+        lines.append(
+            f"- **Qualification gate: {len(flags)} page(s) BLOCKED** as out of scope "
+            "(store/payment, login/account, forum, booking, or donation functionality "
+            "this pipeline does not reproduce) and left out of this file — see below."
+        )
+    elif review_slugs:
+        lines.append(
+            f"- **Qualification gate: site in scope, {len(review_slugs)} page(s) flagged "
+            f"for review** ({', '.join(review_slugs)}) — migrated, but confirm each is "
+            "genuinely informational before go-live."
+        )
     else:
-        lines.append("- **0 payment, login, or account features detected** on the pages processed — consistent with an informational-site profile.")
+        lines.append(
+            "- **Qualification gate: site in scope.** No store/payment, login/account, "
+            "forum, booking, or donation functionality detected on any page — an "
+            "informational-site profile." if qual else
+            "- **0 payment, login, or account features detected** on the pages processed "
+            "— consistent with an informational-site profile."
+        )
     lines.append("")
     lines.append("## Items flagged for human review before go-live")
     lines.append("")
@@ -2406,9 +2425,18 @@ def build_qa_report(data, brand=None):
             "image itself; until it runs, add alt text by hand for accessibility."
         )
     if flags:
-        lines.append(f"- **{len(flags)} page(s) excluded** by the qualification check:")
+        lines.append(f"- **{len(flags)} page(s) excluded** by the qualification check (out of scope):")
         for url, reasons in flags.items():
             lines.append(f"  - {url} — {'; '.join(reasons)}")
+    review_pages = [p for p in pages if (p.get("_qualification") or {}).get("verdict") == "review"]
+    if review_pages:
+        lines.append(
+            "- **Qualification review** — these page(s) are migrated but a human should "
+            "confirm they're genuinely informational (a moderate out-of-scope signal fired):"
+        )
+        for p in review_pages:
+            reasons = (p.get("_qualification") or {}).get("reasons") or []
+            lines.append(f"  - `{p['slug']}` — {reasons[0] if reasons else 'see qualification_report.md'}")
     if pending:
         lines.append(f"- **{pending} page(s)** in the site navigation were not yet crawled — flagged as pending, not dropped.")
     if brand:

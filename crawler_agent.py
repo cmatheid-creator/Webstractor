@@ -29,6 +29,12 @@ from urllib.parse import urlparse, urljoin
 
 from playwright.sync_api import sync_playwright
 
+# The out-of-scope safety gate (payments, accounts, forums, bookings,
+# donations) is pipeline step 3, kept in its own module so it can be
+# re-run and reasoned about independently. crawl() calls scan_page()
+# while it holds the live DOM.
+from qualification_agent import scan_page
+
 
 def same_domain(base, url):
     return urlparse(base).netloc == urlparse(url).netloc
@@ -1078,48 +1084,6 @@ def discover_links(page, base_url):
     return links
 
 
-# ---- Qualification Agent hook -------------------------------------------
-# Structural/DOM checks to flag pages that fall outside the
-# informational-site scope (payments, logins, forums). This is NOT a
-# substitute for the real Qualification Agent -- it's a first-pass filter
-# so the crawler can flag risk early rather than silently processing
-# something out of scope.
-#
-# Earlier this matched keywords anywhere in the page's raw HTML text
-# ("password", "login", "community", "cart", ...). On a cybersecurity
-# advisory site, ordinary blog prose about password hygiene or online
-# communities constantly tripped that -- silently dropping real,
-# in-scope content instead of flagging actual functionality. These checks
-# look for concrete signals (form fields, URL path, known SDK scripts)
-# instead of topic vocabulary.
-URL_PATH_RISK_PATTERN = re.compile(
-    r"/(login|sign-?in|my-?account|register|cart|checkout|forum)(/|$)", re.I
-)
-
-
-def flag_risks(page, url):
-    flags = []
-
-    path = urlparse(url).path
-    if URL_PATH_RISK_PATTERN.search(path):
-        flags.append(f"URL path suggests account/cart/forum area: {path}")
-
-    if page.query_selector("input[type='password']"):
-        flags.append("possible login/account area (password field present)")
-
-    if page.query_selector(
-        "[class*='add-to-cart' i], [class*='shopping-cart' i], "
-        "a[href*='/cart'], a[href*='/checkout'], "
-        "script[src*='stripe.com'], script[src*='paypal.com']"
-    ):
-        flags.append("possible ecommerce/payment (cart/checkout element or payment SDK present)")
-
-    if page.query_selector("[class*='phpbb' i], [class*='discourse-forum' i], a[href*='/forum']"):
-        flags.append("possible forum/community feature (forum software marker present)")
-
-    return flags
-
-
 def extract_navigation(page):
     """The site's real top-level navigation, as a nested tree:
     [{"label": ..., "href": ..., "children": [{"label": ..., "href": ...}, ...]}, ...]
@@ -1344,10 +1308,11 @@ def crawl(start_url, max_pages=100):
                 feed_item_urls.setdefault(feed_slug, set()).add(stripped_url)
             dedupe_key = f"blogpost:{feed_slug}" if feed_slug else canonical_path
             if dedupe_key not in extracted_paths:
-                risks = flag_risks(page, url)
-                if risks:
-                    risk_flags[url] = risks
-                    print(f"  [FLAGGED] {url} -- {risks} (skipping content extraction)")
+                qual = scan_page(page, url)
+                if qual["verdict"] == "block":
+                    risk_flags[url] = qual["reasons"]
+                    print(f"  [BLOCKED] {url} -- out of scope "
+                          f"({', '.join(qual['categories'])}); not migrated")
                 else:
                     try:
                         blocks = extract_blocks(page, url)
@@ -1390,7 +1355,7 @@ def crawl(start_url, max_pages=100):
                             canonical_feed_item_url(stripped_url)
                             if feed_slug else stripped_url
                         )
-                        pages.append({
+                        page_dict = {
                             "old_url": canonical_url,
                             "slug": slugify(canonical_url, start_url),
                             "title": title,
@@ -1399,7 +1364,18 @@ def crawl(start_url, max_pages=100):
                             "type": "page",
                             "is_front_page": (canonical_url == start_url.rstrip("/")),
                             "blocks": blocks,
-                        })
+                        }
+                        # Stash the qualification verdict + evidence so the
+                        # standalone qualification_agent.py can re-judge
+                        # (and run its LLM layer) without a re-crawl.
+                        page_dict["_qualification"] = {
+                            k: qual[k] for k in ("verdict", "categories", "reasons")
+                        }
+                        page_dict["_qualification_evidence"] = qual["evidence"]
+                        if qual["verdict"] == "review":
+                            print(f"  [REVIEW] {url} -- {', '.join(qual['categories'])}: "
+                                  f"{qual['reasons'][0] if qual['reasons'] else ''}")
+                        pages.append(page_dict)
                         print(f"  [ok] {url} -- {len(blocks)} blocks")
 
             new_links = discover_links(page, start_url)
@@ -1422,6 +1398,15 @@ def crawl(start_url, max_pages=100):
         if aliases:
             pg["alias_urls"] = aliases
 
+    review_slugs = [p["slug"] for p in pages
+                    if (p.get("_qualification") or {}).get("verdict") == "review"]
+    if risk_flags:
+        gate = f"OUT OF SCOPE -- {len(risk_flags)} page(s) blocked, not migrated"
+    elif review_slugs:
+        gate = f"REVIEW REQUIRED -- {len(review_slugs)} page(s) flagged, migrated"
+    else:
+        gate = "SITE IN SCOPE -- no out-of-scope functionality detected"
+
     return {
         "site": {
             "title": pages[0]["title"] if pages else "",
@@ -1433,6 +1418,15 @@ def crawl(start_url, max_pages=100):
         "navigation": navigation,
         "footer": footer,
         "qualification_flags": risk_flags,
+        "qualification": {
+            "gate": ("out" if risk_flags else "review" if review_slugs else "in"),
+            "summary": gate,
+            "blocked": sorted(risk_flags.keys()),
+            "review": review_slugs,
+            "scanned": len(pages) + len(risk_flags),
+            "llm_layer": False,
+            "evidence": "crawl",
+        },
     }
 
 
@@ -1448,9 +1442,13 @@ def main():
     with open("structured_content.json", "w") as f:
         json.dump(result, f, indent=2)
 
-    print(f"\nDone. {len(result['pages'])} pages extracted, "
-          f"{len(result['qualification_flags'])} pages flagged for review.")
+    q = result["qualification"]
+    print(f"\nDone. {len(result['pages'])} pages extracted; "
+          f"{len(result['qualification_flags'])} blocked, {len(q['review'])} to review.")
+    print(f"Qualification gate: {q['summary']}")
     print("Wrote structured_content.json -- feed this into generator_agent.py")
+    print("Run `python3 qualification_agent.py` for the full report "
+          "(and the optional LLM judgement layer).")
 
 
 if __name__ == "__main__":

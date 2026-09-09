@@ -172,7 +172,12 @@
       ],
       "meta_title": "Trusted Technology Advice | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "924b96aacd1bbc06"
+      "_structured_blocks_hash": "924b96aacd1bbc06",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/connectivity",
@@ -384,7 +389,12 @@
       ],
       "meta_title": "Secure Business Connectivity Solutions | Stratecon",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "bb9faed1daebb538"
+      "_structured_blocks_hash": "bb9faed1daebb538",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog",
@@ -493,7 +503,12 @@
       ],
       "meta_title": "Stratecon Tech Insights Blog",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "0659618091e1a67d"
+      "_structured_blocks_hash": "0659618091e1a67d",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/terms-of-service",
@@ -817,7 +832,12 @@
       ],
       "meta_title": "Terms of Service | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "e02328dc22773d12"
+      "_structured_blocks_hash": "e02328dc22773d12",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-insurance-is-it-right-for-your-smb",
@@ -1052,7 +1072,12 @@
       "_structured_blocks_hash": "6337a82f57984a27",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/cybersecurity-insurance-is-it-right-for-your-smb"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-for-sales-1",
@@ -1186,7 +1211,12 @@
       ],
       "meta_title": "AI for Sales | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "219b5bd162c3591b"
+      "_structured_blocks_hash": "219b5bd162c3591b",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/cybersecurity-solutions",
@@ -1467,7 +1497,12 @@
       ],
       "meta_title": "Cybersecurity Solutions | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "9b1e32f4d6854ec2"
+      "_structured_blocks_hash": "9b1e32f4d6854ec2",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-strategy-1",
@@ -1638,7 +1673,12 @@
       ],
       "meta_title": "AI Strategy | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "2729ab298153d3fb"
+      "_structured_blocks_hash": "2729ab298153d3fb",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/risk-assessment-1",
@@ -1784,7 +1824,12 @@
       ],
       "meta_title": "Cyber Risk Assessment | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "0a5f99162ce1bc7e"
+      "_structured_blocks_hash": "0a5f99162ce1bc7e",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/creating-and-testing-a-business-continuitydisaster-recovery-plan",
@@ -2099,7 +2144,12 @@
       "_structured_blocks_hash": "2e72e636e2c46633",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/creating-and-testing-a-business-continuitydisaster-recovery-plan"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/threat-protection",
@@ -2327,7 +2377,12 @@
       ],
       "meta_title": "Cyber Threat Protection | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "73337a02697a3408"
+      "_structured_blocks_hash": "73337a02697a3408",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-importance-of-regular-cybersecurity-audits-for-smbs",
@@ -2449,7 +2504,12 @@
       "_structured_blocks_hash": "ddb61bac33433b35",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/the-importance-of-regular-cybersecurity-audits-for-smbs"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/threat-id-%26-detection",
@@ -2625,7 +2685,12 @@
       ],
       "meta_title": "Cyber Threat ID & Detection | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "e5faecc7bababacc"
+      "_structured_blocks_hash": "e5faecc7bababacc",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/services",
@@ -2750,7 +2815,12 @@
       ],
       "meta_title": "Technology Advisory Services | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "237e429459d51b30"
+      "_structured_blocks_hash": "237e429459d51b30",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-solutions",
@@ -2904,7 +2974,12 @@
       ],
       "meta_title": "AI Solutions | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "b9b199a4e86f734a"
+      "_structured_blocks_hash": "b9b199a4e86f734a",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/privacy-policy",
@@ -3108,7 +3183,12 @@
       ],
       "meta_title": "Privacy Policy | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "78e87efd291c4045"
+      "_structured_blocks_hash": "78e87efd291c4045",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/communications-solutions",
@@ -3220,7 +3300,12 @@
       ],
       "meta_title": "Communications Solutions | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "81d53b51a23f2152"
+      "_structured_blocks_hash": "81d53b51a23f2152",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/ai-and-data-analytics-uncovering-business-insights-for-smbs",
@@ -3397,7 +3482,12 @@
       "_structured_blocks_hash": "c12ba07c735e1b02",
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/ai-and-data-analytics-uncovering-business-insights-for-smbs"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/supporting-hybrid-work-with-effective-collaboration-tools",
@@ -3532,7 +3622,12 @@
       ],
       "meta_title": "Supporting Hybrid Work with Collaboration Tools",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "b11937bf09a9efdb"
+      "_structured_blocks_hash": "b11937bf09a9efdb",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/preventing-data-breaches-8-essential-strategies-for-smbs",
@@ -3629,7 +3724,12 @@
       "_structured_blocks_hash": "5ef4599be451ced1",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/preventing-data-breaches-8-essential-strategies-for-smbs"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/unified-communications",
@@ -3769,7 +3869,12 @@
       ],
       "meta_title": "Unified Communications (UCaaS) | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "015d3fbaaab476e1"
+      "_structured_blocks_hash": "015d3fbaaab476e1",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/building-a-cybersecurity-aware-culture-in-your-business",
@@ -3926,7 +4031,12 @@
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/building-a-cybersecurity-aware-culture-in-your-business",
         "https://stratecon.tech/cybersecurity-solutions/f/building-a-cybersecurity-aware-culture-in-your-business"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-to-optimize-your-marketing-strategies",
@@ -4057,7 +4167,12 @@
       "_structured_blocks_hash": "0043cb79463665ea",
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/leveraging-ai-to-optimize-your-marketing-strategies"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/customer-experience",
@@ -4315,7 +4430,12 @@
       ],
       "meta_title": "Customer Experience (CX) Solutions | Stratecon",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "5bb673cffc721b5a"
+      "_structured_blocks_hash": "5bb673cffc721b5a",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/cybersecurity-compliance-for-smbs-what-you-need-to-know",
@@ -4561,7 +4681,12 @@
       "_structured_blocks_hash": "98089682cf9530db",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/cybersecurity-compliance-for-smbs-what-you-need-to-know"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/managing-communications-in-a-multi-generational-workforce",
@@ -4761,7 +4886,12 @@
       ],
       "meta_title": "Communicating Across a Multi-Generational Workforce",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "791ab825f10191b2"
+      "_structured_blocks_hash": "791ab825f10191b2",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/leveraging-ai-for-enhanced-customer-service",
@@ -4965,7 +5095,12 @@
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/leveraging-ai-for-enhanced-customer-service",
         "https://stratecon.tech/cybersecurity-solutions/f/leveraging-ai-for-enhanced-customer-service"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/about",
@@ -5077,7 +5212,12 @@
       ],
       "meta_title": "About Stratecon Tech Advisors & Our Founder",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "52fab98dd71e6f42"
+      "_structured_blocks_hash": "52fab98dd71e6f42",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/10-essential-cybersecurity-practices-for-smbs-in-2024",
@@ -5233,7 +5373,12 @@
       "_structured_blocks_hash": "9e54b6da0de5d7e8",
       "alias_urls": [
         "https://stratecon.tech/cybersecurity-solutions/f/10-essential-cybersecurity-practices-for-smbs-in-2024"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/contact",
@@ -5342,7 +5487,12 @@
       ],
       "meta_title": "Contact Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "46777198504748d0"
+      "_structured_blocks_hash": "46777198504748d0",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-for-customer-service",
@@ -5470,7 +5620,12 @@
       ],
       "meta_title": "AI for Customer Service | Stratecon Tech Advisors",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "28c39be258a46ef6"
+      "_structured_blocks_hash": "28c39be258a46ef6",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/cyber-risk-assessment",
@@ -5515,7 +5670,12 @@
       ],
       "meta_title": "Free Cyber Risk Self-Assessment | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "3a4d09416f648a67"
+      "_structured_blocks_hash": "3a4d09416f648a67",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/top-5-security-considerations-when-utilizing-generative-ai",
@@ -5641,7 +5801,12 @@
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/top-5-security-considerations-when-utilizing-generative-ai",
         "https://stratecon.tech/cybersecurity-solutions/f/top-5-security-considerations-when-utilizing-generative-ai"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-use-policy-template",
@@ -5663,7 +5828,12 @@
       ],
       "meta_title": "Free AI Use Policy Template | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "40c10e1f7679993f"
+      "_structured_blocks_hash": "40c10e1f7679993f",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/ai-disclosure-template",
@@ -5685,7 +5855,12 @@
       ],
       "meta_title": "Free AI Vendor Disclosure Template | Stratecon",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "054684c4c42c46d9"
+      "_structured_blocks_hash": "054684c4c42c46d9",
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/the-spider-mantm-dilemma-building-an-ai-strategy",
@@ -5812,7 +5987,12 @@
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/the-spider-mantm-dilemma-building-an-ai-strategy",
         "https://stratecon.tech/cybersecurity-solutions/f/the-spider-mantm-dilemma-building-an-ai-strategy"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     },
     {
       "old_url": "https://stratecon.tech/blog/f/how-ai-can-transform-your-small-to-medium-business",
@@ -6011,7 +6191,12 @@
       "_structured_blocks_hash": "0e3effcc269bd150",
       "alias_urls": [
         "https://stratecon.tech/ai-solutions/f/how-ai-can-transform-your-small-to-medium-business"
-      ]
+      ],
+      "_qualification": {
+        "verdict": "pass",
+        "categories": [],
+        "reasons": []
+      }
     }
   ],
   "navigation": [
@@ -6161,5 +6346,14 @@
     ],
     "copyright_text": "Copyright \u00a9 2026 STRATECON TECH ADVISORS, a division of Sustainable Investments, LLC - All Rights Reserved."
   },
-  "qualification_flags": {}
+  "qualification_flags": {},
+  "qualification": {
+    "gate": "in",
+    "summary": "**SITE IN SCOPE for automated migration.** No out-of-scope functionality detected.",
+    "blocked": [],
+    "review": [],
+    "scanned": 37,
+    "llm_layer": false,
+    "evidence": "content-only (re-crawl for a full DOM scan)"
+  }
 }

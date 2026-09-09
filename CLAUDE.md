@@ -19,9 +19,14 @@ a clean in-scope example.
 
 1. **Crawler Agent** (scripted) — headless browser, discovers + renders every page.
 2. **Extraction Agent** (scripted) — pulls clean content per page into structured JSON.
-3. **Qualification Agent** (LLM judgment) — flags anything out of scope (payments,
-   logins, forums) before it's processed further. *This is the safety gate that
-   makes "fully automated" an honest claim.*
+3. **Qualification Agent** (`qualification_agent.py`) — the safety gate that keeps
+   "fully automated" honest. A deterministic signal catalog (DOM selectors, GoDaddy
+   `data-ux` widget names, script/`<form action>` hosts, URL-path patterns) tagged
+   by category (payments, accounts, forum, booking, donation) and weight; strong →
+   page blocked, moderate → migrated but flagged for review, weak → noted only.
+   Optional Claude judgement layer for false negatives the DOM misses. The crawler
+   calls `scan_page()` inline and stashes the evidence; the module also re-runs
+   standalone over `structured_content.json`.
 4. **Brand Agent** (scripted) — extracts colors/fonts/logo from computed CSS.
 5. **Content Structuring Agent** (LLM — Claude) — cleans raw extracted content into
    WP-ready structured blocks, generates meta titles/descriptions/alt text.
@@ -442,10 +447,26 @@ any page; body text 90–98% of live everywhere.
   was back-filled with `alias_urls` from the existing `post_feed` hrefs,
   so `redirects.csv` grew 37 → 55 rows now (18 alias redirects) without
   a re-crawl.
+- **Qualification Agent hardened** into its own `qualification_agent.py`
+  (pipeline step 3). Replaced the four inline regex checks in the crawler
+  with a weighted signal catalog across five categories (payments,
+  accounts, forum, booking, donation) — GoDaddy Online Store / Members
+  Area / Appointments `data-ux` widgets, Stripe/Square/PayPal/Shopify/
+  Ecwid/WooCommerce hosts, Calendly/Acuity/Donorbox/GoFundMe embeds,
+  auth providers, forum software, plus URL-path and (weak, guarded) text
+  patterns. `require_all` rules combine predicates (a password field AND
+  login copy). strong→block (excluded), moderate→review (migrated +
+  flagged), weak→noted. Optional Claude judgement layer for DOM-invisible
+  cases; `--offline` or in-session when there's no API key. The crawler
+  calls `scan_page()` and stashes `_qualification` + `_qualification_evidence`
+  per page so the module re-runs standalone; the generator surfaces the
+  gate in the QA report; a `qualification_report.md` is written.
+  Verified: unit tests (verdict reduction, per-rule matching, blog-prose
+  false-positive guard, synthetic store/members/booking pages) + a live
+  `scan_page` pass over 8 real stratecon.tech pages (forms, Cognito embed,
+  blog posts, PDFs) → **0 false positives, site in scope**.
 
 **Can be done without Carver (offered, not yet greenlit):**
-- Harden the **Qualification Agent** (still regex-only — fine for
-  stratecon.tech, not for an unseen client site).
 - Not a bug: the comparison flagged "Cybersecurity Primer – Securing …"
   as an en-dash on dev vs a hyphen on live. The stored text is a plain
   hyphen on all three pages; WordPress's `wptexturize` renders " - " as
