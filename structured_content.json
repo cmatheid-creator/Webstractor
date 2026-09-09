@@ -5659,6 +5659,330 @@
         },
         {
           "type": "heading",
+          "text": "Cyber Risk Self Assessment",
+          "level": 2,
+          "typography_role": "HeadingBeta"
+        },
+        {
+          "type": "contact_form",
+          "title": "Cyber Risk Self Assessment",
+          "fields": [
+            {
+              "type": "html",
+              "label": "intro",
+              "html": "<p>Welcome to your cyber risk self assessment! Please provide your contact information so we can send you the final results. If you do not wish to be contacted by one of our Tech Advisors at the conclusion of this assessment, simply answer &quot;No thank you&quot; in the last question at the end of the questionnaire.</p>"
+            },
+            {
+              "type": "name",
+              "label": "Your Full Name",
+              "required": true
+            },
+            {
+              "type": "email",
+              "label": "Work E-mail",
+              "required": true
+            },
+            {
+              "type": "html",
+              "label": "disclaimer",
+              "html": "<p><strong>DISCLAIMER:</strong> The below questionnaire is a self-assessment designed for informational purposes to assist you with identifying potential cyber risk areas in your business. This assessment is not being performed by Stratecon Tech Advisors &mdash; but if you would like a more formal and comprehensive evaluation of your cyber risk posture, please reach out to us!</p>"
+            },
+            {
+              "type": "html",
+              "label": "instructions",
+              "html": "<p><strong>Instructions:</strong> Please rate your organization&rsquo;s current level of preparedness in each technology area on a scale of 1 to 5.</p>"
+            },
+            {
+              "type": "section",
+              "label": "NETWORK SECURITY"
+            },
+            {
+              "type": "radio",
+              "label": "1. Our network is well-segmented, and we have a DMZ for external-facing services.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "2. We use advanced network monitoring tools to detect and respond to suspicious activities.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "ENDPOINT PROTECTION"
+            },
+            {
+              "type": "radio",
+              "label": "3. All endpoints (laptops, mobile devices, etc.) have up-to-date antivirus and anti-malware software installed.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "4. We have an Endpoint Detection and Response solution to monitor and respond to threats on endpoints.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "IDENTITY AND ACCESS MANAGEMENT"
+            },
+            {
+              "type": "radio",
+              "label": "5. We use multi-factor authentication (MFA) for access to sensitive systems.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "6. Access controls and privilege management for all systems are well-defined and enforced.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "DATA SECURITY"
+            },
+            {
+              "type": "radio",
+              "label": "7. Sensitive data is encrypted both at rest and in transit.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "8. We regularly patch and update software and systems to mitigate known vulnerabilities.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "INCIDENT RESPONSE AND THREAT DETECTION"
+            },
+            {
+              "type": "radio",
+              "label": "9. We have a Security Information and Event Management (SIEM) system in place for real-time monitoring.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "10. We regularly conduct incident response drills and have a well-documented incident response plan.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "SECURITY AWARENESS AND TRAINING"
+            },
+            {
+              "type": "radio",
+              "label": "11. Our employees receive regular cybersecurity training and awareness programs.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "12. We conduct phishing awareness and simulation exercises to educate employees about email threats.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "VENDOR AND THIRD PARTY RISK MANAGEMENT"
+            },
+            {
+              "type": "radio",
+              "label": "13. We assess the security of our vendors and third parties before granting them access to our systems.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "14. Contracts with third parties include security and data protection clauses.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "BUSINESS CONTINUITY AND DISASTER RECOVERY"
+            },
+            {
+              "type": "radio",
+              "label": "15. We have a robust data backup and recovery strategy in place.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "16. We regularly test and validate the restoration of critical systems and data from backups.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "COMPLIANCE AND REGULATORY CONSIDERATIONS"
+            },
+            {
+              "type": "radio",
+              "label": "17. We maintain compliance with relevant industry-specific regulations (e.g., GDPR, HIPAA, PCI-DSS).",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "section",
+              "label": "EMERGING TECHNOLOGIES AND THREATS"
+            },
+            {
+              "type": "radio",
+              "label": "18. We actively monitor and assess the impact of emerging technologies on our security posture.",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "radio",
+              "label": "19. We have a well defined policy and employee training around the use of artificial intelligence (AI).",
+              "options": [
+                "Not prepared, or unsure",
+                "Somewhat prepared",
+                "Moderately prepared",
+                "Quite prepared",
+                "Highly prepared"
+              ],
+              "required": true
+            },
+            {
+              "type": "textarea",
+              "label": "20. List any specific areas where you have cybersecurity concerns:",
+              "required": false
+            },
+            {
+              "type": "select",
+              "label": "Are you interested in having a conversation with a Stratecon Tech Advisor about your cyber risk results?",
+              "options": [
+                "YES! Let's setup some time to chat",
+                "No thank you"
+              ],
+              "required": true
+            },
+            {
+              "type": "html",
+              "label": "consent",
+              "html": "<p>By submitting this form, you confirm that you have read and agreed to the Stratecon Tech Advisors <a href=\"/privacy-policy/\">Privacy Policy</a> and <a href=\"/terms-of-service/\">Terms of Service</a>. By clicking &quot;Submit&quot; below you agree to share your results with Stratecon Tech Advisors.</p>"
+            }
+          ]
+        },
+        {
+          "type": "heading",
           "level": 4,
           "text": "What Next?",
           "typography_role": "HeadingDelta"
@@ -5670,7 +5994,7 @@
       ],
       "meta_title": "Free Cyber Risk Self-Assessment | Stratecon Tech",
       "_structured_agent_version": 2,
-      "_structured_blocks_hash": "3a4d09416f648a67",
+      "_structured_blocks_hash": "0dcba5f8ae34a59f",
       "_qualification": {
         "verdict": "pass",
         "categories": [],

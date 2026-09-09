@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-09 08:40 UTC
+Generated: 2026-09-09 09:34 UTC
 
 ## Summary
 
@@ -11,7 +11,7 @@ Generated: 2026-09-09 08:40 UTC
 
 - **Homepage**: the front page imports as a normal page — titled "Trusted Technology Advisers | Cybersecurity Solutions", slug `home`. Which page WordPress shows at `/` is a site option (Settings → Reading), not page content, so no WXR import can set it. **The Stratecon Migration Repair plugin sets it for you** — upload **`repair-migration.zip`** via Plugins → Add New → Upload Plugin and click Activate — it runs once, shows a report, then deactivates itself; or set it by hand via Settings → Reading → "Your homepage displays" → a static page. Skip both and `/` shows the default blog listing. (Publish the imported pages first — the plugin can only point `/` at a page that exists.)
 - **Hero section** (1 page(s), incl. the home page): the heading, sub-tagline, and call-to-action button were lifted from GoDaddy's header widget (which is otherwise treated as site chrome) and rebuilt as a full-width cover block — this is the migrated home page's only page-level `<h1>`. The background is a GoDaddy stock photo with no importable URL; the Stratecon Migration Repair plugin sideloads it with the rest of the stock images. Sanity-check the wording and the CTA target.
-- **Contact form fields** (4 page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.
+- **Contact form fields** (5 page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.
 - **Newsletter signup** (17 page(s)): mapped to a placeholder shortcode. Needs to be wired to whichever email tool (Mailchimp, etc.) the new site will use.
 - **Images** (94 unique, 122 placements across the crawled pages): 23 included as WXR attachment items pointing at the original site's URLs. Check **"Download and import file attachments"** during import (the default) so WordPress fetches real, independent copies into your media library. Some of the original site's image URLs carry an extension that doesn't match the actual bytes (a `.webp`/`.png` URL that returns JPEG); WordPress saves those with the correct extension but the importer leaves the page's `<img>` tag pointing at the old one, so it 404s. **The Stratecon Migration Repair plugin repoints every broken `wp-content/uploads/` image URL** at the file WordPress actually created — upload **`repair-migration.zip`** via Plugins → Add New → Upload Plugin and click Activate — it runs once, shows a report, then deactivates itself.
 - **Side-by-side layout preserved** (56 section(s)): the original site's two-column image+text sections (detected from its real Grid/GridCell markup) are generated as WordPress Media & Text blocks instead of a plain stacked image and paragraph, matching the original layout rather than flattening it.
@@ -47,7 +47,7 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
 - **Cybersecurity Solutions** (`cybersecurity-solutions`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
   - card images still point at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"]. The import ships a default admin-email notification (to {wp.admin_email}) -- retarget it to the right inbox in Fluent Forms → Settings → Email Notifications
   - post preview images still point at the original site -- swap to the re-hosted media-library copy after import.
 - **AI Strategy** (`ai-strategy-1`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
@@ -58,13 +58,13 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat Protection** (`threat-protection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"]. The import ships a default admin-email notification (to {wp.admin_email}) -- retarget it to the right inbox in Fluent Forms → Settings → Email Notifications
 - **The Importance of Regular Cybersecurity Audits for SMBs** (`the-importance-of-regular-cybersecurity-audits-for-smbs`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat ID & Detection** (`threat-id-%26-detection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"]. The import ships a default admin-email notification (to {wp.admin_email}) -- retarget it to the right inbox in Fluent Forms → Settings → Email Notifications
 - **Services** (`services`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **AI Solutions** (`ai-solutions`):
@@ -108,12 +108,13 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **IT Advisor Services** (`contact`):
-  - contact form "Contact Us" (slot 2) -- fields: Name (text), Email (text), Message (textarea), Email opt-in (checkbox) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Contact Us" (slot 2) -- fields: Name (text), Email (text), Message (textarea), Email opt-in (checkbox) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"]. The import ships a default admin-email notification (to {wp.admin_email}) -- retarget it to the right inbox in Fluent Forms → Settings → Email Notifications
   - newsletter signup -- wire to the real email/newsletter plugin
 - **AI for Customer Service** (`ai-for-customer-service`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **Cyber Risk Assessment** (`cyber-risk-assessment`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
+  - contact form "Cyber Risk Self Assessment" (slot 3) -- fields: 23 fields — 19 rating question(s), 1 name field(s), 1 email field(s), 1 free-text box(es), 1 dropdown(s) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"]. The import ships a default admin-email notification (to {wp.admin_email}) -- retarget it to the right inbox in Fluent Forms → Settings → Email Notifications
 - **Top 5 Security Considerations When Utilizing Generative AI** (`top-5-security-considerations-when-utilizing-generative-ai`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin

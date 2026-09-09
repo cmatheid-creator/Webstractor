@@ -423,28 +423,121 @@ def _ff_checkbox_field(idx, label, name):
     }
 
 
+def _ff_radio_field(idx, label, name, options, required=True):
+    opts = {str(o): str(o) for o in options}
+    return {
+        "index": idx, "element": "input_radio",
+        "attributes": {"type": "radio", "name": name, "value": ""},
+        "options": opts,
+        "settings": {"container_class": "", "label": label, "admin_field_label": label[:60],
+                     "description": "", "label_placement": "",
+                     "validation_rules": {"required": {"value": required, "message": "This field is required"}},
+                     "conditional_logics": [], "layout_class": "",
+                     "enable_image_input": False, "randomize_options": False,
+                     "calc_value_status": False},
+        "editor_options": {"title": "Radio Field", "element": "input-radio",
+                           "icon_class": "ff-edit-radio", "template": "inputRadio"},
+        "uniqElKey": f"el_migration_radio_{idx}",
+    }
+
+
+def _ff_select_field(idx, label, name, options, required=True):
+    opts = {str(o): str(o) for o in options}
+    return {
+        "index": idx, "element": "select",
+        "attributes": {"name": name, "value": "", "id": "", "class": "",
+                       "placeholder": "- Select -"},
+        "options": opts,
+        "settings": {"container_class": "", "label": label, "admin_field_label": label[:60],
+                     "placeholder": "- Select -", "label_placement": "", "help_message": "",
+                     "validation_rules": {"required": {"value": required, "message": "This field is required"}},
+                     "conditional_logics": [], "enable_select_2": False,
+                     "max_selection": "", "randomize_options": False,
+                     "calc_value_status": False},
+        "editor_options": {"title": "Dropdown", "element": "select",
+                           "icon_class": "ff-edit-dropdown", "template": "select"},
+        "uniqElKey": f"el_migration_select_{idx}",
+    }
+
+
+def _ff_section_break(idx, title, description=""):
+    return {
+        "index": idx, "element": "section_break",
+        "attributes": {"id": "", "class": ""},
+        "settings": {"label": title, "description": description, "container_class": "",
+                     "align": "left", "conditional_logics": []},
+        "editor_options": {"title": "Section Break", "element": "section-break",
+                           "icon_class": "ff-edit-section-break", "template": "sectionBreak"},
+        "uniqElKey": f"el_migration_section_{idx}",
+    }
+
+
+def _ff_html_field(idx, html_codes):
+    return {
+        "index": idx, "element": "custom_html",
+        "attributes": [],
+        "settings": {"html_codes": html_codes, "conditional_logics": [], "container_class": ""},
+        "editor_options": {"title": "Custom HTML", "element": "custom-html",
+                           "icon_class": "ff-edit-html-codes", "template": "customHTML"},
+        "uniqElKey": f"el_migration_html_{idx}",
+    }
+
+
+def _summarize_form_fields(fields):
+    """A short human summary of a captured form's fields for the placeholder
+    panel + QA report. Lists them plainly when there are only a few;
+    collapses a long questionnaire (e.g. the cyber-risk self-assessment)
+    to counts so the panel text stays readable."""
+    real = [f for f in fields if (f.get("type") or "text").lower()
+            not in ("section", "section_break", "html", "custom_html")]
+    if len(real) <= 6:
+        return ", ".join(f"{f.get('label') or 'field'} ({f.get('type', 'text')})" for f in real)
+    from collections import Counter
+    c = Counter((f.get("type") or "text").lower() for f in real)
+    names = {"radio": "rating question(s)", "select": "dropdown(s)",
+             "textarea": "free-text box(es)", "input_name": "name field(s)",
+             "name": "name field(s)", "email": "email field(s)",
+             "text": "text field(s)", "checkbox": "checkbox(es)"}
+    parts = [f"{n} {names.get(k, k + ' field(s)')}" for k, n in c.most_common()]
+    return f"{len(real)} fields — " + ", ".join(parts)
+
+
 def build_fluentform_form_fields(fields):
-    """Crawler `[{label, type}]` -> a Fluent Forms `form_fields` object
-    (fields[] + submitButton). Unmapped/odd fields become a simple text
+    """Crawler `[{label, type, options?, required?, html?}]` -> a Fluent
+    Forms `form_fields` object (fields[] + submitButton). Handles name,
+    email, text, phone, textarea, checkbox, radio, select, and layout-only
+    `section` / `html` entries. Unmapped/odd fields become a simple text
     input so nothing captured is silently dropped."""
     ff_fields = []
     for i, f in enumerate(fields):
         label = (f.get("label") or "").strip()
         ftype = (f.get("type") or "text").lower()
         low = label.lower()
-        name = re.sub(r"[^a-z0-9]+", "_", low).strip("_") or f"field_{i}"
-        if ftype == "checkbox":
+        req = bool(f.get("required", ftype in ("email",) or low in ("name", "your name", "full name")))
+        name = re.sub(r"[^a-z0-9]+", "_", low).strip("_")[:48] or f"field_{i}"
+        if ftype in ("section", "section_break"):
+            ff_fields.append(_ff_section_break(i, label, f.get("description") or ""))
+        elif ftype in ("html", "custom_html"):
+            ff_fields.append(_ff_html_field(i, f.get("html") or f"<p>{label}</p>"))
+        elif ftype == "radio":
+            ff_fields.append(_ff_radio_field(i, label or f"Question {i + 1}", name,
+                                             f.get("options") or [], req))
+        elif ftype in ("select", "dropdown"):
+            ff_fields.append(_ff_select_field(i, label or f"Question {i + 1}", name,
+                                              f.get("options") or [], req))
+        elif ftype == "checkbox":
             ff_fields.append(_ff_checkbox_field(i, label or "Consent", name or "consent"))
         elif ftype == "textarea" or low in ("message", "your message", "comments"):
-            ff_fields.append(_ff_textarea_field(i, label or "Message", name or "message"))
-        elif ftype == "email" or low in ("email", "email address", "your email"):
+            ff_fields.append(_ff_textarea_field(i, label or "Message", name or "message",
+                                               required=req))
+        elif ftype == "email" or low in ("email", "email address", "your email", "work e-mail", "work email"):
             ff_fields.append(_ff_email_field(i, label or "Email"))
-        elif low in ("name", "your name", "full name"):
+        elif low in ("name", "your name", "full name", "your full name"):
             ff_fields.append(_ff_name_field(i, label or "Name"))
         elif "phone" in low or ftype in ("tel", "phone"):
             ff_fields.append(_ff_text_field(i, label or "Phone", name or "phone", field_type="tel"))
         else:
-            ff_fields.append(_ff_text_field(i, label or f"Field {i + 1}", name))
+            ff_fields.append(_ff_text_field(i, label or f"Field {i + 1}", name, required=req))
     if not any(x["element"] == "input_email" for x in ff_fields):
         ff_fields.append(_ff_email_field(len(ff_fields), "Email"))
     for j, x in enumerate(ff_fields):
@@ -470,6 +563,51 @@ _FF_FORM_SETTINGS = {
     "delete_entry_on_submission": "no",
     "appendSurveyResult": {"enabled": False, "showLabel": False, "showCount": False},
 }
+
+
+_FF_ADV_VALIDATION = {
+    "status": False, "type": "all",
+    "conditions": [{"field": "", "operator": "=", "value": ""}],
+    "error_message": "", "validation_type": "fail_on_condition_met",
+}
+_FF_DOUBLE_OPTIN = {
+    "status": "no",
+    "confirmation_message": "Please check your email inbox to confirm this submission",
+    "email_body_type": "global", "email_subject": "Please confirm your form submission",
+    "email_body": "<h2>Please Confirm Your Submission</h2><p><a href=\"#confirmation_url#\">Confirm Submission</a></p>",
+    "email_field": "", "skip_if_logged_in": "yes", "skip_if_fc_subscribed": "no",
+}
+
+
+def _ff_notifications_meta(title):
+    """A default admin-email notification so a migrated form actually
+    delivers submissions out of the box (the client can retarget it)."""
+    return {
+        "name": "Admin Notification Email", "sendTo": {"type": "email", "email": "{wp.admin_email}"},
+        "fromName": "", "fromEmail": "", "replyTo": "", "bcc": "", "cc": "",
+        "subject": f"New submission: {title}",
+        "message": "{all_data}", "conditionals": {"status": False, "type": "all", "conditions": []},
+        "enabled": True, "email_format": "html",
+    }
+
+
+def _ff_form_metas(slot, title):
+    """The Fluent Forms `metas` / `form_meta` list. FF's Import tool reads
+    `metas` (the legacy `form_meta` key alone is ignored -- confirmed on
+    6.2.13: a form imported without `metas` has no `formSettings` and its
+    [fluentform] shortcode then renders nothing). Both keys are emitted,
+    identical, matching FF's own export."""
+    entries = [
+        ("template_name", "migrated_form"),
+        ("formSettings", json.dumps(_FF_FORM_SETTINGS)),
+        ("advancedValidationSettings", json.dumps(_FF_ADV_VALIDATION)),
+        ("double_optin_settings", json.dumps(_FF_DOUBLE_OPTIN)),
+        ("notifications", json.dumps([_ff_notifications_meta(title)])),
+    ]
+    return [
+        {"id": i + 1, "form_id": str(slot), "meta_key": k, "value": v}
+        for i, (k, v) in enumerate(entries)
+    ]
 
 
 def _ff_signature(block):
@@ -509,21 +647,28 @@ def build_fluentforms_export(data):
     verbatim from a real Fluent Forms 6.x export, so this is exactly what
     the plugin's own Export produces."""
     slots = assign_ff_slots(data)
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     forms = []
     for slot, info in sorted(slots.items()):
         block = info["block"]
+        title = block.get("title") or f"Migrated Contact Form {slot}"
+        metas = _ff_form_metas(slot, title)
         forms.append({
-            "title": block.get("title") or f"Migrated Contact Form {slot}",
+            "id": slot,
+            "title": title,
             "status": "published",
             "appearance_settings": None,
             "form_fields": build_fluentform_form_fields(block.get("fields") or []),
-            "has_payment": 0,
+            "has_payment": "0",
             "type": "",
             "conditions": None,
-            "form_meta": [
-                {"meta_key": "formSettings", "value": json.dumps(_FF_FORM_SETTINGS)},
-                {"meta_key": "template_name", "value": "migrated_contact_form"},
-            ],
+            "created_by": "1",
+            "created_at": now,
+            "updated_at": now,
+            # FF's importer reads `metas`; `form_meta` kept identical for
+            # older FF versions / hand inspection.
+            "form_meta": metas,
+            "metas": metas,
         })
     return json.dumps(forms, indent=2) + "\n"
 
@@ -792,9 +937,7 @@ def block_to_gutenberg(block):
     if t == "contact_form":
         fields = block.get("fields") or []
         if fields:
-            flist = ", ".join(
-                f"{f.get('label') or 'field'} ({f.get('type', 'text')})" for f in fields
-            )
+            flist = _summarize_form_fields(fields)
         else:
             flist = block.get("note") or "fields not captured from the live site"
         slot = block.get("_ff_slot")
@@ -807,8 +950,10 @@ def block_to_gutenberg(block):
             "[fluentform id=\"…\"] shortcode.",
             f"contact form \"{block.get('title', '')}\" (slot {slot}) -- fields: "
             f"{flist} -- import fluentforms-migration.json (Fluent Forms → Tools "
-            "→ Import Forms), then swap this placeholder for [fluentform id=\"N\"] "
-            "and add an email notification to the form",
+            "→ Import Forms), then swap this placeholder for [fluentform id=\"N\"]. "
+            "The import ships a default admin-email notification (to {wp.admin_email}) "
+            "-- retarget it to the right inbox in Fluent Forms → Settings → Email "
+            "Notifications",
             anchor=anchor,
         )
 

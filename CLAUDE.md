@@ -421,6 +421,19 @@ any page; body text 90–98% of live everywhere.
    etc.) before it can be wired.
 
 **Done 2026-09-09:**
+- **`cyber-risk-assessment` self-assessment form rebuilt in Fluent
+  Forms.** The live page's 20-question Cognito Forms embed (cross-origin,
+  never crawled) is now a `contact_form` block on the page — name, email,
+  10 section breaks, 19 five-point rating radios, a concerns textarea,
+  and a follow-up dropdown, plus the intro/disclaimer/consent as
+  custom-HTML notes. `build_fluentform_form_fields()` grew `radio` /
+  `select` / `section` / `html` types; `build_fluentforms_export()` now
+  emits FF's exact export shape with a **`metas` array** — FF's Import
+  tool ignores a `form_meta`-only export, so the migrated forms had been
+  importing with no `formSettings` and rendering nothing via
+  `[fluentform]`. Verified end to end on the dev site (import → shortcode
+  renders the full 95-radio form → matches live). Still per-site: the
+  crawler doesn't auto-detect third-party form embeds yet.
 - **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
   now render `document_embed` as a `core/file` block with
   `displayPreview` — an inline `<object>` PDF viewer + Download button,

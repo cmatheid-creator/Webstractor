@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "title": "Free Cybersecurity eBook",
     "status": "published",
     "appearance_settings": null,
@@ -216,21 +217,79 @@
         }
       }
     },
-    "has_payment": 0,
+    "has_payment": "0",
     "type": "",
     "conditions": null,
+    "created_by": "1",
+    "created_at": "2026-09-09 09:34:07",
+    "updated_at": "2026-09-09 09:34:07",
     "form_meta": [
       {
+        "id": 1,
+        "form_id": "1",
+        "meta_key": "template_name",
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "1",
         "meta_key": "formSettings",
         "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
       },
       {
+        "id": 3,
+        "form_id": "1",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "1",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "1",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Free Cybersecurity eBook\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
+      }
+    ],
+    "metas": [
+      {
+        "id": 1,
+        "form_id": "1",
         "meta_key": "template_name",
-        "value": "migrated_contact_form"
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "1",
+        "meta_key": "formSettings",
+        "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
+      },
+      {
+        "id": 3,
+        "form_id": "1",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "1",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "1",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Free Cybersecurity eBook\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
       }
     ]
   },
   {
+    "id": 2,
     "title": "Contact Us",
     "status": "published",
     "appearance_settings": null,
@@ -399,7 +458,7 @@
             "help_message": "",
             "validation_rules": {
               "required": {
-                "value": true,
+                "value": false,
                 "message": "This field is required"
               }
             },
@@ -485,17 +544,1473 @@
         }
       }
     },
-    "has_payment": 0,
+    "has_payment": "0",
     "type": "",
     "conditions": null,
+    "created_by": "1",
+    "created_at": "2026-09-09 09:34:07",
+    "updated_at": "2026-09-09 09:34:07",
     "form_meta": [
       {
+        "id": 1,
+        "form_id": "2",
+        "meta_key": "template_name",
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "2",
         "meta_key": "formSettings",
         "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
       },
       {
+        "id": 3,
+        "form_id": "2",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "2",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "2",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Contact Us\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
+      }
+    ],
+    "metas": [
+      {
+        "id": 1,
+        "form_id": "2",
         "meta_key": "template_name",
-        "value": "migrated_contact_form"
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "2",
+        "meta_key": "formSettings",
+        "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
+      },
+      {
+        "id": 3,
+        "form_id": "2",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "2",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "2",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Contact Us\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Cyber Risk Self Assessment",
+    "status": "published",
+    "appearance_settings": null,
+    "form_fields": {
+      "fields": [
+        {
+          "index": 0,
+          "element": "custom_html",
+          "attributes": [],
+          "settings": {
+            "html_codes": "<p>Welcome to your cyber risk self assessment! Please provide your contact information so we can send you the final results. If you do not wish to be contacted by one of our Tech Advisors at the conclusion of this assessment, simply answer &quot;No thank you&quot; in the last question at the end of the questionnaire.</p>",
+            "conditional_logics": [],
+            "container_class": ""
+          },
+          "editor_options": {
+            "title": "Custom HTML",
+            "element": "custom-html",
+            "icon_class": "ff-edit-html-codes",
+            "template": "customHTML"
+          },
+          "uniqElKey": "el_migration_html_0"
+        },
+        {
+          "index": 1,
+          "element": "input_name",
+          "attributes": {
+            "name": "names",
+            "data-type": "name-element"
+          },
+          "settings": {
+            "container_class": "",
+            "admin_field_label": "Your Full Name",
+            "conditional_logics": []
+          },
+          "fields": {
+            "first_name": {
+              "element": "input_text",
+              "attributes": {
+                "type": "text",
+                "name": "first_name",
+                "value": "",
+                "id": "",
+                "class": "",
+                "placeholder": "First Name"
+              },
+              "settings": {
+                "container_class": "",
+                "label": "First Name",
+                "help_message": "",
+                "visible": true,
+                "validation_rules": {
+                  "required": {
+                    "value": true,
+                    "message": "This field is required"
+                  }
+                },
+                "conditional_logics": []
+              },
+              "editor_options": {
+                "template": "inputText"
+              }
+            },
+            "middle_name": {
+              "element": "input_text",
+              "attributes": {
+                "type": "text",
+                "name": "middle_name",
+                "value": "",
+                "id": "",
+                "class": "",
+                "placeholder": "",
+                "required": false
+              },
+              "settings": {
+                "container_class": "",
+                "label": "Middle Name",
+                "help_message": "",
+                "error_message": "",
+                "visible": false,
+                "validation_rules": {
+                  "required": {
+                    "value": false,
+                    "message": "This field is required"
+                  }
+                },
+                "conditional_logics": []
+              },
+              "editor_options": {
+                "template": "inputText"
+              }
+            },
+            "last_name": {
+              "element": "input_text",
+              "attributes": {
+                "type": "text",
+                "name": "last_name",
+                "value": "",
+                "id": "",
+                "class": "",
+                "placeholder": "Last Name",
+                "required": false
+              },
+              "settings": {
+                "container_class": "",
+                "label": "Last Name",
+                "help_message": "",
+                "error_message": "",
+                "visible": true,
+                "validation_rules": {
+                  "required": {
+                    "value": true,
+                    "message": "This field is required"
+                  }
+                },
+                "conditional_logics": []
+              },
+              "editor_options": {
+                "template": "inputText"
+              }
+            }
+          },
+          "editor_options": {
+            "title": "Name Fields",
+            "element": "name-fields",
+            "icon_class": "ff-edit-name",
+            "template": "nameFields"
+          },
+          "uniqElKey": "el_migration_name_1"
+        },
+        {
+          "index": 2,
+          "element": "input_email",
+          "attributes": {
+            "type": "email",
+            "name": "email",
+            "value": "",
+            "id": "",
+            "class": "",
+            "placeholder": "Work E-mail"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "Work E-mail",
+            "label_placement": "",
+            "help_message": "",
+            "admin_field_label": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              },
+              "email": {
+                "value": true,
+                "message": "This field must contain a valid email"
+              }
+            },
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Email Address",
+            "icon_class": "ff-edit-email",
+            "template": "inputText"
+          },
+          "uniqElKey": "el_migration_email_2"
+        },
+        {
+          "index": 3,
+          "element": "custom_html",
+          "attributes": [],
+          "settings": {
+            "html_codes": "<p><strong>DISCLAIMER:</strong> The below questionnaire is a self-assessment designed for informational purposes to assist you with identifying potential cyber risk areas in your business. This assessment is not being performed by Stratecon Tech Advisors &mdash; but if you would like a more formal and comprehensive evaluation of your cyber risk posture, please reach out to us!</p>",
+            "conditional_logics": [],
+            "container_class": ""
+          },
+          "editor_options": {
+            "title": "Custom HTML",
+            "element": "custom-html",
+            "icon_class": "ff-edit-html-codes",
+            "template": "customHTML"
+          },
+          "uniqElKey": "el_migration_html_3"
+        },
+        {
+          "index": 4,
+          "element": "custom_html",
+          "attributes": [],
+          "settings": {
+            "html_codes": "<p><strong>Instructions:</strong> Please rate your organization&rsquo;s current level of preparedness in each technology area on a scale of 1 to 5.</p>",
+            "conditional_logics": [],
+            "container_class": ""
+          },
+          "editor_options": {
+            "title": "Custom HTML",
+            "element": "custom-html",
+            "icon_class": "ff-edit-html-codes",
+            "template": "customHTML"
+          },
+          "uniqElKey": "el_migration_html_4"
+        },
+        {
+          "index": 5,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "NETWORK SECURITY",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_5"
+        },
+        {
+          "index": 6,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "1_our_network_is_well_segmented_and_we_have_a_dm",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "1. Our network is well-segmented, and we have a DMZ for external-facing services.",
+            "admin_field_label": "1. Our network is well-segmented, and we have a DMZ for exte",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_6"
+        },
+        {
+          "index": 7,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "2_we_use_advanced_network_monitoring_tools_to_de",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "2. We use advanced network monitoring tools to detect and respond to suspicious activities.",
+            "admin_field_label": "2. We use advanced network monitoring tools to detect and re",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_7"
+        },
+        {
+          "index": 8,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "ENDPOINT PROTECTION",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_8"
+        },
+        {
+          "index": 9,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "3_all_endpoints_laptops_mobile_devices_etc_have_",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "3. All endpoints (laptops, mobile devices, etc.) have up-to-date antivirus and anti-malware software installed.",
+            "admin_field_label": "3. All endpoints (laptops, mobile devices, etc.) have up-to-",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_9"
+        },
+        {
+          "index": 10,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "4_we_have_an_endpoint_detection_and_response_sol",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "4. We have an Endpoint Detection and Response solution to monitor and respond to threats on endpoints.",
+            "admin_field_label": "4. We have an Endpoint Detection and Response solution to mo",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_10"
+        },
+        {
+          "index": 11,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "IDENTITY AND ACCESS MANAGEMENT",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_11"
+        },
+        {
+          "index": 12,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "5_we_use_multi_factor_authentication_mfa_for_acc",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "5. We use multi-factor authentication (MFA) for access to sensitive systems.",
+            "admin_field_label": "5. We use multi-factor authentication (MFA) for access to se",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_12"
+        },
+        {
+          "index": 13,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "6_access_controls_and_privilege_management_for_a",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "6. Access controls and privilege management for all systems are well-defined and enforced.",
+            "admin_field_label": "6. Access controls and privilege management for all systems ",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_13"
+        },
+        {
+          "index": 14,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "DATA SECURITY",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_14"
+        },
+        {
+          "index": 15,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "7_sensitive_data_is_encrypted_both_at_rest_and_i",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "7. Sensitive data is encrypted both at rest and in transit.",
+            "admin_field_label": "7. Sensitive data is encrypted both at rest and in transit.",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_15"
+        },
+        {
+          "index": 16,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "8_we_regularly_patch_and_update_software_and_sys",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "8. We regularly patch and update software and systems to mitigate known vulnerabilities.",
+            "admin_field_label": "8. We regularly patch and update software and systems to mit",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_16"
+        },
+        {
+          "index": 17,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "INCIDENT RESPONSE AND THREAT DETECTION",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_17"
+        },
+        {
+          "index": 18,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "9_we_have_a_security_information_and_event_manag",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "9. We have a Security Information and Event Management (SIEM) system in place for real-time monitoring.",
+            "admin_field_label": "9. We have a Security Information and Event Management (SIEM",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_18"
+        },
+        {
+          "index": 19,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "10_we_regularly_conduct_incident_response_drills",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "10. We regularly conduct incident response drills and have a well-documented incident response plan.",
+            "admin_field_label": "10. We regularly conduct incident response drills and have a",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_19"
+        },
+        {
+          "index": 20,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "SECURITY AWARENESS AND TRAINING",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_20"
+        },
+        {
+          "index": 21,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "11_our_employees_receive_regular_cybersecurity_t",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "11. Our employees receive regular cybersecurity training and awareness programs.",
+            "admin_field_label": "11. Our employees receive regular cybersecurity training and",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_21"
+        },
+        {
+          "index": 22,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "12_we_conduct_phishing_awareness_and_simulation_",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "12. We conduct phishing awareness and simulation exercises to educate employees about email threats.",
+            "admin_field_label": "12. We conduct phishing awareness and simulation exercises t",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_22"
+        },
+        {
+          "index": 23,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "VENDOR AND THIRD PARTY RISK MANAGEMENT",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_23"
+        },
+        {
+          "index": 24,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "13_we_assess_the_security_of_our_vendors_and_thi",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "13. We assess the security of our vendors and third parties before granting them access to our systems.",
+            "admin_field_label": "13. We assess the security of our vendors and third parties ",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_24"
+        },
+        {
+          "index": 25,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "14_contracts_with_third_parties_include_security",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "14. Contracts with third parties include security and data protection clauses.",
+            "admin_field_label": "14. Contracts with third parties include security and data p",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_25"
+        },
+        {
+          "index": 26,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "BUSINESS CONTINUITY AND DISASTER RECOVERY",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_26"
+        },
+        {
+          "index": 27,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "15_we_have_a_robust_data_backup_and_recovery_str",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "15. We have a robust data backup and recovery strategy in place.",
+            "admin_field_label": "15. We have a robust data backup and recovery strategy in pl",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_27"
+        },
+        {
+          "index": 28,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "16_we_regularly_test_and_validate_the_restoratio",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "16. We regularly test and validate the restoration of critical systems and data from backups.",
+            "admin_field_label": "16. We regularly test and validate the restoration of critic",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_28"
+        },
+        {
+          "index": 29,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "COMPLIANCE AND REGULATORY CONSIDERATIONS",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_29"
+        },
+        {
+          "index": 30,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "17_we_maintain_compliance_with_relevant_industry",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "17. We maintain compliance with relevant industry-specific regulations (e.g., GDPR, HIPAA, PCI-DSS).",
+            "admin_field_label": "17. We maintain compliance with relevant industry-specific r",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_30"
+        },
+        {
+          "index": 31,
+          "element": "section_break",
+          "attributes": {
+            "id": "",
+            "class": ""
+          },
+          "settings": {
+            "label": "EMERGING TECHNOLOGIES AND THREATS",
+            "description": "",
+            "container_class": "",
+            "align": "left",
+            "conditional_logics": []
+          },
+          "editor_options": {
+            "title": "Section Break",
+            "element": "section-break",
+            "icon_class": "ff-edit-section-break",
+            "template": "sectionBreak"
+          },
+          "uniqElKey": "el_migration_section_31"
+        },
+        {
+          "index": 32,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "18_we_actively_monitor_and_assess_the_impact_of_",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "18. We actively monitor and assess the impact of emerging technologies on our security posture.",
+            "admin_field_label": "18. We actively monitor and assess the impact of emerging te",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_32"
+        },
+        {
+          "index": 33,
+          "element": "input_radio",
+          "attributes": {
+            "type": "radio",
+            "name": "19_we_have_a_well_defined_policy_and_employee_tr",
+            "value": ""
+          },
+          "options": {
+            "Not prepared, or unsure": "Not prepared, or unsure",
+            "Somewhat prepared": "Somewhat prepared",
+            "Moderately prepared": "Moderately prepared",
+            "Quite prepared": "Quite prepared",
+            "Highly prepared": "Highly prepared"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "19. We have a well defined policy and employee training around the use of artificial intelligence (AI).",
+            "admin_field_label": "19. We have a well defined policy and employee training arou",
+            "description": "",
+            "label_placement": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "layout_class": "",
+            "enable_image_input": false,
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Radio Field",
+            "element": "input-radio",
+            "icon_class": "ff-edit-radio",
+            "template": "inputRadio"
+          },
+          "uniqElKey": "el_migration_radio_33"
+        },
+        {
+          "index": 34,
+          "element": "textarea",
+          "attributes": {
+            "name": "20_list_any_specific_areas_where_you_have_cybers",
+            "value": "",
+            "id": "",
+            "class": "",
+            "placeholder": "20. List any specific areas where you have cybersecurity concerns:",
+            "rows": 4,
+            "cols": 2
+          },
+          "settings": {
+            "container_class": "",
+            "label": "20. List any specific areas where you have cybersecurity concerns:",
+            "admin_field_label": "",
+            "label_placement": "",
+            "help_message": "",
+            "validation_rules": {
+              "required": {
+                "value": false,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": {
+              "type": "any",
+              "status": false,
+              "conditions": [
+                {
+                  "field": "",
+                  "value": "",
+                  "operator": ""
+                }
+              ]
+            }
+          },
+          "editor_options": {
+            "title": "Text Area",
+            "icon_class": "ff-edit-textarea",
+            "template": "inputTextarea"
+          },
+          "uniqElKey": "el_migration_textarea_34"
+        },
+        {
+          "index": 35,
+          "element": "select",
+          "attributes": {
+            "name": "are_you_interested_in_having_a_conversation_with",
+            "value": "",
+            "id": "",
+            "class": "",
+            "placeholder": "- Select -"
+          },
+          "options": {
+            "YES! Let's setup some time to chat": "YES! Let's setup some time to chat",
+            "No thank you": "No thank you"
+          },
+          "settings": {
+            "container_class": "",
+            "label": "Are you interested in having a conversation with a Stratecon Tech Advisor about your cyber risk results?",
+            "admin_field_label": "Are you interested in having a conversation with a Stratecon",
+            "placeholder": "- Select -",
+            "label_placement": "",
+            "help_message": "",
+            "validation_rules": {
+              "required": {
+                "value": true,
+                "message": "This field is required"
+              }
+            },
+            "conditional_logics": [],
+            "enable_select_2": false,
+            "max_selection": "",
+            "randomize_options": false,
+            "calc_value_status": false
+          },
+          "editor_options": {
+            "title": "Dropdown",
+            "element": "select",
+            "icon_class": "ff-edit-dropdown",
+            "template": "select"
+          },
+          "uniqElKey": "el_migration_select_35"
+        },
+        {
+          "index": 36,
+          "element": "custom_html",
+          "attributes": [],
+          "settings": {
+            "html_codes": "<p>By submitting this form, you confirm that you have read and agreed to the Stratecon Tech Advisors <a href=\"/privacy-policy/\">Privacy Policy</a> and <a href=\"/terms-of-service/\">Terms of Service</a>. By clicking &quot;Submit&quot; below you agree to share your results with Stratecon Tech Advisors.</p>",
+            "conditional_logics": [],
+            "container_class": ""
+          },
+          "editor_options": {
+            "title": "Custom HTML",
+            "element": "custom-html",
+            "icon_class": "ff-edit-html-codes",
+            "template": "customHTML"
+          },
+          "uniqElKey": "el_migration_html_36"
+        }
+      ],
+      "submitButton": {
+        "uniqElKey": "el_migration_submit",
+        "element": "button",
+        "attributes": {
+          "type": "submit",
+          "class": ""
+        },
+        "settings": {
+          "align": "left",
+          "button_style": "default",
+          "container_class": "",
+          "help_message": "",
+          "background_color": "#1a7efb",
+          "button_size": "md",
+          "color": "#ffffff",
+          "button_ui": {
+            "type": "default",
+            "text": "Send",
+            "img_url": ""
+          }
+        },
+        "editor_options": {
+          "title": "Submit Button"
+        }
+      }
+    },
+    "has_payment": "0",
+    "type": "",
+    "conditions": null,
+    "created_by": "1",
+    "created_at": "2026-09-09 09:34:07",
+    "updated_at": "2026-09-09 09:34:07",
+    "form_meta": [
+      {
+        "id": 1,
+        "form_id": "3",
+        "meta_key": "template_name",
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "3",
+        "meta_key": "formSettings",
+        "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
+      },
+      {
+        "id": 3,
+        "form_id": "3",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "3",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "3",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Cyber Risk Self Assessment\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
+      }
+    ],
+    "metas": [
+      {
+        "id": 1,
+        "form_id": "3",
+        "meta_key": "template_name",
+        "value": "migrated_form"
+      },
+      {
+        "id": 2,
+        "form_id": "3",
+        "meta_key": "formSettings",
+        "value": "{\"confirmation\": {\"redirectTo\": \"samePage\", \"messageToShow\": \"Thank you for your message. We'll be in touch shortly.\", \"customPage\": null, \"samePageFormBehavior\": \"hide_form\", \"customUrl\": null}, \"restrictions\": {\"limitNumberOfEntries\": {\"enabled\": false, \"numberOfEntries\": null, \"period\": \"total\", \"limitReachedMsg\": \"Maximum number of entries exceeded.\"}, \"scheduleForm\": {\"enabled\": false, \"start\": null, \"end\": null, \"selectedDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"], \"pendingMsg\": \"Form submission is not started yet.\", \"expiredMsg\": \"Form submission is now closed.\"}, \"requireLogin\": {\"enabled\": false, \"requireLoginMsg\": \"You must be logged in to submit the form.\"}, \"denyEmptySubmission\": {\"enabled\": false, \"message\": \"Sorry, you cannot submit an empty form.\"}}, \"layout\": {\"labelPlacement\": \"top\", \"helpMessagePlacement\": \"with_label\", \"errorMessagePlacement\": \"inline\", \"cssClassName\": \"\", \"asteriskPlacement\": \"asterisk-right\"}, \"delete_entry_on_submission\": \"no\", \"appendSurveyResult\": {\"enabled\": false, \"showLabel\": false, \"showCount\": false}}"
+      },
+      {
+        "id": 3,
+        "form_id": "3",
+        "meta_key": "advancedValidationSettings",
+        "value": "{\"status\": false, \"type\": \"all\", \"conditions\": [{\"field\": \"\", \"operator\": \"=\", \"value\": \"\"}], \"error_message\": \"\", \"validation_type\": \"fail_on_condition_met\"}"
+      },
+      {
+        "id": 4,
+        "form_id": "3",
+        "meta_key": "double_optin_settings",
+        "value": "{\"status\": \"no\", \"confirmation_message\": \"Please check your email inbox to confirm this submission\", \"email_body_type\": \"global\", \"email_subject\": \"Please confirm your form submission\", \"email_body\": \"<h2>Please Confirm Your Submission</h2><p><a href=\\\"#confirmation_url#\\\">Confirm Submission</a></p>\", \"email_field\": \"\", \"skip_if_logged_in\": \"yes\", \"skip_if_fc_subscribed\": \"no\"}"
+      },
+      {
+        "id": 5,
+        "form_id": "3",
+        "meta_key": "notifications",
+        "value": "[{\"name\": \"Admin Notification Email\", \"sendTo\": {\"type\": \"email\", \"email\": \"{wp.admin_email}\"}, \"fromName\": \"\", \"fromEmail\": \"\", \"replyTo\": \"\", \"bcc\": \"\", \"cc\": \"\", \"subject\": \"New submission: Cyber Risk Self Assessment\", \"message\": \"{all_data}\", \"conditionals\": {\"status\": false, \"type\": \"all\", \"conditions\": []}, \"enabled\": true, \"email_format\": \"html\"}]"
       }
     ]
   }

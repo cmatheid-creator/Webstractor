@@ -28,16 +28,28 @@ of by-design differences:
   `/privacy-policy/` now serves the real Stratecon policy (~9.7k chars,
   no boilerplate), `/privacy-policy-2/` 404s.
 
-- **`cyber-risk-assessment` is missing its self-assessment form.** The
-  live page embeds a 20-question Cognito Forms questionnaire (Network
-  Security / Endpoint Protection / … rated 1–5, plus Submit) — the whole
-  point of the page. Dev shows only the intro media+text and the "What
-  Next?" line, with **no form and no placeholder**. Pass 1 (#6) called
-  this "not a real gap" — that was wrong; the embed was never captured.
-  Needs a decision (rebuild in Fluent Forms / embed Cognito Forms / link
-  out) and, at minimum, a flagged placeholder so it isn't silently
-  dropped. Same root cause affects any GoDaddy third-party form embed
-  the crawler doesn't see.
+- **`cyber-risk-assessment` self-assessment form — DONE (rebuilt in
+  Fluent Forms).** The live page embeds a 20-question Cognito Forms
+  questionnaire (Network Security / Endpoint Protection / … rated 1–5,
+  a free-text concerns box, a follow-up dropdown, plus name/email) — the
+  whole point of the page, and the crawler never saw the cross-origin
+  embed. Scraped the live Cognito form's structure, modelled it as a
+  `contact_form` block (heading + 37 fields: 4 custom-HTML notes, name,
+  email, 10 section breaks, 19 rating radios, 1 textarea, 1 dropdown)
+  inserted between the intro and "What Next?" in `structured_content.json`.
+  `build_fluentform_form_fields()` gained `radio` / `select` /
+  `section` / `html` field types; `build_fluentforms_export()` now emits
+  the exact FF export shape including a `metas` array (FF's import tool
+  ignores the legacy `form_meta`-only shape, which is why the migrated
+  forms had been importing with no `formSettings` and their
+  `[fluentform]` shortcode rendered nothing). Verified on the dev site:
+  imported all 3 forms, `[fluentform]` renders the full assessment
+  (95 radio inputs = 19×5, the dropdown, the textarea, section headers,
+  consent, Submit); placed on `/cyber-risk-assessment/` it matches the
+  live page's structure. Import ships a default admin-email
+  notification.
+  Note: this is still a per-site manual model — the crawler doesn't yet
+  auto-detect Cognito/JotForm/Typeform embeds (the generic fix).
 
 ### By-design / cosmetic — confirm acceptable
 
