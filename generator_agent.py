@@ -1067,13 +1067,23 @@ def block_to_gutenberg(block):
         # *migrated* copy via the same href-to-slug lookup card_group's
         # CTA uses, not the original site -- falls back to the original
         # href only if that post genuinely isn't in this crawl. Rendered
-        # in rows of 3 columns, matching this site's other card rows.
+        # in rows of 2, matching the live site's "Insights" grid (its
+        # section cards are 3-up, its post-preview grid is 2-up).
         posts = block.get("posts", [])
         row_blocks = []
         any_images = False
-        for i in range(0, len(posts), 3):
+        # A section heading over the grid ("Cybersecurity Insights" /
+        # "AI Insights" on the live landing pages), rendered the same way
+        # as the page's other section headings (HeadingBeta + dividers).
+        feed_heading = (block.get("heading") or "").strip()
+        if feed_heading:
+            row_blocks.append(block_to_gutenberg({
+                "type": "heading", "text": feed_heading, "level": 2,
+                "typography_role": "HeadingBeta",
+            }))
+        for i in range(0, len(posts), 2):
             column_blocks = []
-            for post in posts[i:i + 3]:
+            for post in posts[i:i + 2]:
                 parts = []
 
                 href = post.get("href")
@@ -1171,9 +1181,9 @@ def block_to_gutenberg(block):
                         '<!-- /wp:paragraph -->'
                     )
 
-                # "migration-flex-column": explicit 33.33% width + flex
-                # column, same reasoning as card_group (keeps a lone
-                # trailing card the same size as the rest).
+                # "migration-flex-column-half": explicit 50% width + flex
+                # column (2-up grid), same "keep a lone trailing card the
+                # same width" reasoning as card_group's 33.33% variant.
                 # "migration-post-feed-card": the white background + 1px
                 # #e2e2e2 border + padding the live "Insights" cards have
                 # -- without it, the whitespace under a short card's text
@@ -1181,8 +1191,8 @@ def block_to_gutenberg(block):
                 # instead of card padding.
                 column_content = "\n\n".join(parts)
                 column_blocks.append(
-                    '<!-- wp:column {"className":"migration-flex-column migration-post-feed-card"} -->\n'
-                    f'<div class="wp-block-column migration-flex-column migration-post-feed-card">\n{column_content}\n</div>\n'
+                    '<!-- wp:column {"className":"migration-flex-column-half migration-post-feed-card"} -->\n'
+                    f'<div class="wp-block-column migration-flex-column-half migration-post-feed-card">\n{column_content}\n</div>\n'
                     '<!-- /wp:column -->'
                 )
 
@@ -2738,6 +2748,8 @@ def _extra_css_rules(brand):
         # sidesteps that specificity fight instead of trying to out-rank
         # a per-instance selector this code doesn't control the name of.
         ".migration-flex-column{flex-basis:33.33%!important;flex-grow:0!important;"
+        "display:flex!important;flex-direction:column!important}"
+        ".migration-flex-column-half{flex-basis:50%!important;flex-grow:0!important;"
         "display:flex!important;flex-direction:column!important}"
         ".migration-columns-gap{column-gap:2.5rem;row-gap:2.5rem}"
         ".migration-cta-buttons{margin-top:auto;padding-top:1.5rem}"
