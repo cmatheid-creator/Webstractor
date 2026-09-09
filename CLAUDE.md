@@ -436,9 +436,12 @@ any page; body text 90–98% of live everywhere.
   `/ai-solutions/f/…` and `/cybersecurity-solutions/f/…` paths for the
   same blog posts, so every regeneration needs a manual merge to the
   canonical page set.
-- Minor: "2026 Cybersecurity Primer – Securing Your Digital Future" uses
-  an en-dash on `cybersecurity-solutions` and a hyphen on the two
-  `threat-*` pages; live uses a hyphen. Trivial consistency nit.
+- Not a bug: the comparison flagged "Cybersecurity Primer – Securing …"
+  as an en-dash on dev vs a hyphen on live. The stored text is a plain
+  hyphen on all three pages; WordPress's `wptexturize` renders " - " as
+  " – " on output. Consistent, standard WP behaviour — nothing to fix.
+  (The 2023 vs 2026 year difference between the pages is faithful to
+  live.)
 - The **Content Structuring Agent's own API path** has still never run
   end to end (this environment is Claude Pro, no API key — step 5 was
   done in-session). Exercise it whenever an `ANTHROPIC_API_KEY` exists.
