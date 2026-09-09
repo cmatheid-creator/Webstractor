@@ -59,9 +59,12 @@ of by-design differences:
   the placeholder now renders in the eBook section, Insights feed after.
   Verified on the dev site (section order:  Free Cybersecurity eBook →
   eBook placeholder → post-feed grid).
-- **Post-feed grids are 3-up on dev vs 2-up on live** (Cybersecurity
-  Insights / AI Insights); the live "All Posts | <category>" filter tabs
-  aren't reproduced.
+- **Post-feed grids 2-up + section heading — DONE.** `post_feed` now
+  renders rows of 2 (matching live's Insights grid) and carries a
+  "Cybersecurity Insights" / "AI Insights" HeadingBeta section heading
+  on the two landing pages. Verified on a fresh dev import. Still not
+  reproduced: the live "All Posts | <category>" filter tabs above the
+  grid (a GoDaddy widget control).
 - **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
   — dev shows title + intro + Download button; live shows an in-page PDF
   viewer. Known trade-off from pass 1 (#6).

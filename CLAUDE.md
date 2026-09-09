@@ -415,10 +415,14 @@ any page; body text 90–98% of live everywhere.
    page, contact, and 17 blog posts. Needs an ESP choice (Mailchimp,
    etc.) before it can be wired.
 
+**Done 2026-09-09:** post-feed grids are now 2-up (match live) with a
+"Cybersecurity Insights" / "AI Insights" section heading on the two
+landing pages — verified on a fresh dev-site pass, which also
+re-confirmed last session's privacy-policy step 5 and eBook reorder held
+through a real import. The live "All Posts | <category>" filter tabs
+above the Insights grid are still not reproduced.
+
 **Can be done without Carver (offered, not yet greenlit):**
-- Add the "Cybersecurity Insights" section heading above that post feed.
-- Make post-feed grids 2-up (match live) instead of 3-up; the live
-  "All Posts | <category>" filter tabs aren't reproduced.
 - Harden the **Qualification Agent** (still regex-only — fine for
   stratecon.tech, not for an unseen client site).
 - Fix **crawler nondeterminism**: a full re-crawl re-discovers duplicate
