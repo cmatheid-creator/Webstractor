@@ -862,19 +862,22 @@ def block_to_gutenberg(block):
                 f'<p>{html.escape(desc)}</p>\n'
                 '<!-- /wp:paragraph -->'
             )
+        # core/file with displayPreview -- an inline <object> PDF viewer
+        # plus a Download button, matching the live page's in-page viewer
+        # (GoDaddy's pdf.js). One native block; the button is part of it.
+        # Cross-origin PDFs on the GoDaddy CDN embed fine today; once the
+        # file is re-hosted into the Media Library it's same-origin.
         parts.append(
-            '<!-- wp:buttons -->\n'
-            '<div class="wp-block-buttons">\n'
-            '<!-- wp:button -->\n'
-            '<div class="wp-block-button"><a class="wp-block-button__link '
-            f'wp-element-button" href="{url}" download>Download PDF</a></div>\n'
-            '<!-- /wp:button -->\n'
+            f'<!-- wp:file {{"href":"{url}","displayPreview":true,"previewHeight":760}} -->\n'
+            '<div class="wp-block-file">'
+            f'<object class="wp-block-file__embed" data="{url}" type="application/pdf" '
+            'style="width:100%;height:760px" aria-label="PDF embed"></object>'
+            f'<a href="{url}" class="wp-block-file__button wp-element-button" download>Download PDF</a>'
             '</div>\n'
-            '<!-- /wp:buttons -->\n'
-            f'<!-- QA FLAG: "{fname}" is linked straight from the old site\'s CDN -- '
-            'download it, add it to the Media Library, and repoint this button before '
-            'go-live. The original page showed it in an in-page PDF viewer; a '
-            'viewer/embed block can be added if that presentation matters. -->'
+            '<!-- /wp:file -->\n'
+            f'<!-- QA FLAG: "{fname}" is embedded straight from the old site\'s CDN -- '
+            'download it, add it to the Media Library, and repoint the file block '
+            '(href + object data) before go-live. -->'
         )
         return "\n\n".join(parts)
 

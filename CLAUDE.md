@@ -421,6 +421,13 @@ any page; body text 90–98% of live everywhere.
    etc.) before it can be wired.
 
 **Done 2026-09-09:**
+- **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
+  now render `document_embed` as a `core/file` block with
+  `displayPreview` — an inline `<object>` PDF viewer + Download button,
+  matching the live page's in-page viewer. Verified on the dev site: 0
+  block-editor validation warnings; the cross-origin GoDaddy CDN PDF
+  loads (PDFium takes a few seconds to paint). QA flag still asks for a
+  Media Library re-host before go-live.
 - Post-feed grids are now 2-up (match live) with a "Cybersecurity
   Insights" / "AI Insights" section heading on the two landing pages —
   verified on a fresh dev-site pass, which also re-confirmed last

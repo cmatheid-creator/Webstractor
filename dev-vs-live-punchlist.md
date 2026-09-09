@@ -65,9 +65,14 @@ of by-design differences:
   on the two landing pages. Verified on a fresh dev import. Still not
   reproduced: the live "All Posts | <category>" filter tabs above the
   grid (a GoDaddy widget control).
-- **PDF-widget pages** (`ai-use-policy-template`, `ai-disclosure-template`)
-  — dev shows title + intro + Download button; live shows an in-page PDF
-  viewer. Known trade-off from pass 1 (#6).
+- **PDF-widget pages — DONE.** `ai-use-policy-template` and
+  `ai-disclosure-template` now render a `core/file` block with
+  `displayPreview` — an inline `<object>` PDF viewer (760px) plus a
+  Download button, matching the live page's in-page viewer. Verified on
+  the dev site: 0 block-editor validation warnings; the cross-origin
+  GoDaddy CDN PDF loads and paints the full Chrome PDF viewer
+  (thumbnails, page nav, zoom). QA flag still asks for a Media Library
+  re-host before go-live (repoint both `href` and the `<object data>`).
 - **Hero** rebuilt as a full-bleed navy cover with centered text vs
   live's translucent white box over the globe image. Deliberate.
 
