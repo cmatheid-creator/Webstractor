@@ -101,6 +101,17 @@ stratecon.tech. The manual reset→reimport→verify loop, in order:
    except the account running the reset** (`claude-agent`). Carver's own
    admin account (`cmatheid` / `cmatheid@gmail.com`) is wiped every cycle
    and must be recreated — see step 10 — or he can't log in.
+   Automating it: Tools → WP Reset → Site Reset — tick "Reactivate
+   current theme" and "Reactivate all currently active plugins" (so the
+   importer / Fluent Forms / Yoast come back), type `reset` into the
+   confirm field, click "Reset Site". That opens WP Reset's **own
+   in-page modal** ("Are you sure…?" with a red **Reset WordPress**
+   button) — it is *not* a native `confirm()` dialog, so a Playwright
+   `page.on("dialog")` handler will not dismiss it; click the modal
+   button explicitly. The reset then logs out + back in and lands on a
+   plugin's post-activation screen (e.g. Yoast's welcome page), not a
+   "site has been reset" notice — verify success by the page/media
+   counts collapsing, not by on-screen text.
 2. Reactivate theme (Twenty Twenty-Four) — usually already stays active
 3. Reactivate WordPress Importer plugin — usually already stays active
 4. Settings → Permalinks → **Post name** → Save Changes (a full reset drops
@@ -435,7 +446,27 @@ any page; body text 90–98% of live everywhere.
   tool ignores a `form_meta`-only export, so the migrated forms had been
   importing with no `formSettings` and rendering nothing via
   `[fluentform]`. Verified end to end on the dev site (import → shortcode
-  renders the full 95-radio form → matches live). - **Generic third-party form-embed detection.** The crawler now
+  renders the full 95-radio form → matches live).
+- **Full dev-site verification pass (2026-09-09).** Ran the whole
+  workflow end to end against dev.stratecon.tech (headed real Chrome):
+  WP Reset (38→2 pages, 96→0 media) → permalinks → import with
+  attachments → publish → repair plugin (17 image URLs repointed, 71
+  stock images sideloaded, front page + logo set) → cache purge →
+  verify logged out (`x-proxy-cache: MISS` everywhere) → recreate
+  `cmatheid` admin. 9-page logged-out spot check: 0 broken images, logo
+  on every page, no shortcode leaks, FAQ `<details>` / inline PDF
+  `<object>` / 2-up Insights grid / cyber-risk placeholder all render.
+  Found + fixed one issue: WordPress's sample Privacy Policy page was
+  still live at `/privacy-policy-2/` with core boilerplate — the repair
+  plugin's step 5 gated the sample-trash on the migrated page's slug,
+  which fails when publish-order hands the migrated page
+  `/privacy-policy/` directly. Now the sample is trashed whenever a
+  distinct migrated Privacy Policy page exists; re-verified
+  (`/privacy-policy/` = real policy, `/privacy-policy-2/` 404s). Also
+  noted: WP Reset's confirm is a custom in-page modal ("Reset
+  WordPress" button), not a native `confirm()` dialog — a
+  `page.on("dialog")` handler alone doesn't dismiss it.
+- **Generic third-party form-embed detection.** The crawler now
   auto-detects the class of problem the cyber-risk-assessment fix solved
   by hand. `EMBED_FORM_PROVIDERS` + `detect_embedded_forms()` in
   `crawler_agent.py` scan each page for an `<iframe>` / loader `<script>`

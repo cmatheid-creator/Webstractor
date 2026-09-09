@@ -5,6 +5,40 @@ counts + broken-image detection, form/placeholder flags, full-page
 screenshots of every pair), run 2026-09-06 against the current dev site
 (fresh reset → import → publish → repair plugin → front page set).
 
+## Pass 3 — full reset→import→verify pass 2026-09-09
+
+Ran the whole dev-site workflow end to end against `dev.stratecon.tech`
+(headed real Chrome): WP Reset (38→2 pages, 96→0 media, users wiped to
+`claude-agent`) → permalinks → import `stratecon-migration.xml` with
+attachments → publish → repair plugin → cache purge (WP-Optimize + SG) →
+verify **logged out** (`x-proxy-cache: MISS` on every page) → recreate
+`cmatheid` admin.
+
+- **Repair plugin report:** 17 broken image URLs repointed, 71 stock
+  images sideloaded (0 skipped), front page set (home, id 100), site
+  logo set (attachment 40004).
+- **Logged-out spot checks (9 pages):** all HTTP 200 except the expected
+  404s; **0 broken images** anywhere; logo on every page; no shortcode
+  leaks. Home `<title>` + FAQ (`<details>`×3) correct; About title
+  correct; `ai-use-policy-template` renders the inline PDF `<object>`;
+  `cybersecurity-solutions` renders the 10-card 2-up Insights grid +
+  "Free Cybersecurity eBook"/"Cybersecurity Insights" headings + the
+  eBook placeholder; `cyber-risk-assessment` renders the intro →
+  "Cyber Risk Self Assessment" heading → the 23-field placeholder panel
+  ("import fluentforms-migration.json, then swap the shortcode" — the
+  Fluent Forms import + `[fluentform]` swap stays a manual go-live step,
+  as designed) → "What Next?".
+- **`cmatheid` admin recreated** (Administrator).
+- **One issue found and fixed:** the WordPress sample Privacy Policy page
+  was still live at `/privacy-policy-2/` serving core boilerplate —
+  publish-order edge case in the repair plugin's step 5. Fixed and
+  re-verified (see the privacy-policy item below).
+- **Note:** the verification script bulk-published *every* draft,
+  including WordPress's own "Sample Page" and sample "Privacy Policy".
+  The documented workflow publishes only the imported pages; a careful
+  operator should leave WordPress's two default drafts alone (or trash
+  "Sample Page").
+
 ## Pass 2 — full dev-vs-live pass 2026-09-08
 
 Re-ran the structured + visual diff across all 37 pairs (logged out,
@@ -19,14 +53,25 @@ of by-design differences:
 - **`/privacy-policy/` slug collision — DONE.** WP Reset re-seeds a
   sample "Privacy Policy" page every cycle, so the WXR import can't claim
   the slug and the migrated page lands at `/privacy-policy-2/`. The
-  repair plugin now has a step 5: it identifies the sample page by its
+  repair plugin's step 5 identifies the sample page by its
   "Suggested text:" boilerplate, trashes it (freeing the slug), moves
   the migrated page onto `/privacy-policy/`, and repoints
-  `wp_page_for_privacy_policy`. Idempotent. Verified on the dev site by
-  re-activating the plugin: report read "trashed the WordPress sample
-  page (id 3); moved the migrated page to /privacy-policy/",
-  `/privacy-policy/` now serves the real Stratecon policy (~9.7k chars,
-  no boilerplate), `/privacy-policy-2/` 404s.
+  `wp_page_for_privacy_policy`. Idempotent.
+  **Hardened 2026-09-09** after the full verification pass surfaced an
+  edge case: if the operator publishes WordPress's own sample "Privacy
+  Policy" draft alongside the imported pages, `wp_unique_post_slug()` on
+  publish can hand the *migrated* page `/privacy-policy/` directly and
+  bump the *sample* to `/privacy-policy-2/`. The old code gated the whole
+  cleanup on `migrated->post_name !== 'privacy-policy'`, so in that
+  ordering it skipped everything and left WordPress's boilerplate live at
+  `/privacy-policy-2/`. Now the sample is trashed whenever a distinct
+  migrated Privacy Policy page exists; the re-slug is the only
+  slug-gated step. Verified on a full fresh reset→import→publish→repair
+  pass: `/privacy-policy/` serves the real Stratecon policy (9,761
+  chars, `suggested_text=false`), `/privacy-policy-2/` 404s (it was
+  never a real crawled URL; core's `_wp_old_slug` redirect doesn't apply
+  across two different posts for a bare page URL, so a 404 is the
+  outcome).
 
 - **`cyber-risk-assessment` self-assessment form — DONE (rebuilt in
   Fluent Forms).** The live page embeds a 20-question Cognito Forms

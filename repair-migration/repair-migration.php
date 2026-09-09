@@ -350,10 +350,19 @@ function stratecon_migration_repair_run() {
     //    seed a sample "Privacy Policy" page, so the WXR import can't
     //    claim that slug and the migrated page lands at
     //    /privacy-policy-2/. Detect that -- the sample page always carries
-    //    the "Suggested text:" boilerplate -- and swap them: trash the
-    //    sample (which frees the slug), move the migrated page onto
-    //    /privacy-policy/, and repoint the privacy-policy option.
-    //    Idempotent: once done there's no /privacy-policy-2/ to find.
+    //    the "Suggested text:" boilerplate -- and clean it up: trash the
+    //    sample and put the migrated page on /privacy-policy/ if it isn't
+    //    already there, then repoint the privacy-policy option.
+    //    Which of the two ends up with the "-2" slug depends on the order
+    //    they were published (if the operator publishes WordPress's own
+    //    sample draft alongside the imported pages, the migrated one can
+    //    grab /privacy-policy/ directly), so trashing the sample must NOT
+    //    be gated on the migrated page's current slug -- only the re-slug
+    //    step is. The leftover /privacy-policy-2/ (WordPress's, never a
+    //    real crawled URL) simply 404s afterwards; core's _wp_old_slug
+    //    redirect doesn't apply across two different posts for a bare
+    //    page URL. Idempotent: get_posts(post_status=any) doesn't return
+    //    trashed pages, so a second run finds no sample and does nothing.
     // -----------------------------------------------------------------
     $pp_pages = get_posts(array(
         'post_type'   => 'page',
@@ -370,15 +379,18 @@ function stratecon_migration_repair_run() {
             $pp_migrated = $pp;
         }
     }
-    if ($pp_migrated && $pp_sample && (int) $pp_migrated->ID !== (int) $pp_sample->ID
-        && $pp_migrated->post_name !== 'privacy-policy') {
+    if ($pp_migrated && $pp_sample && (int) $pp_migrated->ID !== (int) $pp_sample->ID) {
         wp_trash_post($pp_sample->ID);                 // appends __trashed, frees the slug
-        wp_update_post(array('ID' => $pp_migrated->ID, 'post_name' => 'privacy-policy'));
+        $moved = false;
+        if ($pp_migrated->post_name !== 'privacy-policy') {
+            wp_update_post(array('ID' => $pp_migrated->ID, 'post_name' => 'privacy-policy'));
+            $moved = true;
+        }
         if ((int) get_option('wp_page_for_privacy_policy') === (int) $pp_sample->ID) {
             update_option('wp_page_for_privacy_policy', $pp_migrated->ID);
         }
         $report[] = "Privacy Policy: trashed the WordPress sample page (id {$pp_sample->ID}); "
-                  . "moved the migrated page to /privacy-policy/.";
+                  . ($moved ? "moved the migrated page to /privacy-policy/." : "migrated page already at /privacy-policy/.");
     }
 
     return $report;
