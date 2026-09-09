@@ -2151,9 +2151,14 @@ def build_wxr(data, brand=None):
 def build_redirects_csv(data):
     lines = ["Source URL,Target URL"]
     for page in data["pages"]:
-        old = page["old_url"]
         new = f"/{page['slug']}/" if not page.get("is_front_page") else "/"
-        lines.append(f"{old},{new}")
+        lines.append(f"{page['old_url']},{new}")
+        # A GoDaddy blog post is served under every section that links to
+        # it (/blog/f/x, /ai-solutions/f/x, ...); the crawler records the
+        # non-canonical prefixes as alias_urls. The new site only knows
+        # the canonical one, so 301 each alias to the post as well.
+        for alias in page.get("alias_urls") or []:
+            lines.append(f"{alias},{new}")
     for item in data["navigation"]:
         if "old_url" in item and item.get("status") == "not_yet_extracted":
             lines.append(f"{item['old_url']},/PENDING-EXTRACTION/")

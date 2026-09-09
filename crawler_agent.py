@@ -44,6 +44,36 @@ def slugify(url, base):
     return path.rsplit("/", 1)[-1]
 
 
+# GoDaddy Website Builder serves a blog post at `/<section>/f/<slug>`,
+# where `<section>` is *any* page that links to it -- the blog index
+# (/blog/f/<slug>) and every landing page whose "Insights" feed lists it
+# (/ai-solutions/f/<slug>, /cybersecurity-solutions/f/<slug>, ...). The
+# content is identical under every prefix (the `/f/` route is a dedicated
+# post view; the section is cosmetic). A post's identity is therefore its
+# slug alone. Without collapsing these, every re-crawl saves the same
+# post 2-3 times with the same slug and different old_urls, and someone
+# has to merge them back down by hand before regenerating.
+BLOG_FEED_ITEM_RE = re.compile(r"^/[^/]+/f/([^/]+)/?$")
+
+
+def blog_feed_slug(path):
+    """The <slug> of a GoDaddy blog-feed-item path (`/<section>/f/<slug>`),
+    or None if `path` isn't one."""
+    m = BLOG_FEED_ITEM_RE.match(path)
+    return m.group(1) if m else None
+
+
+def canonical_feed_item_url(url):
+    """Rewrite any `/<section>/f/<slug>` URL to the canonical
+    `/blog/f/<slug>` (the form redirects.csv and real bookmarks use);
+    returns `url` unchanged if it isn't a feed-item URL."""
+    parts = urlparse(url)
+    slug = blog_feed_slug(parts.path)
+    if not slug:
+        return url
+    return f"{parts.scheme}://{parts.netloc}/blog/f/{slug}"
+
+
 def element_text(el):
     """Get an element's text, tolerating nodes inner_text() rejects (e.g.
     an SVG icon matched by a broad selector isn't an HTMLElement)."""
@@ -1219,6 +1249,11 @@ def crawl(start_url, max_pages=100):
     pages = []
     risk_flags = {}
     extracted_paths = set()
+    # slug -> {every `/<section>/f/<slug>` URL seen for that post}. Used
+    # both to dedupe (one saved page per slug) and, after the crawl, to
+    # attach the non-canonical prefixes as `alias_urls` so redirects.csv
+    # can 301 them to the new post too.
+    feed_item_urls = {}
     navigation = []
     footer = {}
 
@@ -1296,8 +1331,19 @@ def crawl(start_url, max_pages=100):
             # filtered view -- but content is only extracted and saved
             # once per canonical (query-stripped) path, so we don't end
             # up with duplicate "pages" for the same content.
+            #
+            # A GoDaddy blog post is served under every section that
+            # links to it (/blog/f/x, /ai-solutions/f/x, ...) with
+            # identical content, so its dedupe key is the slug alone, not
+            # the full path -- otherwise every re-crawl saves it 2-3
+            # times. Every prefix seen is remembered for redirects.csv.
             canonical_path = urlparse(url).path.rstrip("/") or "/"
-            if canonical_path not in extracted_paths:
+            stripped_url = url.split("?")[0].rstrip("/")
+            feed_slug = blog_feed_slug(canonical_path)
+            if feed_slug:
+                feed_item_urls.setdefault(feed_slug, set()).add(stripped_url)
+            dedupe_key = f"blogpost:{feed_slug}" if feed_slug else canonical_path
+            if dedupe_key not in extracted_paths:
                 risks = flag_risks(page, url)
                 if risks:
                     risk_flags[url] = risks
@@ -1331,14 +1377,19 @@ def crawl(start_url, max_pages=100):
                         hero_image = ""
                         if blocks and blocks[0].get("type") == "hero":
                             hero_image = (blocks[0].get("image") or {}).get("src", "")
-                        extracted_paths.add(canonical_path)
+                        extracted_paths.add(dedupe_key)
                         # Record the canonical, query-stripped URL, not
                         # whichever query-string variant happened to be
                         # the first one visited -- that variant is an
                         # implementation detail of how this page's links
                         # were discovered, not the URL real backlinks or
-                        # bookmarks would use for redirects.
-                        canonical_url = url.split("?")[0].rstrip("/")
+                        # bookmarks would use for redirects. For a blog
+                        # post, canonicalise the section prefix to /blog/
+                        # too, whichever prefix served this crawl.
+                        canonical_url = (
+                            canonical_feed_item_url(stripped_url)
+                            if feed_slug else stripped_url
+                        )
                         pages.append({
                             "old_url": canonical_url,
                             "slug": slugify(canonical_url, start_url),
@@ -1355,6 +1406,21 @@ def crawl(start_url, max_pages=100):
             to_visit |= (new_links - visited)
 
         browser.close()
+
+    # Attach the non-canonical section prefixes a blog post was also
+    # served under as `alias_urls`, so the generator can 301 each of them
+    # to the new post (they'd otherwise 404 on the new site, which only
+    # knows /blog/f/<slug> -> /<slug>/).
+    for pg in pages:
+        fs = blog_feed_slug(urlparse(pg["old_url"]).path)
+        if not fs:
+            continue
+        canon = pg["old_url"].rstrip("/")
+        aliases = sorted(
+            u for u in feed_item_urls.get(fs, set()) if u.rstrip("/") != canon
+        )
+        if aliases:
+            pg["alias_urls"] = aliases
 
     return {
         "site": {

@@ -428,14 +428,24 @@ any page; body text 90–98% of live everywhere.
   `cybersecurity-solutions`. Side effect: `fluentforms-migration.json`
   dedup'd from 3 forms to 2, and all three eBook pages now reference the
   same form. Verified logged out on the dev site.
+- **Crawler blog-post dedup.** GoDaddy serves each post under every
+  section that links to it (`/blog/f/x`, `/ai-solutions/f/x`,
+  `/cybersecurity-solutions/f/x`) with identical content, so every
+  re-crawl was saving each post 2-3 times with the same slug and needing
+  a manual merge. `crawl()` now keys its dedup on the slug alone for
+  `/<section>/f/<slug>` paths (`blog_feed_slug()` / `canonical_feed_item_url()`
+  in `crawler_agent.py`), canonicalises `old_url` to `/blog/f/<slug>`
+  whichever prefix served the crawl, and records the other prefixes as
+  `page["alias_urls"]`. `build_redirects_csv()` emits a 301 row per
+  alias, so those URLs no longer 404 on the new site. Verified by unit
+  test + a crawl-loop simulation; the current `structured_content.json`
+  was back-filled with `alias_urls` from the existing `post_feed` hrefs,
+  so `redirects.csv` grew 37 → 55 rows now (18 alias redirects) without
+  a re-crawl.
 
 **Can be done without Carver (offered, not yet greenlit):**
 - Harden the **Qualification Agent** (still regex-only — fine for
   stratecon.tech, not for an unseen client site).
-- Fix **crawler nondeterminism**: a full re-crawl re-discovers duplicate
-  `/ai-solutions/f/…` and `/cybersecurity-solutions/f/…` paths for the
-  same blog posts, so every regeneration needs a manual merge to the
-  canonical page set.
 - Not a bug: the comparison flagged "Cybersecurity Primer – Securing …"
   as an en-dash on dev vs a hyphen on live. The stored text is a plain
   hyphen on all three pages; WordPress's `wptexturize` renders " - " as
