@@ -415,12 +415,19 @@ any page; body text 90–98% of live everywhere.
    page, contact, and 17 blog posts. Needs an ESP choice (Mailchimp,
    etc.) before it can be wired.
 
-**Done 2026-09-09:** post-feed grids are now 2-up (match live) with a
-"Cybersecurity Insights" / "AI Insights" section heading on the two
-landing pages — verified on a fresh dev-site pass, which also
-re-confirmed last session's privacy-policy step 5 and eBook reorder held
-through a real import. The live "All Posts | <category>" filter tabs
-above the Insights grid are still not reproduced.
+**Done 2026-09-09:**
+- Post-feed grids are now 2-up (match live) with a "Cybersecurity
+  Insights" / "AI Insights" section heading on the two landing pages —
+  verified on a fresh dev-site pass, which also re-confirmed last
+  session's privacy-policy step 5 and eBook reorder held through a real
+  import. The live "All Posts | <category>" filter tabs above the
+  Insights grid are still not reproduced.
+- Normalized the "FREE CYBERSECURITY EBOOK" all-caps heading + form
+  title (crawler had grabbed CSS-uppercased text) to "Free Cybersecurity
+  eBook" on `threat-protection` and `threat-id-%26-detection`, matching
+  `cybersecurity-solutions`. Side effect: `fluentforms-migration.json`
+  dedup'd from 3 forms to 2, and all three eBook pages now reference the
+  same form. Verified logged out on the dev site.
 
 **Can be done without Carver (offered, not yet greenlit):**
 - Harden the **Qualification Agent** (still regex-only — fine for
@@ -429,8 +436,9 @@ above the Insights grid are still not reproduced.
   `/ai-solutions/f/…` and `/cybersecurity-solutions/f/…` paths for the
   same blog posts, so every regeneration needs a manual merge to the
   canonical page set.
-- Minor: the "FREE CYBERSECURITY EBOOK" all-caps form title (crawler
-  grabbed a CSS-uppercased hero heading as the region title).
+- Minor: "2026 Cybersecurity Primer – Securing Your Digital Future" uses
+  an en-dash on `cybersecurity-solutions` and a hyphen on the two
+  `threat-*` pages; live uses a hyphen. Trivial consistency nit.
 - The **Content Structuring Agent's own API path** has still never run
   end to end (this environment is Claude Pro, no API key — step 5 was
   done in-session). Exercise it whenever an `ANTHROPIC_API_KEY` exists.

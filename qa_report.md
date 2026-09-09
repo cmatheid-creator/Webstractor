@@ -1,6 +1,6 @@
 # Migration QA Report — Trusted Technology Advisers | Cybersecurity Solutions
 
-Generated: 2026-09-09 07:57 UTC
+Generated: 2026-09-09 08:08 UTC
 
 ## Summary
 
@@ -58,13 +58,13 @@ Formerly emitted as `<!-- QA FLAG -->` HTML comments inside each page's content.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat Protection** (`threat-protection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "FREE CYBERSECURITY EBOOK" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
 - **The Importance of Regular Cybersecurity Audits for SMBs** (`the-importance-of-regular-cybersecurity-audits-for-smbs`):
   - still points at the original site -- swap to the re-hosted media-library copy after import.
   - newsletter signup -- wire to the real email/newsletter plugin
 - **Threat ID & Detection** (`threat-id-%26-detection`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
-  - contact form "FREE CYBERSECURITY EBOOK" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
+  - contact form "Free Cybersecurity eBook" (slot 1) -- fields: Name (text), Email (text), Company (text) -- import fluentforms-migration.json (Fluent Forms → Tools → Import Forms), then swap this placeholder for [fluentform id="N"] and add an email notification to the form
 - **Services** (`services`):
   - image still points at the original site -- swap to the re-hosted media-library copy after import.
 - **AI Solutions** (`ai-solutions`):
