@@ -754,8 +754,30 @@ def extract_element_content(container, page_url):
     detected media_text pair (see mark_media_text_pairs()) into that
     block's own "content" list."""
     content = []
-    for el in container.query_selector_all("h1, h2, h3, h4, h5, h6, p, ul, ol"):
+    for el in container.query_selector_all(
+        "h1, h2, h3, h4, h5, h6, p, ul, ol, "
+        "a[data-ux-btn], a[data-ux='ButtonSecondary'], a[data-ux='ButtonPrimary']"
+    ):
         tag = el.evaluate("e => e.tagName.toLowerCase()")
+        if tag == "a":
+            # GoDaddy "Button" widget inside a content section (data-ux-btn
+            # "secondary"/"primary") -- the pill CTA that closes almost
+            # every media_text block on the solution pages ("Get a Quote",
+            # "Let's Talk", ...). Captured as its own button item so the
+            # generator can render a real core/button, not lose it. Use the
+            # raw textContent, not inner_text(): GoDaddy styles these
+            # labels with CSS text-transform:uppercase, and inner_text()
+            # would bake the ALL-CAPS rendering into the stored label.
+            label = " ".join((el.text_content() or "").split())
+            if not label:
+                continue
+            href = el.get_attribute("href")
+            content.append({
+                "type": "button",
+                "text": label,
+                "href": urljoin(page_url, href) if href else "",
+            })
+            continue
         text = element_text(el)
         if not text:
             continue
@@ -896,6 +918,71 @@ def extract_hero(page, page_url):
     return hero
 
 
+def extract_page_banner(page, page_url):
+    """GoDaddy Website Builder's "Banner" widget, or None.
+
+    Distinct from the header-widget hero (extract_hero()): this is a
+    body-level <div data-ux="WidgetBanner"> -- a ~210px full-width band
+    with a stock background photo (a CSS background-image on a nested
+    <div data-aid="BACKGROUND_IMAGE_RENDERED">, whose aria-label is a
+    human-written description that doubles as alt) and the page title as
+    an <h1 data-aid="SECTION_TITLE_RENDERED"> centred in white over a
+    dark scrim. Present on the solution/landing pages (connectivity,
+    services, threat-protection, ...), absent on about/blog/legal.
+
+    The widget's <h1> is NOT inside CHROME_SELECTOR, so extract_blocks()'s
+    main pass would otherwise emit it as a bare "CONNECTIVITY" heading
+    with no image -- this tags every element inside the widget with
+    data-migration-banner so that pass skips it, and returns the banner
+    as its own block instead.
+    """
+    data = page.evaluate(
+        r"""(baseUrl) => {
+            const wb = document.querySelector('[data-ux="WidgetBanner"], [data-ux="SectionBanner"]');
+            if (!wb) return null;
+            wb.querySelectorAll('*').forEach(e => e.setAttribute('data-migration-banner', '1'));
+            wb.setAttribute('data-migration-banner', '1');
+
+            const titleEl = wb.querySelector('[data-aid="SECTION_TITLE_RENDERED"]')
+                || wb.querySelector('h1, h2');
+            const title = titleEl ? titleEl.textContent.replace(/\s+/g, ' ').trim() : '';
+            if (!title) return null;
+
+            const bg = wb.querySelector('[data-aid="BACKGROUND_IMAGE_RENDERED"], [data-ux="Background"]') || wb;
+            let imgUrl = '';
+            for (const el of [bg, ...bg.querySelectorAll('*')]) {
+                const bi = getComputedStyle(el).backgroundImage;
+                if (bi && bi !== 'none') {
+                    // the value is usually "linear-gradient(...), url('...')"
+                    const m = bi.match(/url\((['"]?)(.*?)\1\)/);
+                    if (m && m[2]) { imgUrl = m[2]; break; }
+                }
+            }
+            const abs = (u) => { try { return new URL(u, baseUrl).href; } catch (e) { return u || ''; } };
+            return {
+                title: title,
+                title_role: titleEl.getAttribute('data-typography') || '',
+                image: imgUrl ? {
+                    src: abs(imgUrl),
+                    alt: (bg && bg.getAttribute('aria-label')) || '',
+                } : null,
+            };
+        }""",
+        page_url,
+    )
+    if not data or not data.get("title"):
+        return None
+    banner = {"type": "page_banner", "title": data["title"]}
+    if data.get("title_role"):
+        banner["title_role"] = data["title_role"]
+    if data.get("image") and data["image"].get("src"):
+        banner["image"] = {
+            "src": data["image"]["src"],
+            "alt": data["image"].get("alt") or "",
+        }
+    return banner
+
+
 def extract_blocks(page, page_url):
     """Turn a rendered page's DOM into structured content blocks."""
     blocks = []
@@ -912,6 +999,17 @@ def extract_blocks(page, page_url):
         hero = None
     if hero:
         blocks.append(hero)
+
+    # GoDaddy "Banner" widget (body-level title-over-photo band) -- see
+    # extract_page_banner(). Tags its own subtree with data-migration-banner
+    # so the document-order pass below skips the bare title heading.
+    try:
+        banner = extract_page_banner(page, page_url)
+    except Exception as e:
+        print(f"  [warn] page-banner extraction failed: {e}")
+        banner = None
+    if banner:
+        blocks.append(banner)
 
     settle_lazy_widgets(page)
     mark_media_text_pairs(page)
@@ -934,6 +1032,12 @@ def extract_blocks(page, page_url):
     for el in elements:
         if el.evaluate("(e, sel) => !!e.closest(sel)", CHROME_SELECTOR):
             continue  # inside the header, footer, or a nav -- not page content
+
+        # Inside the GoDaddy "Banner" widget -- already emitted as a
+        # single page_banner block (see extract_page_banner()); skip so
+        # its title isn't re-extracted as a bare heading.
+        if el.evaluate("e => !!e.closest('[data-migration-banner]')"):
+            continue
 
         # A GoDaddy PDF widget (see mark_pdf_widgets()) -- emit it once as
         # a single document_embed block; skip every element inside it so

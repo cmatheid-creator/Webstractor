@@ -788,6 +788,92 @@ def block_to_gutenberg(block):
             'Repair plugin sideloads it and repoints this reference. -->'
         )
 
+    if t == "page_banner":
+        # GoDaddy Website Builder's body-level "Banner" widget -- see
+        # crawler_agent.py's extract_page_banner(). A short (~230px)
+        # full-width core/cover: stock background photo, dark scrim, the
+        # page title as a centred white <h1>. This is the migrated page's
+        # page-level <h1>; without it the solution pages open with the
+        # title as plain navy text on white and no banner image at all.
+        # Same overlay/scoping approach as the "hero" branch above, with
+        # its own .migration-page-banner class so it can be tuned shorter.
+        heading_text = html.escape(block["title"])
+        hb = _role_style_bits(block.get("title_role"), _BRAND, include_color=False)
+        if hb and hb["json_attrs"]:
+            h_attrs = f'"level":1,{hb["json_attrs"]}'
+            h_classes = f'wp-block-heading {hb["classes"]}'.strip()
+        else:
+            h_attrs = '"level":1'
+            h_classes = "wp-block-heading"
+        inner_markup = (
+            f'<!-- wp:heading {{{h_attrs}}} -->\n'
+            f'<h1 class="{h_classes}">{heading_text}</h1>\n'
+            '<!-- /wp:heading -->'
+        )
+        image = block.get("image")
+        if not image or not image.get("src"):
+            return (
+                '<!-- wp:group {"align":"full","className":"migration-page-banner",'
+                '"layout":{"type":"constrained"}} -->\n'
+                '<div class="wp-block-group alignfull migration-page-banner">\n'
+                f'{inner_markup}\n'
+                '</div>\n'
+                '<!-- /wp:group -->'
+            )
+        src = xml_escape(display_image_url(image["src"]))
+        alt = xml_escape(image.get("alt", ""))
+        return (
+            '<!-- wp:cover {"url":"' + src + '","dimRatio":50,'
+            '"overlayColor":"primary","align":"full","className":"migration-page-banner"} -->\n'
+            '<div class="wp-block-cover alignfull migration-page-banner">\n'
+            '<span aria-hidden="true" class="wp-block-cover__background '
+            'has-primary-background-color has-background-dim-50 has-background-dim"></span>\n'
+            f'<img class="wp-block-cover__image-background" alt="{alt}" src="{src}" '
+            'data-object-fit="cover"/>\n'
+            '<div class="wp-block-cover__inner-container">\n'
+            f'{inner_markup}\n'
+            '</div>\n'
+            '</div>\n'
+            '<!-- /wp:cover -->\n'
+            '<!-- QA FLAG: page banner background image still points at the original site '
+            '(a GoDaddy stock photo with no importable URL) -- the Stratecon Migration '
+            'Repair plugin sideloads it and repoints this reference. -->'
+        )
+
+    if t == "button":
+        # A GoDaddy "Button" widget captured inside a content section
+        # (see crawler_agent.py's extract_element_content()) -- the pill
+        # CTA that closes most media_text sections on the solution pages.
+        # Rendered as a real left-aligned core/button, its href remapped
+        # to the migrated slug when it points at another migrated page.
+        raw_label = block.get("text") or "Learn more"
+        if raw_label.islower():
+            # GoDaddy renders these labels through CSS text-transform;
+            # a handful were authored lower-case ("start a conversation").
+            _small = {"a", "an", "the", "to", "of", "and", "or", "for", "in", "on", "with"}
+            raw_label = " ".join(
+                w if (i and w in _small) else w[:1].upper() + w[1:]
+                for i, w in enumerate(raw_label.split())
+            )
+        label = html.escape(raw_label)
+        slug = href_to_slug(block.get("href"))
+        url = (
+            f"{NEW_BASE_URL}/{slug}/"
+            if _PAGES_BY_SLUG and slug in _PAGES_BY_SLUG
+            else block.get("href")
+        )
+        url_escaped = xml_escape(url or "#")
+        return (
+            '<!-- wp:buttons {"className":"migration-cta-buttons"} -->\n'
+            '<div class="wp-block-buttons migration-cta-buttons">\n'
+            '<!-- wp:button -->\n'
+            '<div class="wp-block-button"><a class="wp-block-button__link '
+            f'wp-element-button" href="{url_escaped}">{label}</a></div>\n'
+            '<!-- /wp:button -->\n'
+            '</div>\n'
+            '<!-- /wp:buttons -->'
+        )
+
     if t == "heading":
         level = block.get("level", 2)
         text = html.escape(block["text"])
@@ -1488,7 +1574,7 @@ def collect_unique_images(pages):
                 url = display_image_url(block["src"])
                 if url not in images:
                     images[url] = block.get("alt", "")
-            elif block["type"] == "hero":
+            elif block["type"] in ("hero", "page_banner"):
                 image = block.get("image")
                 if image and image.get("src"):
                     url = display_image_url(image["src"])
@@ -2387,6 +2473,8 @@ def build_qa_report(data, brand=None):
         for p in pages for b in p["blocks"] if b["type"] == "embedded_form"
     })
     hero_count = count_blocks("hero")
+    page_banner_count = count_blocks("page_banner")
+    cta_button_count = count_blocks("button")
 
     # Content Structuring Agent (pipeline step 5) coverage. meta_title is
     # only ever set by step 5, so it's the honest "did step 5's LLM pass
@@ -2400,7 +2488,7 @@ def build_qa_report(data, brand=None):
             t = b["type"]
             if t in ("image", "media_text") and b.get("src") and not (b.get("alt") or "").strip():
                 images_missing_alt.append(p["slug"])
-            elif t == "hero" and (b.get("image") or {}).get("src") and not (b["image"].get("alt") or "").strip():
+            elif t in ("hero", "page_banner") and (b.get("image") or {}).get("src") and not (b["image"].get("alt") or "").strip():
                 images_missing_alt.append(p["slug"])
             elif t == "card_group":
                 for c in b.get("cards", []) or []:
@@ -2470,6 +2558,24 @@ def build_qa_report(data, brand=None):
             "`<h1>`. The background is a GoDaddy stock photo with no importable URL; "
             f"the {REPAIR_PLUGIN_NAME} plugin sideloads it with the rest of the stock "
             "images. Sanity-check the wording and the CTA target."
+        )
+    if page_banner_count:
+        lines.append(
+            f"- **Page banner** ({page_banner_count} page(s)): GoDaddy's body-level "
+            "\"Banner\" widget — a full-width title-over-photo band that opens the "
+            "solution/landing pages — rebuilt as a short full-width cover block "
+            "carrying the page's `<h1>`. Background is a GoDaddy stock photo with no "
+            f"importable URL; the {REPAIR_PLUGIN_NAME} plugin sideloads it with the "
+            "rest of the stock images and repoints the reference."
+        )
+    if cta_button_count:
+        lines.append(
+            f"- **Section CTA buttons** ({cta_button_count}): the pill call-to-action "
+            "that closes most side-by-side sections on the solution pages "
+            "(\"Get a Quote\", \"Let's Talk\", \"Schedule a Call\", …) is carried "
+            "through as a real button; links that point at another migrated page are "
+            "remapped to the new slug, external/anchor targets are kept as-is — "
+            "confirm the targets."
         )
     if contact_form_count:
         lines.append(f"- **Contact form fields** ({contact_form_count} page(s)): the exact fields on the live contact form weren't fully visible in the extracted content. The generated page includes a placeholder form block — confirm the real field set before publishing.")
@@ -2998,6 +3104,20 @@ def _extra_css_rules(brand):
         ".migration-hero .wp-block-cover__inner-container{text-align:center;"
         "max-width:820px;margin-left:auto;margin-right:auto}"
         ".migration-hero .wp-block-cover__inner-container :where(h1,p){color:#ffffff}"
+    )
+
+    # The page banner (see block_to_gutenberg()'s "page_banner" branch) --
+    # GoDaddy's body-level title-over-photo band on the solution pages.
+    # Shorter than the home hero, same centred white treatment.
+    rules.append(
+        ".migration-page-banner{min-height:230px}"
+        ".migration-page-banner .wp-block-cover__background{background-color:" + primary + "}"
+        ".migration-page-banner .wp-block-cover__inner-container{text-align:center;"
+        "max-width:900px;margin-left:auto;margin-right:auto}"
+        ".migration-page-banner .wp-block-cover__inner-container h1{color:#ffffff}"
+        ".migration-page-banner.wp-block-group{background-color:" + primary + ";"
+        "padding-top:3rem;padding-bottom:3rem;text-align:center}"
+        ".migration-page-banner.wp-block-group h1{color:#ffffff}"
     )
 
     # Form placeholder panel (see _form_placeholder()) -- a form the

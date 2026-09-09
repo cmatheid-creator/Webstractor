@@ -189,10 +189,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "CONNECTIVITY",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "CONNECTIVITY",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
+            "alt": "Banner with a man in a business suit pointing at interconnected circles"
+          }
         },
         {
           "type": "media_text",
@@ -249,6 +252,11 @@
               "items": [
                 "<strong>Inter-Office Communications: </strong>Enable seamless and efficient communication between offices with features like VoIP, instant messaging, and video conferencing."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Get a Quote",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -311,6 +319,11 @@
               "items": [
                 "<strong>Data Encryption: </strong>Protect sensitive business data during transmission with end-to-end encryption protocols."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Let's Discuss",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -383,6 +396,11 @@
               "items": [
                 "<strong>Quality of Service (QoS): </strong>Prioritize business-critical applications to ensure optimum performance, even in remote settings."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -531,11 +549,11 @@
         },
         {
           "type": "paragraph",
-          "text": "This website is operated by Sustainable Investments, LLC dba Stratecon Tech Advisors. Throughout the site, the terms \u201cwe\u201d, \u201cus\u201d and \u201cour\u201d refer to Stratecon Tech Advisors. Stratecon Tech Advisors offers this website, including all information, tools and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here."
+          "text": "This website is operated by Sustainable Investments, LLC dba Stratecon Tech Advisors. Throughout the site, the terms “we”, “us” and “our” refer to Stratecon Tech Advisors. Stratecon Tech Advisors offers this website, including all information, tools and services available from this site to you, the user, conditioned upon your acceptance of all terms, conditions, policies and notices stated here."
         },
         {
           "type": "paragraph",
-          "text": "By visiting our site and/ or purchasing something from us, you engage in our \u201cService\u201d and agree to be bound by the following terms and conditions (\u201cTerms of Service\u201d, \u201cTerms\u201d), including those additional terms and conditions and policies referenced herein and/or available by hyperlink. These Terms of Service apply to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/ or contributors of content."
+          "text": "By visiting our site and/ or purchasing something from us, you engage in our “Service” and agree to be bound by the following terms and conditions (“Terms of Service”, “Terms”), including those additional terms and conditions and policies referenced herein and/or available by hyperlink. These Terms of Service apply to all users of the site, including without limitation users who are browsers, vendors, customers, merchants, and/ or contributors of content."
         },
         {
           "type": "paragraph",
@@ -547,7 +565,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 1 \u2013 ONLINE STORE TERMS"
+          "text": "SECTION 1 – ONLINE STORE TERMS"
         },
         {
           "type": "paragraph",
@@ -567,7 +585,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 2 \u2013 GENERAL CONDITIONS"
+          "text": "SECTION 2 – GENERAL CONDITIONS"
         },
         {
           "type": "paragraph",
@@ -587,7 +605,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 3 \u2013 ACCURACY, COMPLETENESS AND TIMELINESS OF INFORMATION"
+          "text": "SECTION 3 – ACCURACY, COMPLETENESS AND TIMELINESS OF INFORMATION"
         },
         {
           "type": "paragraph",
@@ -599,7 +617,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 4 \u2013 MODIFICATIONS TO THE SERVICE AND PRICES"
+          "text": "SECTION 4 – MODIFICATIONS TO THE SERVICE AND PRICES"
         },
         {
           "type": "paragraph",
@@ -615,7 +633,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 5 \u2013 PRODUCTS OR SERVICES (if applicable)"
+          "text": "SECTION 5 – PRODUCTS OR SERVICES (if applicable)"
         },
         {
           "type": "paragraph",
@@ -623,7 +641,7 @@
         },
         {
           "type": "paragraph",
-          "text": "We have made every effort to display as accurately as possible the colors and images of our products that appear at the store. We cannot guarantee that your computer monitor\u2019s display of any color will be accurate."
+          "text": "We have made every effort to display as accurately as possible the colors and images of our products that appear at the store. We cannot guarantee that your computer monitor’s display of any color will be accurate."
         },
         {
           "type": "paragraph",
@@ -635,7 +653,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 6 \u2013 ACCURACY OF BILLING AND ACCOUNT INFORMATION"
+          "text": "SECTION 6 – ACCURACY OF BILLING AND ACCOUNT INFORMATION"
         },
         {
           "type": "paragraph",
@@ -651,7 +669,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 7 \u2013 OPTIONAL TOOLS"
+          "text": "SECTION 7 – OPTIONAL TOOLS"
         },
         {
           "type": "paragraph",
@@ -659,7 +677,7 @@
         },
         {
           "type": "paragraph",
-          "text": "You acknowledge and agree that we provide access to such tools \u201das is\u201d and \u201cas available\u201d without any warranties, representations or conditions of any kind and without any endorsement. We shall have no liability whatsoever arising from or relating to your use of optional third-party tools."
+          "text": "You acknowledge and agree that we provide access to such tools ”as is” and “as available” without any warranties, representations or conditions of any kind and without any endorsement. We shall have no liability whatsoever arising from or relating to your use of optional third-party tools."
         },
         {
           "type": "paragraph",
@@ -671,7 +689,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 8 \u2013 THIRD-PARTY LINKS"
+          "text": "SECTION 8 – THIRD-PARTY LINKS"
         },
         {
           "type": "paragraph",
@@ -683,19 +701,19 @@
         },
         {
           "type": "paragraph",
-          "text": "We are not liable for any harm or damages related to the purchase or use of goods, services, resources, content, or any other transactions made in connection with any third-party websites. Please review carefully the third-party\u2019s policies and practices and make sure you understand them before you engage in any transaction. Complaints, claims, concerns, or questions regarding third-party products should be directed to the third-party."
+          "text": "We are not liable for any harm or damages related to the purchase or use of goods, services, resources, content, or any other transactions made in connection with any third-party websites. Please review carefully the third-party’s policies and practices and make sure you understand them before you engage in any transaction. Complaints, claims, concerns, or questions regarding third-party products should be directed to the third-party."
         },
         {
           "type": "paragraph",
-          "text": "SECTION 9 \u2013 USER COMMENTS, FEEDBACK AND OTHER SUBMISSIONS"
+          "text": "SECTION 9 – USER COMMENTS, FEEDBACK AND OTHER SUBMISSIONS"
         },
         {
           "type": "paragraph",
-          "text": "If, at our request, you send certain specific submissions (for example contest entries) or without a request from us you send creative ideas, suggestions, proposals, plans, or other materials, whether online, by email, by postal mail, or otherwise (collectively, \u2018comments\u2019), you agree that we may, at any time, without restriction, edit, copy, publish, distribute, translate and otherwise use in any medium any comments that you forward to us. We are and shall be under no obligation (1) to maintain any comments in confidence; (2) to pay compensation for any comments; or (3) to respond to any comments."
+          "text": "If, at our request, you send certain specific submissions (for example contest entries) or without a request from us you send creative ideas, suggestions, proposals, plans, or other materials, whether online, by email, by postal mail, or otherwise (collectively, ‘comments’), you agree that we may, at any time, without restriction, edit, copy, publish, distribute, translate and otherwise use in any medium any comments that you forward to us. We are and shall be under no obligation (1) to maintain any comments in confidence; (2) to pay compensation for any comments; or (3) to respond to any comments."
         },
         {
           "type": "paragraph",
-          "text": "We may, but have no obligation to, monitor, edit or remove content that we determine in our sole discretion are unlawful, offensive, threatening, libelous, defamatory, pornographic, obscene or otherwise objectionable or violates any party\u2019s intellectual property or these Terms of Service."
+          "text": "We may, but have no obligation to, monitor, edit or remove content that we determine in our sole discretion are unlawful, offensive, threatening, libelous, defamatory, pornographic, obscene or otherwise objectionable or violates any party’s intellectual property or these Terms of Service."
         },
         {
           "type": "paragraph",
@@ -703,7 +721,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 10 \u2013 PERSONAL INFORMATION"
+          "text": "SECTION 10 – PERSONAL INFORMATION"
         },
         {
           "type": "paragraph",
@@ -711,7 +729,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 11 \u2013 ERRORS, INACCURACIES AND OMISSIONS"
+          "text": "SECTION 11 – ERRORS, INACCURACIES AND OMISSIONS"
         },
         {
           "type": "paragraph",
@@ -723,7 +741,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 12 \u2013 PROHIBITED USES"
+          "text": "SECTION 12 – PROHIBITED USES"
         },
         {
           "type": "paragraph",
@@ -731,7 +749,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 13 \u2013 DISCLAIMER OF WARRANTIES; LIMITATION OF LIABILITY"
+          "text": "SECTION 13 – DISCLAIMER OF WARRANTIES; LIMITATION OF LIABILITY"
         },
         {
           "type": "paragraph",
@@ -747,7 +765,7 @@
         },
         {
           "type": "paragraph",
-          "text": "You expressly agree that your use of, or inability to use, the service is at your sole risk. The service and all products and services delivered to you through the service are (except as expressly stated by us) provided \u2018as is\u2019 and \u2018as available\u2019 for your use, without any representation, warranties or conditions of any kind, either express or implied, including all implied warranties or conditions of merchantability, merchantable quality, fitness for a particular purpose, durability, title, and non-infringement."
+          "text": "You expressly agree that your use of, or inability to use, the service is at your sole risk. The service and all products and services delivered to you through the service are (except as expressly stated by us) provided ‘as is’ and ‘as available’ for your use, without any representation, warranties or conditions of any kind, either express or implied, including all implied warranties or conditions of merchantability, merchantable quality, fitness for a particular purpose, durability, title, and non-infringement."
         },
         {
           "type": "paragraph",
@@ -755,15 +773,15 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 14 \u2013 INDEMNIFICATION"
+          "text": "SECTION 14 – INDEMNIFICATION"
         },
         {
           "type": "paragraph",
-          "text": "You agree to indemnify, defend and hold harmless Stratecon Tech Advisors, Inc. and our parent, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, interns and employees, harmless from any claim or demand, including reasonable attorneys\u2019 fees, made by any third-party due to or arising out of your breach of these Terms of Service or the documents they incorporate by reference, or your violation of any law or the rights of a third-party."
+          "text": "You agree to indemnify, defend and hold harmless Stratecon Tech Advisors, Inc. and our parent, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, interns and employees, harmless from any claim or demand, including reasonable attorneys’ fees, made by any third-party due to or arising out of your breach of these Terms of Service or the documents they incorporate by reference, or your violation of any law or the rights of a third-party."
         },
         {
           "type": "paragraph",
-          "text": "SECTION 15 \u2013 SEVERABILITY"
+          "text": "SECTION 15 – SEVERABILITY"
         },
         {
           "type": "paragraph",
@@ -771,7 +789,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 16 \u2013 TERMINATION"
+          "text": "SECTION 16 – TERMINATION"
         },
         {
           "type": "paragraph",
@@ -787,7 +805,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 17 \u2013 ENTIRE AGREEMENT"
+          "text": "SECTION 17 – ENTIRE AGREEMENT"
         },
         {
           "type": "paragraph",
@@ -803,7 +821,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 18 \u2013 GOVERNING LAW"
+          "text": "SECTION 18 – GOVERNING LAW"
         },
         {
           "type": "paragraph",
@@ -811,7 +829,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 19 \u2013 CHANGES TO TERMS OF SERVICE"
+          "text": "SECTION 19 – CHANGES TO TERMS OF SERVICE"
         },
         {
           "type": "paragraph",
@@ -823,7 +841,7 @@
         },
         {
           "type": "paragraph",
-          "text": "SECTION 20 \u2013 CONTACT INFORMATION"
+          "text": "SECTION 20 – CONTACT INFORMATION"
         },
         {
           "type": "paragraph",
@@ -878,23 +896,23 @@
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Data Breach Notification Costs:</strong> The expenses related to notifying customers, employees, or other stakeholders about a data breach."
+          "text": "• <strong>Data Breach Notification Costs:</strong> The expenses related to notifying customers, employees, or other stakeholders about a data breach."
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Legal Fees and Expenses:</strong> Costs associated with legal actions resulting from the breach, including lawsuits or fines."
+          "text": "• <strong>Legal Fees and Expenses:</strong> Costs associated with legal actions resulting from the breach, including lawsuits or fines."
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Cyber Extortion Payments:</strong> Ransomware payments or other forms of extortion demands."
+          "text": "• <strong>Cyber Extortion Payments:</strong> Ransomware payments or other forms of extortion demands."
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Business Interruption Losses:</strong> Financial losses due to downtime or operational disruptions caused by a cyber incident."
+          "text": "• <strong>Business Interruption Losses:</strong> Financial losses due to downtime or operational disruptions caused by a cyber incident."
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Public Relations Efforts:</strong> Costs related to managing the fallout of a cyberattack on the company\u2019s reputation."
+          "text": "• <strong>Public Relations Efforts:</strong> Costs related to managing the fallout of a cyberattack on the company’s reputation."
         },
         {
           "type": "heading",
@@ -924,7 +942,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Given the statistics and the ever-present threat, cybersecurity insurance might seem like a no-brainer. However, it\u2019s crucial for SMBs to carefully evaluate whether it\u2019s the right move for their specific situation."
+          "text": "Given the statistics and the ever-present threat, cybersecurity insurance might seem like a no-brainer. However, it’s crucial for SMBs to carefully evaluate whether it’s the right move for their specific situation."
         },
         {
           "type": "paragraph",
@@ -944,7 +962,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Cybersecurity insurance comes at a cost, and it\u2019s essential to weigh this cost against the potential benefits. Premiums can vary widely based on the size of your business, the industry you operate in, and your existing cybersecurity posture. According to a 2023 survey by Hiscox, the average annual premium for SMBs was around $1,500 to $7,500, depending on the level of coverage."
+          "text": "Cybersecurity insurance comes at a cost, and it’s essential to weigh this cost against the potential benefits. Premiums can vary widely based on the size of your business, the industry you operate in, and your existing cybersecurity posture. According to a 2023 survey by Hiscox, the average annual premium for SMBs was around $1,500 to $7,500, depending on the level of coverage."
         },
         {
           "type": "paragraph",
@@ -956,7 +974,7 @@
         },
         {
           "type": "paragraph",
-          "text": "In certain industries, cybersecurity insurance may be more than just a smart investment\u2014it could be a requirement. For example, businesses in the healthcare sector are often subject to stringent regulations like HIPAA, which mandates specific security measures. Failure to comply can result in hefty fines and legal action. Some regulatory bodies or clients might also require proof of cybersecurity insurance as part of doing business with them."
+          "text": "In certain industries, cybersecurity insurance may be more than just a smart investment—it could be a requirement. For example, businesses in the healthcare sector are often subject to stringent regulations like HIPAA, which mandates specific security measures. Failure to comply can result in hefty fines and legal action. Some regulatory bodies or clients might also require proof of cybersecurity insurance as part of doing business with them."
         },
         {
           "type": "paragraph",
@@ -964,7 +982,7 @@
         },
         {
           "type": "paragraph",
-          "text": "A data breach can significantly damage your business\u2019s reputation, leading to a loss of customers and revenue. Cybersecurity insurance often includes coverage for public relations efforts to help manage and repair your reputation post-incident. For SMBs, which often rely on word-of-mouth and community trust, this can be invaluable."
+          "text": "A data breach can significantly damage your business’s reputation, leading to a loss of customers and revenue. Cybersecurity insurance often includes coverage for public relations efforts to help manage and repair your reputation post-incident. For SMBs, which often rely on word-of-mouth and community trust, this can be invaluable."
         },
         {
           "type": "heading",
@@ -973,7 +991,7 @@
         },
         {
           "type": "paragraph",
-          "text": "While cybersecurity insurance offers many benefits, it\u2019s not a silver bullet. There are potential drawbacks and limitations that SMBs should be aware of:"
+          "text": "While cybersecurity insurance offers many benefits, it’s not a silver bullet. There are potential drawbacks and limitations that SMBs should be aware of:"
         },
         {
           "type": "paragraph",
@@ -981,7 +999,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Not all cybersecurity insurance policies are created equal. Some may not cover certain types of cyber incidents, or they may have low coverage limits that don\u2019t fully protect your business in the event of a significant breach. It\u2019s essential to read the fine print and understand exactly what is and isn\u2019t covered by your policy."
+          "text": "Not all cybersecurity insurance policies are created equal. Some may not cover certain types of cyber incidents, or they may have low coverage limits that don’t fully protect your business in the event of a significant breach. It’s essential to read the fine print and understand exactly what is and isn’t covered by your policy."
         },
         {
           "type": "paragraph",
@@ -997,7 +1015,7 @@
         },
         {
           "type": "paragraph",
-          "text": "There\u2019s a risk that investing in cybersecurity insurance might lead some businesses to become complacent in their cybersecurity efforts. Insurance should be viewed as a supplement to\u2014not a replacement for\u2014strong cybersecurity practices."
+          "text": "There’s a risk that investing in cybersecurity insurance might lead some businesses to become complacent in their cybersecurity efforts. Insurance should be viewed as a supplement to—not a replacement for—strong cybersecurity practices."
         },
         {
           "type": "paragraph",
@@ -1005,7 +1023,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Insurers may deny claims if they determine that the business didn\u2019t take adequate precautions to prevent the cyberattack. For example, if an SMB fails to regularly update its software or doesn\u2019t have an incident response plan in place, the insurer might argue that the business was negligent, leading to a denied claim."
+          "text": "Insurers may deny claims if they determine that the business didn’t take adequate precautions to prevent the cyberattack. For example, if an SMB fails to regularly update its software or doesn’t have an incident response plan in place, the insurer might argue that the business was negligent, leading to a denied claim."
         },
         {
           "type": "heading",
@@ -1014,23 +1032,23 @@
         },
         {
           "type": "paragraph",
-          "text": "Deciding whether to invest in cybersecurity insurance ultimately comes down to your business\u2019s unique circumstances. Consider the following questions:"
+          "text": "Deciding whether to invest in cybersecurity insurance ultimately comes down to your business’s unique circumstances. Consider the following questions:"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>What is the value of the data your business handles? </strong>If a data breach were to occur, what would be the potential impact on your business, both financially and reputationally?"
+          "text": "• <strong>What is the value of the data your business handles? </strong>If a data breach were to occur, what would be the potential impact on your business, both financially and reputationally?"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>How robust are your current cybersecurity measures?</strong> Do you have the resources to implement and maintain effective cybersecurity practices, or would insurance provide the necessary safety net?"
+          "text": "• <strong>How robust are your current cybersecurity measures?</strong> Do you have the resources to implement and maintain effective cybersecurity practices, or would insurance provide the necessary safety net?"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Are you subject to regulatory requirements that mandate cybersecurity insurance?</strong> If so, failing to have insurance could result in penalties or loss of business opportunities."
+          "text": "• <strong>Are you subject to regulatory requirements that mandate cybersecurity insurance?</strong> If so, failing to have insurance could result in penalties or loss of business opportunities."
         },
         {
           "type": "paragraph",
-          "text": "\u2022 <strong>Can your business afford the potential out-of-pocket costs of a cyberattack?</strong> If the answer is no, then cybersecurity insurance might be a worthwhile investment."
+          "text": "• <strong>Can your business afford the potential out-of-pocket costs of a cyberattack?</strong> If the answer is no, then cybersecurity insurance might be a worthwhile investment."
         },
         {
           "type": "heading",
@@ -1039,7 +1057,7 @@
         },
         {
           "type": "paragraph",
-          "text": "In an era where cyber threats are growing in both frequency and sophistication, cybersecurity insurance can offer SMBs a critical layer of protection. However, it\u2019s essential to approach this decision thoughtfully. Conduct a comprehensive risk assessment, understand the costs involved, and ensure that insurance complements\u2014not replaces\u2014your broader cybersecurity strategy. By taking these steps, you can make an informed decision that best protects your business in the digital age."
+          "text": "In an era where cyber threats are growing in both frequency and sophistication, cybersecurity insurance can offer SMBs a critical layer of protection. However, it’s essential to approach this decision thoughtfully. Conduct a comprehensive risk assessment, understand the costs involved, and ensure that insurance complements—not replaces—your broader cybersecurity strategy. By taking these steps, you can make an informed decision that best protects your business in the digital age."
         },
         {
           "type": "paragraph",
@@ -1089,10 +1107,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "AI FOR SALES",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "AI FOR SALES",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
+            "alt": ""
+          }
         },
         {
           "type": "media_text",
@@ -1149,6 +1170,11 @@
               "items": [
                 "<strong>Action Items:</strong> Automatically capture action items to streamline meeting follow-up and simplify task delegation."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Request a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -1166,7 +1192,7 @@
             {
               "type": "list",
               "items": [
-                "<strong>AI for Sales Managers:</strong> AI helps sales managers understand what\u2019s happening on sales calls so they can help coach and support reps and provide helpful feedback."
+                "<strong>AI for Sales Managers:</strong> AI helps sales managers understand what’s happening on sales calls so they can help coach and support reps and provide helpful feedback."
               ]
             },
             {
@@ -1180,6 +1206,11 @@
               "items": [
                 "<strong>AI Playbooks:</strong> Outline sales playbooks that drive consistency and sales success, then leverage AI to automatically track completion of each playbook step."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -1205,6 +1236,11 @@
               "items": [
                 "<strong>AI-Powered Voice:</strong> Conversational AI-powered virtual voice agents can answer initial sales inquiries quickly and efficiently."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule time to learn more",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -1514,10 +1550,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "AI STRATEGY",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "AI STRATEGY",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
+            "alt": ""
+          }
         },
         {
           "type": "media_text",
@@ -1574,6 +1613,11 @@
               "items": [
                 "<strong>Identify Focus Areas:</strong> Identify the key areas of your business where AI can help achieve business outcomes and, conversely, areas where you don't wish to use AI."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Start a Conversation",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -1605,6 +1649,11 @@
               "items": [
                 "<strong>Audit and Oversight:</strong> Implement auditing procedures to continuously monitor AI systems for compliance, effectiveness, and ethical behavior."
               ]
+            },
+            {
+              "type": "button",
+              "text": "AI Use Policy Template",
+              "href": "https://stratecon.tech/ai-use-policy-template"
             }
           ]
         },
@@ -1636,6 +1685,11 @@
               "items": [
                 "<strong>Service Level Agreements:</strong> Clearly outline performance expectations, availability, and contingencies in vendor contracts to ensure seamless integration and ongoing management of AI solutions."
               ]
+            },
+            {
+              "type": "button",
+              "text": "AI Disclosure Statement Template",
+              "href": "https://stratecon.tech/ai-disclosure-template"
             }
           ]
         },
@@ -1667,6 +1721,11 @@
               "items": [
                 "<strong>Continuous Learning:</strong> Foster a culture of continuous learning and upskilling by offering periodic refresher courses, workshops, and seminars to keep staff updated on the latest advancements in AI."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule Training",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -1690,10 +1749,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "CYBER RISK ASSESSMENT",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "CYBER RISK ASSESSMENT",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
+            "alt": "Data center with racks of equipment glowing inside data cabinets"
+          }
         },
         {
           "type": "media_text",
@@ -1709,6 +1771,11 @@
             {
               "type": "paragraph",
               "text": "Comprehensive cyber risk assessments empower your organization to safeguard its assets, reputation, and bottom line. By identifying vulnerabilities and quantifying potential risks, risk assessments enable you to take proactive measures, ensuring the resilience and continuity of your operations."
+            },
+            {
+              "type": "button",
+              "text": "Free Risk Assessment",
+              "href": "https://stratecon.tech/cyber-risk-assessment"
             }
           ]
         },
@@ -1914,7 +1981,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Human assets are your employees, contractors, and other stakeholders. Assessing human assets involves understanding the roles and responsibilities that are vital for your business\u2019s continuity. Consider:"
+          "text": "Human assets are your employees, contractors, and other stakeholders. Assessing human assets involves understanding the roles and responsibilities that are vital for your business’s continuity. Consider:"
         },
         {
           "type": "paragraph",
@@ -2161,10 +2228,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "CYBER THREAT PROTECTION",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "CYBER THREAT PROTECTION",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
+            "alt": "Rows of data racks full of computers and computer equipment"
+          }
         },
         {
           "type": "media_text",
@@ -2179,11 +2249,16 @@
             },
             {
               "type": "paragraph",
-              "text": "We provide industry-leading cybersecurity solutions so you can focus on what matters most \u2014 running your business effectively and efficiently."
+              "text": "We provide industry-leading cybersecurity solutions so you can focus on what matters most — running your business effectively and efficiently."
             },
             {
               "type": "paragraph",
-              "text": "Stay ahead of cyber adversaries by protecting your key corporate assets. Secure your organization\u2019s future with us today."
+              "text": "Stay ahead of cyber adversaries by protecting your key corporate assets. Secure your organization’s future with us today."
+            },
+            {
+              "type": "button",
+              "text": "Free Risk Assessment",
+              "href": "https://stratecon.tech/cyber-risk-assessment"
             }
           ]
         },
@@ -2262,6 +2337,11 @@
               "items": [
                 "<strong>Behavioral Analytics: </strong>Profile typical user behavior to identify anomalies and potential internal threats."
               ]
+            },
+            {
+              "type": "button",
+              "text": "start a conversation",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2332,6 +2412,11 @@
               "items": [
                 "<strong>Forensic Analysis: </strong>Conduct a detailed post-incident analysis to understand the threat's origin and impact, aiding in future protection efforts."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2471,11 +2556,11 @@
         {
           "type": "heading",
           "level": 2,
-          "text": "We\u2019re Here to Help"
+          "text": "We’re Here to Help"
         },
         {
           "type": "paragraph",
-          "text": "If developing your cybersecurity strategy sounds intimidating, don\u2019t worry, we\u2019re here to help! We can assist you with evaluating your cyber risks and identifying the technologies and best practices that will fortify your business against cyber threats. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "If developing your cybersecurity strategy sounds intimidating, don’t worry, we’re here to help! We can assist you with evaluating your cyber risks and identifying the technologies and best practices that will fortify your business against cyber threats. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -2521,10 +2606,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "CYBER THREAT ID AND DETECTION",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "CYBER THREAT ID AND DETECTION",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
+            "alt": "Rows of data racks full of computers and computer equipment"
+          }
         },
         {
           "type": "media_text",
@@ -2540,6 +2628,11 @@
             {
               "type": "paragraph",
               "text": "Stay ahead of cyber adversaries. Our advanced threat detection mechanisms identify potential risks, vulnerabilities, and malicious activities before they can wreak havoc on your systems."
+            },
+            {
+              "type": "button",
+              "text": "Free Risk Assessment",
+              "href": "https://stratecon.tech/cyber-risk-assessment"
             }
           ]
         },
@@ -2611,6 +2704,11 @@
                 "Network Traffic Analysis",
                 "Endpoint Detection and Response (EDR)"
               ]
+            },
+            {
+              "type": "button",
+              "text": "start a conversation",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2640,6 +2738,11 @@
                 "Social Networking Dangers",
                 "Bring-your-own-device (BYOD) Policies"
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule Training",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2702,10 +2805,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "YOUR TECHNOLOGY PARTNER",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "YOUR TECHNOLOGY PARTNER",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/2644/:/cr=t:2.52%25,l:0%25,w:94.97%25,h:94.97%25/rs=w:1535,m",
+            "alt": "Data center with racks of glowing equipment in data cabinets"
+          }
         },
         {
           "type": "media_text",
@@ -2757,6 +2863,11 @@
                 "Optimize processes for enhanced efficiency and productivity",
                 "Eliminate the complexities of technology to save time and resources"
               ]
+            },
+            {
+              "type": "button",
+              "text": "Let's Talk",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2783,6 +2894,11 @@
                 "Customized tech solutions that align with your specific goals",
                 "Comprehensive strategy from architecture to technology stack selection"
               ]
+            },
+            {
+              "type": "button",
+              "text": "Let's Connect",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -2809,6 +2925,11 @@
                 "Cost-Effective Hiring: Reduce the costs and risks associated with permanent hires by leveraging our flexible staffing options, tailored to fit your budget and project timelines.",
                 "Seamless Integration: Our augmented staff seamlessly integrates with your existing team, ensuring smooth collaboration and continuity without the overhead of onboarding and training."
               ]
+            },
+            {
+              "type": "button",
+              "text": "start a conversation",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -3086,11 +3207,11 @@
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Delete your personal information from our records; and"
+          "text": "• Delete your personal information from our records; and"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Direct any service providers to delete your personal information from their records."
+          "text": "• Direct any service providers to delete your personal information from their records."
         },
         {
           "type": "paragraph",
@@ -3098,39 +3219,39 @@
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Complete the transaction for which the personal information was collected, fulfill the terms of a written warranty or product recall conducted in accordance with federal law, provide a good or service requested by you, or reasonably anticipated within the context of our ongoing business relationship with you, or otherwise perform a contract between you and us;"
+          "text": "• Complete the transaction for which the personal information was collected, fulfill the terms of a written warranty or product recall conducted in accordance with federal law, provide a good or service requested by you, or reasonably anticipated within the context of our ongoing business relationship with you, or otherwise perform a contract between you and us;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Detect security incidents, protect against malicious, deceptive, fraudulent, or illegal activity; or prosecute those responsible for that activity;"
+          "text": "• Detect security incidents, protect against malicious, deceptive, fraudulent, or illegal activity; or prosecute those responsible for that activity;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Debug to identify and repair errors that impair existing intended functionality;"
+          "text": "• Debug to identify and repair errors that impair existing intended functionality;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Exercise free speech, ensure the right of another consumer to exercise his or her right of free speech, or exercise another right provided for by law;"
+          "text": "• Exercise free speech, ensure the right of another consumer to exercise his or her right of free speech, or exercise another right provided for by law;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Comply with the California Electronic Communications Privacy Act;"
+          "text": "• Comply with the California Electronic Communications Privacy Act;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Engage in public or peer-reviewed scientific, historical, or statistical research in the public interest that adheres to all other applicable ethics and privacy laws, when our deletion of the information is likely to render impossible or seriously impair the achievement of such research, provided we have obtained your informed consent;"
+          "text": "• Engage in public or peer-reviewed scientific, historical, or statistical research in the public interest that adheres to all other applicable ethics and privacy laws, when our deletion of the information is likely to render impossible or seriously impair the achievement of such research, provided we have obtained your informed consent;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Enable solely internal uses that are reasonably aligned with your expectations based on your relationship with us;"
+          "text": "• Enable solely internal uses that are reasonably aligned with your expectations based on your relationship with us;"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Comply with an existing legal obligation; or"
+          "text": "• Comply with an existing legal obligation; or"
         },
         {
           "type": "paragraph",
-          "text": "\u2022 Otherwise use your personal information, internally, in a lawful manner that is compatible with the context in which you provided the information."
+          "text": "• Otherwise use your personal information, internally, in a lawful manner that is compatible with the context in which you provided the information."
         },
         {
           "type": "paragraph",
@@ -3329,7 +3450,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Traditionally, large corporations have dominated the market when it comes to utilizing advanced technology due to their resources. Businesses that adopt data-driven decision-making experience a significant increase in productivity, but the vast amounts of data can be overwhelming for organizations that don\u2019t have staff dedicated to data analysis."
+          "text": "Traditionally, large corporations have dominated the market when it comes to utilizing advanced technology due to their resources. Businesses that adopt data-driven decision-making experience a significant increase in productivity, but the vast amounts of data can be overwhelming for organizations that don’t have staff dedicated to data analysis."
         },
         {
           "type": "paragraph",
@@ -3342,7 +3463,7 @@
         },
         {
           "type": "paragraph",
-          "text": "AI and data analytics enable SMBs to move from gut-based to data-driven decisions. By analyzing historical data, AI algorithms can predict trends, identify risks, and suggest actionable insights that could have been overlooked otherwise. This shift not only increases accuracy but also enhances the speed of decision-making, which is crucial in today\u2019s fast-paced market environments."
+          "text": "AI and data analytics enable SMBs to move from gut-based to data-driven decisions. By analyzing historical data, AI algorithms can predict trends, identify risks, and suggest actionable insights that could have been overlooked otherwise. This shift not only increases accuracy but also enhances the speed of decision-making, which is crucial in today’s fast-paced market environments."
         },
         {
           "type": "paragraph",
@@ -3423,15 +3544,15 @@
         },
         {
           "type": "paragraph",
-          "text": "<strong>Coca-Cola</strong> - Coca-Cola used an AI-powered marketing platform called Albert to optimize its digital advertising campaigns. Albert analyzes customer data to optimize ad placements and targeting, improving the return on investment by fine-tuning the advertising spend based on customer behavior and preferences\u200b (<sup><a href=\"https://digitaltransformationskills.com/ai-for-business/\">Source</a></sup>)\u200b."
+          "text": "<strong>Coca-Cola</strong> - Coca-Cola used an AI-powered marketing platform called Albert to optimize its digital advertising campaigns. Albert analyzes customer data to optimize ad placements and targeting, improving the return on investment by fine-tuning the advertising spend based on customer behavior and preferences​ (<sup><a href=\"https://digitaltransformationskills.com/ai-for-business/\">Source</a></sup>)​."
         },
         {
           "type": "paragraph",
-          "text": "<strong>UPS</strong> - UPS implemented an AI-powered logistics platform called ORION (On-Road Integrated Optimization and Navigation) to optimize its delivery routes. This system analyzes data from various sources including customer information and traffic patterns to create efficient routes, significantly reducing travel distances and operational costs\u200b (<sup><a href=\"https://digitaltransformationskills.com/ai-for-business/\">Source</a></sup>)\u200b."
+          "text": "<strong>UPS</strong> - UPS implemented an AI-powered logistics platform called ORION (On-Road Integrated Optimization and Navigation) to optimize its delivery routes. This system analyzes data from various sources including customer information and traffic patterns to create efficient routes, significantly reducing travel distances and operational costs​ (<sup><a href=\"https://digitaltransformationskills.com/ai-for-business/\">Source</a></sup>)​."
         },
         {
           "type": "paragraph",
-          "text": "<strong>Global Tech LED</strong> - This company used Google\u2019s AI tools for automated bid adjustment and remarketing campaigns in its digital marketing. Their AI-driven approach led to a remarkable increase in website traffic and user engagement in targeted regions across South Asia, Latin America, and Western Europe\u200b (<sup><a href=\"https://emerj.com/ai-sector-overviews/5-business-intelligence-analytics-case-studies-across-industry/\">Source</a></sup>)\u200b."
+          "text": "<strong>Global Tech LED</strong> - This company used Google’s AI tools for automated bid adjustment and remarketing campaigns in its digital marketing. Their AI-driven approach led to a remarkable increase in website traffic and user engagement in targeted regions across South Asia, Latin America, and Western Europe​ (<sup><a href=\"https://emerj.com/ai-sector-overviews/5-business-intelligence-analytics-case-studies-across-industry/\">Source</a></sup>)​."
         },
         {
           "type": "heading",
@@ -3440,7 +3561,7 @@
         },
         {
           "type": "paragraph",
-          "text": "In the digital age where \u201cdata is the new oil,\u201d the integration of AI and data analytics is not just a trend but a strategic necessity. These technologies provide actionable insights that can drastically enhance operational efficiencies, customer satisfaction, and overall business performance."
+          "text": "In the digital age where “data is the new oil,” the integration of AI and data analytics is not just a trend but a strategic necessity. These technologies provide actionable insights that can drastically enhance operational efficiencies, customer satisfaction, and overall business performance."
         },
         {
           "type": "paragraph",
@@ -3449,11 +3570,11 @@
         {
           "type": "heading",
           "level": 4,
-          "text": "We\u2019re Here to Help"
+          "text": "We’re Here to Help"
         },
         {
           "type": "paragraph",
-          "text": "If your organization would like assistance with building an AI Strategy and determining where AI data analysis can help guide your key business decisions, we\u2019re here to help! We can assist you with evaluating and identifying the technologies and best practices that will empower your leadership teams to make data-driven decisions that will optimize your business and provide a competitive advantage in your markets. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "If your organization would like assistance with building an AI Strategy and determining where AI data analysis can help guide your key business decisions, we’re here to help! We can assist you with evaluating and identifying the technologies and best practices that will empower your leadership teams to make data-driven decisions that will optimize your business and provide a competitive advantage in your markets. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -3515,7 +3636,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Selecting and deploying effective communications and collaboration tools can address the concerns of management teams while also empowering remote teams to collaborate regardless of their locale. In businesses where \u201cwork is something you do, not a place you go,\u201d implementing these tools successfully is crucial to maintaining productivity, enhancing communication, and driving business growth."
+          "text": "Selecting and deploying effective communications and collaboration tools can address the concerns of management teams while also empowering remote teams to collaborate regardless of their locale. In businesses where “work is something you do, not a place you go,” implementing these tools successfully is crucial to maintaining productivity, enhancing communication, and driving business growth."
         },
         {
           "type": "heading",
@@ -3551,7 +3672,7 @@
         },
         {
           "type": "paragraph",
-          "text": "With tools selected, the next step is to establish clear policies and procedures that support remote work. This includes setting expectations for availability, communication norms, and deadlines. It\u2019s crucial to address how and when to use each tool effectively to avoid overlapping functionalities or communication silos."
+          "text": "With tools selected, the next step is to establish clear policies and procedures that support remote work. This includes setting expectations for availability, communication norms, and deadlines. It’s crucial to address how and when to use each tool effectively to avoid overlapping functionalities or communication silos."
         },
         {
           "type": "heading",
@@ -3578,7 +3699,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Finally, it\u2019s essential to continuously monitor the effectiveness of your remote work strategy and make adjustments as needed. This includes soliciting feedback from employees, analyzing productivity metrics, and staying updated on new tools or updates to existing platforms. The goal is to remain agile and responsive to the evolving needs of your workforce and the technological landscape."
+          "text": "Finally, it’s essential to continuously monitor the effectiveness of your remote work strategy and make adjustments as needed. This includes soliciting feedback from employees, analyzing productivity metrics, and staying updated on new tools or updates to existing platforms. The goal is to remain agile and responsive to the evolving needs of your workforce and the technological landscape."
         },
         {
           "type": "heading",
@@ -3587,16 +3708,16 @@
         },
         {
           "type": "paragraph",
-          "text": "Implementing effective remote work strategies with the right collaboration tools is more than just a technical deployment\u2014it\u2019s about fostering a supportive and productive work environment. For businesses where innovation and rapid response are key, embracing these strategies can lead to significant competitive advantages. By carefully selecting tools, crafting thoughtful policies, and fostering a culture of collaboration, companies can not only adapt to the demands of remote work but can thrive in this new digital work era."
+          "text": "Implementing effective remote work strategies with the right collaboration tools is more than just a technical deployment—it’s about fostering a supportive and productive work environment. For businesses where innovation and rapid response are key, embracing these strategies can lead to significant competitive advantages. By carefully selecting tools, crafting thoughtful policies, and fostering a culture of collaboration, companies can not only adapt to the demands of remote work but can thrive in this new digital work era."
         },
         {
           "type": "heading",
           "level": 4,
-          "text": "We\u2019re Here to Help"
+          "text": "We’re Here to Help"
         },
         {
           "type": "paragraph",
-          "text": "If your organization would like assistance implementing an effective communications and collaboration strategy to support a hybrid work model, we\u2019re here to help! We can assist you with evaluating and identifying the technologies and best practices that will empower your hybrid workforce while providing the visibility required by management teams. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "If your organization would like assistance implementing an effective communications and collaboration strategy to support a hybrid work model, we’re here to help! We can assist you with evaluating and identifying the technologies and best practices that will empower your hybrid workforce while providing the visibility required by management teams. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -3741,10 +3862,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "UNIFIED COMMUNICATIONS",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "UNIFIED COMMUNICATIONS",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
+            "alt": "Man in business suit pointing to a circle in interconnected circles diagram"
+          }
         },
         {
           "type": "media_text",
@@ -3787,7 +3911,7 @@
             {
               "type": "list",
               "items": [
-                "<strong>Unified Application: </strong>Manage all your communication needs\u2014voice, video, chat, SMS, and email\u2014through a unified application."
+                "<strong>Unified Application: </strong>Manage all your communication needs—voice, video, chat, SMS, and email—through a unified application."
               ]
             },
             {
@@ -3801,6 +3925,11 @@
               "items": [
                 "<strong>Instant Synchronization: </strong>Keep all communication tools in sync across different devices and platforms, eliminating the challenges of fragmented communication."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Request a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -3832,6 +3961,11 @@
               "items": [
                 "<strong>Virtual Meeting Rooms: </strong>Conduct online meetings, webinars, and video conferences with high-quality audio and video capabilities."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -3863,6 +3997,11 @@
               "items": [
                 "<strong>Resource Optimization: </strong>Reduce costs by streamlining your communications infrastructure and minimizing the need for separate tools and platforms."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule a Call",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -3907,7 +4046,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Before a culture of cybersecurity can be built, it\u2019s crucial that everyone in the organization understands why it matters. For businesses of all sizes, a cyberattack can mean financial losses, data breaches, and damaged reputations that can take years to repair. Small to medium businesses (SMBs) are especially vulnerable, as a cyber breach or ransomware attack can mean going out of business entirely. Educating your team on the potential impacts of cyber incidents is the first step toward a more secure organization."
+          "text": "Before a culture of cybersecurity can be built, it’s crucial that everyone in the organization understands why it matters. For businesses of all sizes, a cyberattack can mean financial losses, data breaches, and damaged reputations that can take years to repair. Small to medium businesses (SMBs) are especially vulnerable, as a cyber breach or ransomware attack can mean going out of business entirely. Educating your team on the potential impacts of cyber incidents is the first step toward a more secure organization."
         },
         {
           "type": "heading",
@@ -3997,11 +4136,11 @@
         },
         {
           "type": "paragraph",
-          "text": "Building a cybersecurity-aware culture is an ongoing process that requires commitment, investment, and vigilance. For SMBs, in particular, where resources are often limited, the focus should be on creating a strong foundation of knowledge, supported by effective policies and the right technology \u2013 in addition to seeking key partnerships with trusted cybersecurity providers and advisors. By embedding cybersecurity into the corporate culture, businesses can not only protect their assets and data but also position themselves as trustworthy and reliable partners in the digital economy."
+          "text": "Building a cybersecurity-aware culture is an ongoing process that requires commitment, investment, and vigilance. For SMBs, in particular, where resources are often limited, the focus should be on creating a strong foundation of knowledge, supported by effective policies and the right technology – in addition to seeking key partnerships with trusted cybersecurity providers and advisors. By embedding cybersecurity into the corporate culture, businesses can not only protect their assets and data but also position themselves as trustworthy and reliable partners in the digital economy."
         },
         {
           "type": "paragraph",
-          "text": "If developing your cybersecurity strategy sounds intimidating, don\u2019t worry, we\u2019re here to help! We can assist you with evaluating your cyber risks and identifying the technologies and best practices that will fortify your business against cyber threats. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "If developing your cybersecurity strategy sounds intimidating, don’t worry, we’re here to help! We can assist you with evaluating your cyber risks and identifying the technologies and best practices that will fortify your business against cyber threats. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -4138,7 +4277,7 @@
         },
         {
           "type": "paragraph",
-          "text": "If your organization would like assistance with building an AI Strategy and determining where AI can help optimize your marketing strategies, we\u2019re here to help! We can assist you with evaluating and identifying the technologies and best practices that will super charge your marketing efforts to accelerate business growth. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "If your organization would like assistance with building an AI Strategy and determining where AI can help optimize your marketing strategies, we’re here to help! We can assist you with evaluating and identifying the technologies and best practices that will super charge your marketing efforts to accelerate business growth. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -4184,10 +4323,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "CUSTOMER EXPERIENCE (CX)",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "CUSTOMER EXPERIENCE (CX)",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
+            "alt": "Man in a business suit pointing at interconnected circles"
+          }
         },
         {
           "type": "media_text",
@@ -4236,7 +4378,7 @@
             {
               "type": "list",
               "items": [
-                "<strong>Customer Journey Mapping: </strong>Visualize your customer\u2019s entire journey, identify touchpoints, and improve the overall experience."
+                "<strong>Customer Journey Mapping: </strong>Visualize your customer’s entire journey, identify touchpoints, and improve the overall experience."
               ]
             },
             {
@@ -4244,6 +4386,11 @@
               "items": [
                 "<strong>Post-Interaction Surveys: </strong>Collect valuable customer feedback to understand needs and expectations better, enabling continual service improvement."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule a Call",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4269,6 +4416,11 @@
               "items": [
                 "<strong>ROI Tracking: </strong>Monitor the ROI of marketing campaigns, customer engagements, and other sales activities for better allocation of resources."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule time to learn more",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4292,7 +4444,7 @@
             {
               "type": "list",
               "items": [
-                "<strong>Omnichannel Support: </strong>Deliver a unified experience across multiple channels\u2014phone, email, chat, and social media\u2014from a single dashboard."
+                "<strong>Omnichannel Support: </strong>Deliver a unified experience across multiple channels—phone, email, chat, and social media—from a single dashboard."
               ]
             },
             {
@@ -4306,6 +4458,11 @@
               "items": [
                 "<strong>Real-Time Analytics: </strong>Monitor key performance indicators in real time to gauge customer satisfaction, agent productivity, and operational efficiency."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Request a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4337,6 +4494,11 @@
               "items": [
                 "<strong>Automated Workflows: </strong>Eliminate manual tasks by automating routine processes such as ticket assignment, follow-ups, and reporting."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Request a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4362,6 +4524,11 @@
               "items": [
                 "<strong>AI-Powered Voice: </strong>Conversational AI-powered virtual voice agents can answer initial customer inquiries quickly and efficiently, any time of day, any day of the year."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4397,8 +4564,13 @@
             {
               "type": "list",
               "items": [
-                "<strong>AI Customer Journey: </strong>AI provides agents with context and guidance about the customer\u2019s issue and past interactions to help customers faster and improve customer satisfaction."
+                "<strong>AI Customer Journey: </strong>AI provides agents with context and guidance about the customer’s issue and past interactions to help customers faster and improve customer satisfaction."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule a Call",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -4424,6 +4596,11 @@
               "items": [
                 "<strong>AI-Powered Workforce Management : </strong>Leverage AI and machine learning to forecast agent staffing requirements, monitor contact center workflows, and make adjustments in real-time, reducing costs, wait times, and time-to-resolution."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Request a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -4652,7 +4829,7 @@
         },
         {
           "type": "paragraph",
-          "text": "By following the steps outlined in this blog post and staying proactive in your cybersecurity efforts, you can navigate the complex landscape of cybersecurity compliance and focus on what you do best \u2013 running and growing your business. If your organization could use help with cybersecurity strategy, technology selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss where we can help."
+          "text": "By following the steps outlined in this blog post and staying proactive in your cybersecurity efforts, you can navigate the complex landscape of cybersecurity compliance and focus on what you do best – running and growing your business. If your organization could use help with cybersecurity strategy, technology selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss where we can help."
         },
         {
           "type": "paragraph",
@@ -4710,7 +4887,7 @@
         },
         {
           "type": "paragraph",
-          "text": "For the first time in modern history, companies are now composed of up to <em>five</em> generations of employees: the Silent Generation/Traditionalists, Baby Boomers, Gen X, Millennials, and Gen Z. This poses unique challenges for many areas of a business, ranging from employee retention, to leadership, personnel management, and especially communications. Each generation is characterized by unique perspectives that were shaped by their life experiences growing up. None is more \u201cright\u201d than another, but they are often quite different."
+          "text": "For the first time in modern history, companies are now composed of up to <em>five</em> generations of employees: the Silent Generation/Traditionalists, Baby Boomers, Gen X, Millennials, and Gen Z. This poses unique challenges for many areas of a business, ranging from employee retention, to leadership, personnel management, and especially communications. Each generation is characterized by unique perspectives that were shaped by their life experiences growing up. None is more “right” than another, but they are often quite different."
         },
         {
           "type": "paragraph",
@@ -4727,7 +4904,7 @@
         },
         {
           "type": "paragraph",
-          "text": "NOTE: The below generalizations are supported by surveys and studies (<sup><a href=\"https://www.msci.org/understanding-a-multigenerational-workforce/#:~:text=Millenials%20dominate%20the%20workforce&amp;text=So%2C%20let's%20begin%20by%20looking,changed%20jobs%20within%20a%20year.\">source</a></sup>) and they can be helpful guidelines to understand different age groups in the workplace. However, everyone is a unique individual and there will always be exceptions. There are Baby Boomers that are very comfortable using technology, and there are Gen Z\u2019ers that are very comfortable communicating face-to-face, for example, so it\u2019s important not to pre-judge or stereotype."
+          "text": "NOTE: The below generalizations are supported by surveys and studies (<sup><a href=\"https://www.msci.org/understanding-a-multigenerational-workforce/#:~:text=Millenials%20dominate%20the%20workforce&amp;text=So%2C%20let's%20begin%20by%20looking,changed%20jobs%20within%20a%20year.\">source</a></sup>) and they can be helpful guidelines to understand different age groups in the workplace. However, everyone is a unique individual and there will always be exceptions. There are Baby Boomers that are very comfortable using technology, and there are Gen Z’ers that are very comfortable communicating face-to-face, for example, so it’s important not to pre-judge or stereotype."
         },
         {
           "type": "paragraph",
@@ -4751,7 +4928,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Perspectives Influenced By: The Vietnam War, the first Moon landing, the invention of television. Generally grew up in a \u201ctraditional\u201d family with married parents, father working and mother the caretaker for the family."
+          "text": "Perspectives Influenced By: The Vietnam War, the first Moon landing, the invention of television. Generally grew up in a “traditional” family with married parents, father working and mother the caretaker for the family."
         },
         {
           "type": "paragraph",
@@ -4787,7 +4964,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Attitudes about Work: Work is a \u201cnecessary evil,\u201d but not the key source of life fulfillment. Value teamwork, rapid career growth, collaborative leaders that they <em>like</em> (versus just respect). Apt to make frequent job changes to align with changing life priorities. Often explore new interests in \u201cside gig\u2019s\u201d with an eye on perhaps owning their own business."
+          "text": "Attitudes about Work: Work is a “necessary evil,” but not the key source of life fulfillment. Value teamwork, rapid career growth, collaborative leaders that they <em>like</em> (versus just respect). Apt to make frequent job changes to align with changing life priorities. Often explore new interests in “side gig’s” with an eye on perhaps owning their own business."
         },
         {
           "type": "paragraph",
@@ -4799,11 +4976,11 @@
         },
         {
           "type": "paragraph",
-          "text": "Perspectives Influenced By: Growing up as a \u201cdigital native\u201d i.e. they had the internet, smart phones, and social media available their whole lives. A November, 2022 <a href=\"https://www.statista.com/statistics/1366903/us-gen-z-adults-daily-social-media-usage/\">survey</a> found half of Gen Z\u2019ers spends 4 or more hours a day on social media, partially explaining an inclination towards consensus-based decision making. Used to immense knowledge and services being available \u201cfor free.\u201d Worried about the future (climate change, global unrest, financial uncertainty). Self-esteem often negatively impacted by social media - according to a 2022 <a href=\"https://www2.deloitte.com/content/dam/Deloitte/global/Documents/deloitte-2022-genz-millennial-survey.pdf\">Deloitte survey</a>, more likely to receive therapy or mental health treatment than any other generation."
+          "text": "Perspectives Influenced By: Growing up as a “digital native” i.e. they had the internet, smart phones, and social media available their whole lives. A November, 2022 <a href=\"https://www.statista.com/statistics/1366903/us-gen-z-adults-daily-social-media-usage/\">survey</a> found half of Gen Z’ers spends 4 or more hours a day on social media, partially explaining an inclination towards consensus-based decision making. Used to immense knowledge and services being available “for free.” Worried about the future (climate change, global unrest, financial uncertainty). Self-esteem often negatively impacted by social media - according to a 2022 <a href=\"https://www2.deloitte.com/content/dam/Deloitte/global/Documents/deloitte-2022-genz-millennial-survey.pdf\">Deloitte survey</a>, more likely to receive therapy or mental health treatment than any other generation."
         },
         {
           "type": "paragraph",
-          "text": "Attitudes about Work: Not sold on traditional views of work, and often aspire to own their own business. When employed by a business, they expect flexibility in schedules, location, and workloads. Often seek a very collaborative team environment, and care a great deal about a company\u2019s mission, purpose, and plan to make the world a better place. Driven by their experiences with social media, they often seek attention and recognition."
+          "text": "Attitudes about Work: Not sold on traditional views of work, and often aspire to own their own business. When employed by a business, they expect flexibility in schedules, location, and workloads. Often seek a very collaborative team environment, and care a great deal about a company’s mission, purpose, and plan to make the world a better place. Driven by their experiences with social media, they often seek attention and recognition."
         },
         {
           "type": "paragraph",
@@ -4816,11 +4993,11 @@
         },
         {
           "type": "paragraph",
-          "text": "Given the significant differences in workplace perspectives and attitudes possessed by each generation, leaders must be flexible in their approach when managing a multi-generational workforce if they want to achieve the best results. Particularly when the leader is not of the same generation as their team members, it is important to adapt leadership styles to be most effective in achieving team goals. This doesn\u2019t mean the leader should completely change their style \u2013 after all, it has helped them achieve their own success - but they should be considerate of their audience to help get the buy-in they need for the best team outcomes."
+          "text": "Given the significant differences in workplace perspectives and attitudes possessed by each generation, leaders must be flexible in their approach when managing a multi-generational workforce if they want to achieve the best results. Particularly when the leader is not of the same generation as their team members, it is important to adapt leadership styles to be most effective in achieving team goals. This doesn’t mean the leader should completely change their style – after all, it has helped them achieve their own success - but they should be considerate of their audience to help get the buy-in they need for the best team outcomes."
         },
         {
           "type": "paragraph",
-          "text": "Each person has unique value they can bring to a team environment, and it is a leader\u2019s job to recognize and develop that for the benefit of the individual, the team, and the organization. An important step in unlocking the full potential of each team member is taking steps to show each team member that they are \u201cseen\u201d and \u201cheard.\u201d One way that leaders can show that they are a leader for all is by adapting their communications style to consider the preferences of the groups they lead (<sup><a href=\"https://www.greatplacetowork.com/resources/blog/engaging-and-managing-multigenerational-workforce\">source</a></sup>)."
+          "text": "Each person has unique value they can bring to a team environment, and it is a leader’s job to recognize and develop that for the benefit of the individual, the team, and the organization. An important step in unlocking the full potential of each team member is taking steps to show each team member that they are “seen” and “heard.” One way that leaders can show that they are a leader for all is by adapting their communications style to consider the preferences of the groups they lead (<sup><a href=\"https://www.greatplacetowork.com/resources/blog/engaging-and-managing-multigenerational-workforce\">source</a></sup>)."
         },
         {
           "type": "heading",
@@ -4833,7 +5010,7 @@
         },
         {
           "type": "paragraph",
-          "text": "When communicating with team members from a different age group, it can also help to collaborate with someone from that age group to hone the messaging. Recruiting a \u201ccommunications ambassador\u201d like this helps build bridges between different groups, and it fosters healthy teamwork. Modeling this kind of teamwork also encourages others to reach outside their peer group for help, and insights."
+          "text": "When communicating with team members from a different age group, it can also help to collaborate with someone from that age group to hone the messaging. Recruiting a “communications ambassador” like this helps build bridges between different groups, and it fosters healthy teamwork. Modeling this kind of teamwork also encourages others to reach outside their peer group for help, and insights."
         },
         {
           "type": "heading",
@@ -4851,7 +5028,7 @@
         },
         {
           "type": "paragraph",
-          "text": "The most effective teams have a diversity of backgrounds, experiences, and perspectives. As much as working within a multi-generational team or organization can pose challenges, the benefits of this diversity are significant. Different perspectives \u2013 and strengths \u2013 should be celebrated and propagated across diverse teams. As an example, have a Baby Boomer provide training to the group on public speaking. Ask a Gen X\u2019er to speak on developing critical thinking skills and adopting a challenger mentality. Get help from Millennials to build and manage your digital marketing. Ask Gen Z\u2019ers for their perspectives on evolving digital communications trends. The possibilities are endless, and exciting!"
+          "text": "The most effective teams have a diversity of backgrounds, experiences, and perspectives. As much as working within a multi-generational team or organization can pose challenges, the benefits of this diversity are significant. Different perspectives – and strengths – should be celebrated and propagated across diverse teams. As an example, have a Baby Boomer provide training to the group on public speaking. Ask a Gen X’er to speak on developing critical thinking skills and adopting a challenger mentality. Get help from Millennials to build and manage your digital marketing. Ask Gen Z’ers for their perspectives on evolving digital communications trends. The possibilities are endless, and exciting!"
         },
         {
           "type": "heading",
@@ -4860,7 +5037,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Managing communications within a multi-generational workforce can at first seem daunting, but it doesn\u2019t have to be. We can assist you with evaluating your communications needs and identifying the technologies and best practices that will simplify communications across multiple modalities while amplifying the effectiveness of your messaging across multiple generations. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
+          "text": "Managing communications within a multi-generational workforce can at first seem daunting, but it doesn’t have to be. We can assist you with evaluating your communications needs and identifying the technologies and best practices that will simplify communications across multiple modalities while amplifying the effectiveness of your messaging across multiple generations. Please <a href=\"https://stratecon.tech/contact\">contact us</a> to set up time to discuss your requirements live."
         },
         {
           "type": "paragraph",
@@ -4919,7 +5096,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Customer service has emerged as a critical differentiator for businesses across many industries, and artificial intelligence (AI) has become a powerful tool to elevate customer service by offering personalized, efficient, and scalable solutions. In this blog we\u2019ll explore how AI can transform customer service for businesses of all sizes, from small businesses to large enterprises, and provide insights into implementation strategies along with some real-world applications."
+          "text": "Customer service has emerged as a critical differentiator for businesses across many industries, and artificial intelligence (AI) has become a powerful tool to elevate customer service by offering personalized, efficient, and scalable solutions. In this blog we’ll explore how AI can transform customer service for businesses of all sizes, from small businesses to large enterprises, and provide insights into implementation strategies along with some real-world applications."
         },
         {
           "type": "heading",
@@ -5504,10 +5681,13 @@
       "is_front_page": false,
       "blocks": [
         {
-          "type": "heading",
-          "level": 1,
-          "text": "AI FOR CUSTOMER SERVICE",
-          "typography_role": "HeadingAlpha"
+          "type": "page_banner",
+          "title": "AI FOR CUSTOMER SERVICE",
+          "title_role": "HeadingAlpha",
+          "image": {
+            "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
+            "alt": "Picture of an eye with a digital background, related to artificial intelligence (AI) for CX"
+          }
         },
         {
           "type": "media_text",
@@ -5558,6 +5738,11 @@
               "items": [
                 "<strong>AI-Powered Voice:</strong> Conversational AI-powered virtual voice agents can answer initial customer inquiries quickly and efficiently, any time of day, any day of the year."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule a Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -5587,8 +5772,13 @@
             {
               "type": "list",
               "items": [
-                "<strong>AI Customer Journey:</strong> AI provides agents with context and guidance about the customer\u2019s issue and past interactions to help customers faster and improve customer satisfaction."
+                "<strong>AI Customer Journey:</strong> AI provides agents with context and guidance about the customer’s issue and past interactions to help customers faster and improve customer satisfaction."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Contact Us",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         },
@@ -5614,6 +5804,11 @@
               "items": [
                 "<strong>AI-Powered Workforce Management :</strong> Leverage AI and machine learning to forecast agent staffing requirements, monitor contact center workflows, and make adjustments in real-time, reducing costs, wait times, time-to-resolution."
               ]
+            },
+            {
+              "type": "button",
+              "text": "Schedule Demo",
+              "href": "https://stratecon.tech/contact"
             }
           ]
         }
@@ -6031,11 +6226,11 @@
         },
         {
           "type": "paragraph",
-          "text": "<a href=\"https://www.cnbc.com/2023/05/02/samsung-bans-use-of-ai-like-chatgpt-for-staff-after-misuse-of-chatbot.html\">Samsung Electronics</a> recently made headlines when some of its software engineers uploaded code into OpenAI\u2019s ChatGPT to leverage AI to troubleshoot code. On the surface, this sounds pretty smart, right? Without taking the time to understand that anything shared with these public tools becomes part of its large language models, however, these engineers accidentally put proprietary code into the public domain. As a result, Samsung has, for now, banned the use of such tools by employees for work purposes."
+          "text": "<a href=\"https://www.cnbc.com/2023/05/02/samsung-bans-use-of-ai-like-chatgpt-for-staff-after-misuse-of-chatbot.html\">Samsung Electronics</a> recently made headlines when some of its software engineers uploaded code into OpenAI’s ChatGPT to leverage AI to troubleshoot code. On the surface, this sounds pretty smart, right? Without taking the time to understand that anything shared with these public tools becomes part of its large language models, however, these engineers accidentally put proprietary code into the public domain. As a result, Samsung has, for now, banned the use of such tools by employees for work purposes."
         },
         {
           "type": "paragraph",
-          "text": "Privacy concerns have also rapidly emerged. On March 30, 2023, Italy\u2019s data regulator <a href=\"https://www.gpdp.it/web/guest/home/docweb/-/docweb-display/docweb/9870832\">temporarily banned</a> the use of OpenAI\u2019s ChatGPT because of its use of user data from millions of Italian users. OpenAI has since <a href=\"https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9881490#english\">taken measures</a> to comply with the <a href=\"https://gdpr.eu/what-is-gdpr/\">General Data Protection Regulation (GDPR)</a> concerns expressed by the Italian regulators, and they have made ChatGPT available to Italian users again, but the dialogue is ongoing."
+          "text": "Privacy concerns have also rapidly emerged. On March 30, 2023, Italy’s data regulator <a href=\"https://www.gpdp.it/web/guest/home/docweb/-/docweb-display/docweb/9870832\">temporarily banned</a> the use of OpenAI’s ChatGPT because of its use of user data from millions of Italian users. OpenAI has since <a href=\"https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9881490#english\">taken measures</a> to comply with the <a href=\"https://gdpr.eu/what-is-gdpr/\">General Data Protection Regulation (GDPR)</a> concerns expressed by the Italian regulators, and they have made ChatGPT available to Italian users again, but the dialogue is ongoing."
         },
         {
           "type": "paragraph",
@@ -6055,7 +6250,7 @@
         },
         {
           "type": "paragraph",
-          "text": "When incorporating generative AI, data protection becomes paramount. Organizations must establish robust data protection measures to safeguard sensitive information and prevent unauthorized access. More specifically, organizations need to establish policies, technologies, and processes that will prevent employees from uploading sensitive company information into generative AI tools that are publicly available, and even when companies deploy private <a href=\"https://aws.amazon.com/what-is/gpt/#:~:text=Generative%20Pre%2Dtrained%20Transformers%2C%20commonly,AI%20applications%20such%20as%20ChatGPT.\">GPT</a> AI solutions there need to be safeguards to properly protect information that shouldn\u2019t necessarily be shared company wide."
+          "text": "When incorporating generative AI, data protection becomes paramount. Organizations must establish robust data protection measures to safeguard sensitive information and prevent unauthorized access. More specifically, organizations need to establish policies, technologies, and processes that will prevent employees from uploading sensitive company information into generative AI tools that are publicly available, and even when companies deploy private <a href=\"https://aws.amazon.com/what-is/gpt/#:~:text=Generative%20Pre%2Dtrained%20Transformers%2C%20commonly,AI%20applications%20such%20as%20ChatGPT.\">GPT</a> AI solutions there need to be safeguards to properly protect information that shouldn’t necessarily be shared company wide."
         },
         {
           "type": "paragraph",
@@ -6071,7 +6266,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Maintaining a secure environment demands ongoing monitoring and auditing of AI systems. Regularly assess AI models, algorithms, and their outputs to identify any potential vulnerabilities or biases \u2013 and be sure to include the proper humans to ensure accuracy of results. Generative AI can produce results that seem completely factual, but they should not be taken at face value without confirming with subject matter experts. ChatGPT has posted on their site, for example, that \u201cChatGPT may produce inaccurate information about people, places, or facts,\u201d so it is crucial to audit the results that are produced. By closely monitoring generative AI solutions, organizations can promptly detect and address emerging cybersecurity threats, and ensure the reliability and integrity of the results produced."
+          "text": "Maintaining a secure environment demands ongoing monitoring and auditing of AI systems. Regularly assess AI models, algorithms, and their outputs to identify any potential vulnerabilities or biases – and be sure to include the proper humans to ensure accuracy of results. Generative AI can produce results that seem completely factual, but they should not be taken at face value without confirming with subject matter experts. ChatGPT has posted on their site, for example, that “ChatGPT may produce inaccurate information about people, places, or facts,” so it is crucial to audit the results that are produced. By closely monitoring generative AI solutions, organizations can promptly detect and address emerging cybersecurity threats, and ensure the reliability and integrity of the results produced."
         },
         {
           "type": "paragraph",
@@ -6095,7 +6290,7 @@
         },
         {
           "type": "paragraph",
-          "text": "After over 25 years in corporate information technology roles, I took the leap and founded my own Technology Advisory company. It\u2019s exciting and fulfilling and having the time and energy to continually explore new technologies is one of my passions. I\u2019ll also let you in on a secret \u2013 I leveraged ChatGPT to assist me with creating this blog post! If your organization could use help with information technology strategy, selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact-us\">contact us</a> to setup time to discuss where we can help."
+          "text": "After over 25 years in corporate information technology roles, I took the leap and founded my own Technology Advisory company. It’s exciting and fulfilling and having the time and energy to continually explore new technologies is one of my passions. I’ll also let you in on a secret – I leveraged ChatGPT to assist me with creating this blog post! If your organization could use help with information technology strategy, selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact-us\">contact us</a> to setup time to discuss where we can help."
         },
         {
           "type": "paragraph",
@@ -6216,12 +6411,12 @@
         },
         {
           "type": "paragraph",
-          "text": "For those that haven\u2019t yet leveraged AI tools, determining <em>if</em>, <em>how</em>, and <em>where</em> they leverage AI remains a strategic imperative, and yet as quoted in the movie <em>Spider-Man</em>:"
+          "text": "For those that haven’t yet leveraged AI tools, determining <em>if</em>, <em>how</em>, and <em>where</em> they leverage AI remains a strategic imperative, and yet as quoted in the movie <em>Spider-Man</em>:"
         },
         {
           "type": "heading",
           "level": 4,
-          "text": "\u201cWith great power comes great responsibility.\u201d"
+          "text": "“With great power comes great responsibility.”"
         },
         {
           "type": "paragraph",
@@ -6229,7 +6424,7 @@
         },
         {
           "type": "paragraph",
-          "text": "If your organization doesn\u2019t already have a well-documented and implemented AI strategy, <strong>AI Use Policies</strong> and <strong>AI Disclosure Statements</strong> are a great place to start."
+          "text": "If your organization doesn’t already have a well-documented and implemented AI strategy, <strong>AI Use Policies</strong> and <strong>AI Disclosure Statements</strong> are a great place to start."
         },
         {
           "type": "heading",
@@ -6267,7 +6462,7 @@
             "<strong>Data Privacy and Security: </strong>Understanding how AI vendors handle data is essential to ensuring compliance with data privacy regulations and maintaining the security of sensitive information. AI Disclosure Statements often include details about data collection, storage, and usage. If vendors share information with any 3rdparties to deliver their AI features, completing an AI Disclosure Statement for those 3rd parties is also crucial.",
             "<strong>Performance and Limitations: </strong>AI technologies have limitations. AI Disclosure Statements provide information about the AI's performance metrics and potential shortcomings. These disclosures help identify areas where additional human oversight of AI-generated results is required to ensure accuracy and efficacy. This information helps companies manage expectations and plan for contingencies.",
             "<strong>Accountability and Trust:</strong> By demanding AI Disclosure Statements from vendors, companies send a clear message that they prioritize transparency and accountability. This encourages vendors to develop ethical AI solutions and builds trust between parties.",
-            "<strong>Governance and Control:</strong> A well-documented AI Disclosure Statement not only covers what AI features are available within a vendor\u2019s products, but also how these features may be enabled or disabled, and which parties are allowed to make these changes."
+            "<strong>Governance and Control:</strong> A well-documented AI Disclosure Statement not only covers what AI features are available within a vendor’s products, but also how these features may be enabled or disabled, and which parties are allowed to make these changes."
           ]
         },
         {
@@ -6486,7 +6681,7 @@
         },
         {
           "type": "paragraph",
-          "text": "Navigating the world of new technologies like AI can be intimidating, but you don\u2019t have to make that journey on your own \u2013 we\u2019re here to help! If your organization could use help with information technology strategy, selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact-us\">contact us</a> to setup time to discuss where we can help."
+          "text": "Navigating the world of new technologies like AI can be intimidating, but you don’t have to make that journey on your own – we’re here to help! If your organization could use help with information technology strategy, selection, and vendor evaluations, please <a href=\"https://stratecon.tech/contact-us\">contact us</a> to setup time to discuss where we can help."
         },
         {
           "type": "paragraph",
@@ -6668,7 +6863,7 @@
         "href": "/terms-of-service"
       }
     ],
-    "copyright_text": "Copyright \u00a9 2026 STRATECON TECH ADVISORS, a division of Sustainable Investments, LLC - All Rights Reserved."
+    "copyright_text": "Copyright © 2026 STRATECON TECH ADVISORS, a division of Sustainable Investments, LLC - All Rights Reserved."
   },
   "qualification_flags": {},
   "qualification": {
