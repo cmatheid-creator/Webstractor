@@ -3176,15 +3176,20 @@ def _extra_css_rules(brand):
     # A translucent white panel behind the hero text (see
     # block_to_gutenberg()'s "hero" branch, .migration-hero-box) --
     # confirmed on this site's live home page: rgba(255,255,255,0.9),
-    # ~40px/56px padding, no border-radius. .migration-hero-boxed on the
-    # outer cover cancels the plain .migration-hero white-text rule above
-    # (same specificity, later in the sheet wins) so the heading/CTA use
-    # the theme's normal dark colors against the light box instead.
+    # ~40px/56px padding, no border-radius. .migration-hero-boxed needs to
+    # cancel the plain .migration-hero white-text rule above -- same
+    # specificity (two classes each), so on its own it's a coin flip
+    # depending on stylesheet-merge order rather than a reliable win
+    # (confirmed on the dev site: white-on-white, unreadable, was still
+    # winning). Match the ".wp-block-cover" element into the selector to
+    # force strictly higher specificity, and set the real brand navy
+    # rather than "inherit" so it doesn't depend on what the ancestor
+    # chain resolves to either.
     rules.append(
         ".migration-hero-box{background-color:rgba(255,255,255,.9);"
         "padding:2.5rem 3.5rem;display:inline-block}"
         ".migration-hero-boxed .wp-block-cover__inner-container{max-width:600px}"
-        ".migration-hero-boxed .wp-block-cover__inner-container :where(h1,p){color:inherit}"
+        ".wp-block-cover.migration-hero-boxed .wp-block-cover__inner-container :where(h1,p){color:" + primary + "}"
     )
 
     # The page banner (see block_to_gutenberg()'s "page_banner" branch) --
