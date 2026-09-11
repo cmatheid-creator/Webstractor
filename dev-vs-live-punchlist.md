@@ -5,6 +5,69 @@ counts + broken-image detection, form/placeholder flags, full-page
 screenshots of every pair), run 2026-09-06 against the current dev site
 (fresh reset → import → publish → repair plugin → front page set).
 
+## Pass 5 — layout regressions the structural diff can't see 2026-09-11
+
+Carver reported four concrete visual differences Pass 4's structural
+diff (headings/text-length/image-counts) had no way to catch, because
+none of them change the text or image *count* — they're layout and
+functional-behavior regressions:
+
+1. **Home hero** — no translucent white panel behind the heading/
+   sub-tagline/CTA, and the background photo read noticeably more
+   "faded"/muddy than live.
+2. **Services page** — the "middle three" IT-service sections all had
+   their image on the left; live alternates left/right per section.
+3. **About page** — same left/right problem, plus the founder photo
+   rendered oversized (stretched to a plain 50% column) instead of
+   live's smaller, right-aligned, narrower-column treatment.
+4. **Contact page** — no functional form, just the placeholder panel
+   (by design at generation time, but never swapped for the real one).
+
+Root-caused and fixed all four (see the two commits below); full
+reset→import→publish→repair→Fluent-Forms-import→shortcode-swap→cache-purge
+pass on the dev site, verified logged out against all four pages plus a
+full 37-page block-validation sweep before deploying. Screenshots
+confirm home/services/about/contact now match live's layout.
+
+**1 & 2 — `extract_hero()` / `mark_media_text_pairs()` fixes** (see the
+"Fix hero white box/overlay and alternating media_text image position"
+commit): the hero's dim overlay was hard-coded to 60% navy (live has
+none — legibility comes from the white box) and every media_text pair
+rendered image-left at a flat 50/50 split (GoDaddy alternates sides via
+`flex-direction:row-reverse` on the Grid — the image is always the
+*first* DOM child regardless of which side it renders on, so DOM order
+can't detect it; About's founder photo also uses a ~33/67 split, not
+50/50). Both are now captured from the live DOM (rendered position +
+width share, and the hero's actual overlay alpha + box background) and
+applied via `core/media-text`'s `mediaPosition`/`mediaWidth` and a new
+`.migration-hero-box` group — markup verified against
+`wp.blocks.getBlockContent()`, including two block-validation bugs this
+surfaced (a `dimRatio:0` CSS-class regression, and a same-specificity
+CSS rule losing the cascade) — see the two follow-up commits.
+
+**4 — Contact / eBook / Cyber-Risk forms — DONE.** Imported
+`fluentforms-migration.json`'s 3 forms via Fluent Forms → Tools → Import
+Forms (new ids 3/4/5), then swapped each `.migration-form-placeholder`
+panel for its real `[fluentform id="N"]` shortcode via a REST content
+PATCH on `contact`, `cyber-risk-assessment`, `cybersecurity-solutions`,
+`threat-protection`, `threat-id-%26-detection`. Verified: `/contact/`
+renders a real First/Last Name, Email, Message, opt-in, Send form (8
+inputs). **Not yet automated** — a fresh WP Reset wipes Fluent Forms
+along with everything else, so this import + swap has to be redone by
+hand (or scripted again) after every reset; the repair plugin doesn't
+do it (dropped earlier as too fragile for a direct-DB-insert approach —
+the sanctioned Import Forms UI path used here is reliable but still
+manual).
+
+**Comparison tooling gap, noted for next time:** every structural-diff
+pass so far (heading text, body-text length ratio, image/CTA counts)
+is blind to *how* content is laid out — side, width, overlay/box
+styling, and whether a "form" placeholder is real. Catching this class
+of regression earlier means either an actual visual/pixel diff between
+matched live/dev screenshots, or explicit structural checks for the
+specific things GoDaddy is known to vary (image side, column width,
+overlay presence) rather than just counting elements.
+
 ## Pass 4 — full dev-vs-live re-diff + page banners / CTAs 2026-09-09
 
 Re-ran the structured diff across all 37 pairs with **working text

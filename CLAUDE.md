@@ -161,6 +161,21 @@ stratecon.tech. The manual reset→reimport→verify loop, in order:
     "send the user a set-password link" option. `claude-agent` working
     is not evidence that Carver still has access — his account is a
     separate row and it is gone after every reset.
+11. Wire up the real forms (still manual — a reset wipes Fluent Forms
+    too): Fluent Forms → Tools → Import Forms → upload
+    `fluentforms-migration.json` (file input `#fileUpload`, button
+    `.el-button--primary` "Import Forms" — the URL is
+    `admin.php?page=fluent_forms_transfer`, not discoverable by guessing
+    a route). Note the new form ids it creates (FF numbers its own demo
+    forms 1-2 first, so the imported ones land at 3+), then in each
+    page that carries a `.migration-form-placeholder` panel, replace
+    that `<!-- wp:group {"className":"migration-form-placeholder",
+    "anchor":"migration-ff-N"} -->...<!-- /wp:group -->` block with
+    `<!-- wp:shortcode -->[fluentform id="<the real id>"]<!-- /wp:shortcode -->`
+    (a REST `POST wp/v2/pages/<id>` with the edited `content` is the
+    reliable way to do this precisely, rather than hand-editing in the
+    block editor). Without this step every "form" on the site is the
+    dashed placeholder panel, not a working form.
 
 If this Claude Code session has real credentials for dev.stratecon.tech (a
 dedicated `claude-agent` WordPress admin account — check for a local,
@@ -433,6 +448,33 @@ any page; body text 90–98% of live everywhere.
    page, contact, and 17 blog posts. Needs an ESP choice (Mailchimp,
    etc.) before it can be wired. **Still open** — the last remaining
    punch-list item, and it can't move without the ESP name.
+
+**Done 2026-09-11:**
+- **Four layout regressions the structural dev-vs-live diff couldn't
+  see, reported by Carver directly.** Home hero was missing its
+  translucent white text panel and had a hard-coded 60% dark overlay
+  (live has none); Services/About media_text sections were all
+  image-left instead of alternating like live; About's founder photo
+  was stretched to a plain 50% column instead of live's narrower,
+  right-aligned treatment; Contact page showed the dashed form
+  placeholder instead of a working form. `extract_hero()` now captures
+  the real overlay alpha and the white-box background/padding from the
+  live DOM; `mark_media_text_pairs()` now compares *rendered* left
+  position (not DOM order — GoDaddy alternates sides via
+  `flex-direction:row-reverse`, DOM order never changes) and the image
+  cell's width share. Imported the 3 Fluent Forms + swapped every
+  placeholder for its real `[fluentform id]` shortcode (see the "Dev
+  site workflow" step 11 above — still a manual step after every
+  reset). Two block-validation bugs surfaced and fixed along the way
+  (a `dimRatio:0` CSS-class edge case, and a same-specificity CSS rule
+  silently losing the cascade). Verified: full reset→import→publish→
+  repair→FF-import→shortcode-swap→cache-purge pass, logged out,
+  screenshots confirm home/services/about/contact now match live.
+  See `dev-vs-live-punchlist.md` "Pass 5" for the noted gap in the
+  comparison tooling itself (structural diffs can't see layout/overlay/
+  form-functionality regressions — only a real visual diff or
+  explicit structural checks for these specific GoDaddy behaviors would
+  have caught this ahead of Carver spotting it).
 
 **Done 2026-09-09:**
 - **`cyber-risk-assessment` self-assessment form rebuilt in Fluent
