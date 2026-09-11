@@ -402,7 +402,27 @@ def mark_media_text_pairs(page):
 
                 const img = imgCell.querySelector('img');
                 if (!img) continue;
+
+                // GoDaddy alternates which side the image sits on with
+                // flex-direction:row-reverse on the Grid -- confirmed via
+                // the live site's own markup on /services and /about,
+                // where every image is the *first* DOM child regardless
+                // of which side it renders on. DOM order is therefore
+                // useless for detecting the side; compare rendered
+                // horizontal position instead. Also capture the image
+                // cell's share of the row's width -- most pairs split
+                // 50/50, but a section like About's founder photo uses a
+                // narrower image column (confirmed ~33/67), and stretching
+                // it to a plain 50/50 WordPress Media & Text block makes
+                // the photo look oversized next to the live page.
+                const ir = imgCell.getBoundingClientRect();
+                const tr = textCell.getBoundingClientRect();
+                const side = ir.left < tr.left ? 'left' : 'right';
+                const totalW = ir.width + tr.width;
+                const widthPct = totalW > 0 ? Math.round((ir.width / totalW) * 100) : 50;
                 img.setAttribute('data-migration-media-text-image', String(pairCount));
+                img.setAttribute('data-migration-media-text-side', side);
+                img.setAttribute('data-migration-media-text-width', String(widthPct));
                 textCell.setAttribute('data-migration-media-text-content', String(pairCount));
                 pairCount++;
             }
@@ -861,17 +881,49 @@ def extract_hero(page, page_url):
             // The background image is a CSS background-image, and it may
             // sit on the marked element itself or on a nested slideshow
             // container -- walk the marked element and its descendants and
-            // take the first real url(...) found.
+            // take the first real url(...) found. The same walk picks up
+            // a dark overlay baked into that same background-image as a
+            // leading linear-gradient(rgba(0,0,0,N) ...) -- confirmed on
+            // this site's home hero, N is 0 (no overlay at all; the text
+            // stays legible via the white box below, not by darkening the
+            // whole photo). Earlier versions hard-coded a 60% navy tint
+            // here regardless of what the live page actually used, which
+            // made the migrated hero image look muddy/over-darkened next
+            // to a live page with none.
             let imgUrl = '';
+            let dimAlpha = 0;
             if (bg) {
                 const cands = [bg, ...bg.querySelectorAll('*')];
                 for (const el of cands) {
                     const bi = getComputedStyle(el).backgroundImage;
                     if (bi && bi !== 'none') {
                         const m = bi.match(/url\((['"]?)(.*?)\1\)/);
-                        if (m && m[2]) { imgUrl = m[2]; break; }
+                        if (m && m[2]) {
+                            imgUrl = m[2];
+                            const dm = bi.match(/rgba?\([^)]*,\s*([\d.]+)\)/);
+                            if (dm) dimAlpha = parseFloat(dm[1]) || 0;
+                            break;
+                        }
                     }
                 }
+            }
+
+            // A translucent panel behind the heading/sub-tagline/CTA --
+            // confirmed on the live home page: rgba(255,255,255,0.9),
+            // padding 40px 56px, no border-radius, wrapping just that
+            // text cluster (not the full hero width). Walk up from the
+            // <h1> looking for the first ancestor with a real background
+            // color, stopping at the section boundary.
+            let boxBg = '', boxPadding = '';
+            let boxEl = h1.parentElement;
+            for (let i = 0; i < 8 && boxEl && boxEl !== sec; i++) {
+                const cs = getComputedStyle(boxEl);
+                if (cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') {
+                    boxBg = cs.backgroundColor;
+                    boxPadding = cs.padding;
+                    break;
+                }
+                boxEl = boxEl.parentElement;
             }
 
             const abs = (u) => {
@@ -892,6 +944,8 @@ def extract_hero(page, page_url):
                     src: abs(imgUrl),
                     alt: (bg && bg.getAttribute('aria-label')) || '',
                 } : null,
+                dim_ratio: Math.round(dimAlpha * 100),
+                heading_box: boxBg ? { background: boxBg, padding: boxPadding } : null,
             };
         }""",
         page_url,
@@ -915,6 +969,9 @@ def extract_hero(page, page_url):
             "src": data["image"]["src"],
             "alt": data["image"].get("alt") or "",
         }
+    hero["dim_ratio"] = data.get("dim_ratio") or 0
+    if data.get("heading_box"):
+        hero["heading_box"] = data["heading_box"]
     return hero
 
 
@@ -1151,12 +1208,19 @@ def extract_blocks(page, page_url):
 
                 if resolved is not None and content:
                     abs_src, alt = resolved
-                    blocks.append({
+                    mt_block = {
                         "type": "media_text",
                         "src": abs_src,
                         "alt": alt,
                         "content": content,
-                    })
+                    }
+                    side = el.get_attribute("data-migration-media-text-side")
+                    if side:
+                        mt_block["image_side"] = side
+                    width = el.get_attribute("data-migration-media-text-width")
+                    if width:
+                        mt_block["image_width_pct"] = int(width)
+                    blocks.append(mt_block)
                 elif resolved is not None:
                     # Text side had nothing extractable after all --
                     # fall back to a plain image rather than losing it.

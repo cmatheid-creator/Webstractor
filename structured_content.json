@@ -28,6 +28,11 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/2646/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:1535,m",
             "alt": "An open hand cupping a floating globe made of digital elements, representing technology"
+          },
+          "dim_ratio": 0,
+          "heading_box": {
+            "background": "rgba(255, 255, 255, 0.9)",
+            "padding": "40px 56px"
           }
         },
         {
@@ -216,7 +221,9 @@
               "type": "paragraph",
               "text": "Connect with us to learn how we can tailor connectivity solutions to support secure, anytime, anywhere connectivity for your employees and business locations."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -258,7 +265,9 @@
               "text": "Get a Quote",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -289,7 +298,9 @@
                 "<strong>Dedicated Support</strong>: 24/7 customer support and monitoring to ensure your internet connectivity remains optimal at all times."
               ]
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -325,7 +336,9 @@
               "text": "Let's Discuss",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -366,7 +379,9 @@
                 "<strong>Optimization: </strong>Continuously fine-tune cloud resources to maximize efficiency and reduce costs."
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -402,7 +417,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "Secure Business Connectivity Solutions | Stratecon",
@@ -1134,7 +1151,9 @@
               "type": "paragraph",
               "text": "Put the power of AI to work for your organization to enable your sales teams and supercharge your sales results."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -1176,7 +1195,9 @@
               "text": "Request a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1212,7 +1233,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1242,7 +1265,9 @@
               "text": "Schedule time to learn more",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "AI for Sales | Stratecon Tech Advisors",
@@ -1290,7 +1315,9 @@
                 "In 2023, it took organizations <strong>204 days</strong> to detect data breaches, and an average of <strong>73 days</strong> to contain them <sup><a href=\"https://www.ibm.com/reports/data-breach\">source</a></sup>"
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -1577,7 +1604,9 @@
               "type": "paragraph",
               "text": "The good news? We can help!"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -1619,7 +1648,9 @@
               "text": "Start a Conversation",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1655,7 +1686,9 @@
               "text": "AI Use Policy Template",
               "href": "https://stratecon.tech/ai-use-policy-template"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1691,7 +1724,9 @@
               "text": "AI Disclosure Statement Template",
               "href": "https://stratecon.tech/ai-disclosure-template"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1727,7 +1762,9 @@
               "text": "Schedule Training",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "AI Strategy | Stratecon Tech Advisors",
@@ -1777,7 +1814,9 @@
               "text": "Free Risk Assessment",
               "href": "https://stratecon.tech/cyber-risk-assessment"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -1814,7 +1853,9 @@
                 "<strong>Strategic Resource Allocation:</strong> Make informed decisions about cybersecurity investments, helping you allocate resources effectively, prioritizing critical areas to maximize the impact of your security efforts."
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1845,7 +1886,9 @@
                 "<strong>Third-Party Confidence:</strong> Strengthen your relationships with partners and vendors. Risk Assessments of third-party entities ensure they meet your security standards, reducing overall risk in your business ecosystem."
               ]
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -1876,7 +1919,9 @@
                 "<strong>Employee Empowerment:</strong> Foster a culture of cybersecurity awareness. Risk Assessments raise employee understanding of potential risks, encouraging best practices and creating a vigilant team that actively contributes to your organization's defense."
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2260,7 +2305,9 @@
               "text": "Free Risk Assessment",
               "href": "https://stratecon.tech/cyber-risk-assessment"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2297,7 +2344,9 @@
                 "<strong>24/7 Monitoring: </strong>Ensure round-the-clock protection with real-time monitoring and instant incident response."
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2343,7 +2392,9 @@
               "text": "start a conversation",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -2378,7 +2429,9 @@
                 "<strong>Identity and Access Management (IAM):</strong> Implement strict access control to ensure only verified users have access to the information they need."
               ]
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -2418,7 +2471,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2634,7 +2689,9 @@
               "text": "Free Risk Assessment",
               "href": "https://stratecon.tech/cyber-risk-assessment"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2671,7 +2728,9 @@
                 "Identify Threats, Vulnerabilities, and Risks to Assets"
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2710,7 +2769,9 @@
               "text": "start a conversation",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -2744,7 +2805,9 @@
               "text": "Schedule Training",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2832,7 +2895,9 @@
               "type": "paragraph",
               "text": "We're help to help fill those gaps with a suite of technology services that will help your business grow."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -2869,7 +2934,9 @@
               "text": "Let's Talk",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -2900,7 +2967,9 @@
               "text": "Let's Connect",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -2931,7 +3000,9 @@
               "text": "start a conversation",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "Technology Advisory Services | Stratecon Tech",
@@ -3339,7 +3410,9 @@
                 "Companies with effective communication and collaboration see a <strong>50% reduction</strong> in employee turnover. <sup><a href=\"https://www.zippia.com/advice/workplace-collaboration-statistics/\">source</a></sup>"
               ]
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -3889,7 +3962,9 @@
               "type": "paragraph",
               "text": "Connect with us today to learn how your organization can benefit from unified, scalable, and secure communications."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -3931,7 +4006,9 @@
               "text": "Request a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -3967,7 +4044,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -4003,7 +4082,9 @@
               "text": "Schedule a Call",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "Unified Communications (UCaaS) | Stratecon Tech",
@@ -4350,7 +4431,9 @@
               "type": "paragraph",
               "text": "Combine the power of AI and automation with secure cloud access to supercharge your sales teams and elevate your customer service organization."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -4392,7 +4475,9 @@
               "text": "Schedule a Call",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -4422,7 +4507,9 @@
               "text": "Schedule time to learn more",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -4464,7 +4551,9 @@
               "text": "Request a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -4500,7 +4589,9 @@
               "text": "Request a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -4530,7 +4621,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -4572,7 +4665,9 @@
               "text": "Schedule a Call",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -4602,7 +4697,9 @@
               "text": "Request a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "Customer Experience (CX) Solutions | Stratecon",
@@ -5321,7 +5418,9 @@
               "type": "paragraph",
               "text": "Principal Consultant and Founder"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 33
         },
         {
           "type": "heading",
@@ -5344,7 +5443,9 @@
               "type": "paragraph",
               "text": "Our mission is to help businesses of all sizes reach their full potential through the intelligent use of technology."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -5361,7 +5462,9 @@
               "type": "paragraph",
               "text": "Our team of experts has years of experience in the IT industry. We are passionate about helping businesses succeed and we pride ourselves on our technical expertise and exceptional customer service."
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -5378,7 +5481,9 @@
               "type": "paragraph",
               "text": "We offer a wide range of IT advisory services, all designed to help you build the most effective and efficient IT product portfolio that will secure and grow your business."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -5708,7 +5813,9 @@
               "type": "paragraph",
               "text": "By using AI to enable and automate the access to key information, live agents are better equipped to deliver world-class customer experiences."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
@@ -5744,7 +5851,9 @@
               "text": "Schedule a Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -5780,7 +5889,9 @@
               "text": "Contact Us",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "right",
+          "image_width_pct": 50
         },
         {
           "type": "media_text",
@@ -5810,7 +5921,9 @@
               "text": "Schedule Demo",
               "href": "https://stratecon.tech/contact"
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         }
       ],
       "meta_title": "AI for Customer Service | Stratecon Tech Advisors",
@@ -5850,7 +5963,9 @@
               "type": "paragraph",
               "text": "If you haven't recently completed this important step, we suggest taking 5-10 minutes to complete the Free Cyber Risk Self Assessment, below."
             }
-          ]
+          ],
+          "image_side": "left",
+          "image_width_pct": 50
         },
         {
           "type": "heading",
