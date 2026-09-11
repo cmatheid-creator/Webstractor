@@ -5,6 +5,80 @@ counts + broken-image detection, form/placeholder flags, full-page
 screenshots of every pair), run 2026-09-06 against the current dev site
 (fresh reset → import → publish → repair plugin → front page set).
 
+## Pass 6 — compare_agent.py: closing the tooling gap 2026-09-11
+
+Pass 5 fixed the four regressions Carver found by eye but left the
+comparison *tooling* itself unchanged -- still just headings/text-length/
+image-counts, blind to layout. Built `compare_agent.py`, a permanent
+pipeline tool (not a throwaway script), adding the checks that would
+have caught Pass 5's regressions automatically:
+
+- **media_text image side/width** — matched live-to-dev by heading text,
+  compared by *rendered* position (GoDaddy's `flex-direction:row-reverse`
+  alternation makes DOM order meaningless — confirmed the image is
+  always the first DOM child regardless of which side it renders on).
+- **hero/banner text-panel + photo-overlay** — generalized to recognize
+  either GoDaddy's gradient-baked-into-background-image technique or
+  WordPress core/cover's separate overlay-span-with-opacity technique
+  (needed both: the first version only knew GoDaddy's, so it silently
+  found "no overlay" on every migrated page and cried wolf on all 10
+  banner pages until fixed).
+- **form realness** — real input/textarea/select count vs an unswapped
+  `.migration-form-placeholder` panel.
+- **a full-page pixel diff**, vertically offset-aligned first (a naive
+  top-crop badly false-positives on ordinary height differences), kept
+  **informational/ranked only, not a flag** — even a page confirmed by
+  eye to match live scores 20–40% different from ordinary cross-platform
+  rendering noise (different font hinting, re-encoded stock photos,
+  multi-point spacing drift down a long page); treating that as pass/fail
+  would flag most of the site on noise alone.
+
+**Caught a real bug in itself before trusting it:** a stray Python-style
+`#` comment inside the JS template caused a silent `evaluate()` syntax
+error, so an initial full-site run's "0/37 flagged" was meaningless — no
+check had actually executed, and every field the diff logic read back was
+just an empty default. Fixed, then written to distrust its own logic:
+validated with a synthetic HTML fixture deliberately mismatched on every
+check (image side, width, hero box, overlay strength, form realness) and
+confirmed **all five fire correctly** before trusting a real run against
+the site.
+
+**That real run then found three genuine, previously-unknown issues**
+(the actual proof this was worth building), now also fixed:
+- `page_banner`'s overlay was hard-coded to 50%; the live banner is
+  ~24%. `extract_page_banner()` now captures the real value, same
+  pattern as the earlier hero `dim_ratio` fix.
+- `risk-assessment-1` ("Take Free Assessment") and `cyber-risk-assessment`
+  ("Get in Touch") were each missing a stand-alone CTA button that sits
+  in its own text-only section, not inside any media_text pair — the
+  crawler only captures buttons from media_text text-cells. Added by
+  hand to `structured_content.json` (matched to its exact position on
+  the live page) rather than building a whole new extraction path for
+  what's currently a single-site, two-button case.
+- `threat-protection` and `threat-id-%26-detection` had their Fluent
+  Forms shortcode swap **silently reverted** back to the placeholder
+  panel — a real self-inflicted regression: an earlier content PATCH in
+  the same session (pushing the page_banner `dim_ratio` fix) overwrote
+  those two pages' content from freshly regenerated (placeholder-shaped)
+  XML, clobbering the shortcode swap done earlier in the same pass. Both
+  the lesson and the fix: **content PATCHes must be applied in the right
+  order relative to the Fluent Forms shortcode swap**, or re-apply the
+  swap after any later content push — see CLAUDE.md's dev-site workflow
+  step 11.
+
+Verified: 0 invalid blocks across all touched pages before deploying;
+full 37-page sweep on the dev site afterward — 24/37 pages still show a
+flag, but every single one is one of the two already-documented,
+non-actionable patterns (the intentional blog-listing-header strip on
+all 16 blog posts, and body-text-ratio measurement noise on pages with
+form placeholders). **Zero real regressions outstanding.**
+
+Going forward: run `python3 compare_agent.py` after any dev-site deploy
+(or `python3 compare_agent.py <slug> ...` for just the touched pages) —
+output goes to `comparison-output/` (gitignored), read `report.md` for
+the flagged pages + the visual-diff ranking, and write up anything real
+into this file by hand, the way every pass so far has.
+
 ## Pass 5 — layout regressions the structural diff can't see 2026-09-11
 
 Carver reported four concrete visual differences Pass 4's structural

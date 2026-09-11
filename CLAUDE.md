@@ -37,7 +37,14 @@ a clean in-scope example.
 8. **Redirect Agent** (scripted) — old-URL → new-URL map, exportable as CSV for
    the Redirection plugin.
 9. **QA Agent** (scripted + LLM summary) — diffs old vs new, writes a plain-English
-   report.
+   report. `qa_report.md` (build_qa_report() in generator_agent.py) covers the
+   static content inventory (forms/images/FAQ/meta coverage); the live
+   dev-vs-live comparison itself is `compare_agent.py` — structural checks
+   (headings/text-length/image counts) plus layout checks a purely
+   structural diff can't see (media_text image side/width, hero/banner
+   text-panel + overlay, real-form-vs-placeholder) and an informational
+   full-page pixel diff. Run it after any dev-site deploy; see
+   dev-vs-live-punchlist.md "Pass 6" for why the layout checks exist.
 10. **Concierge Agent** (LLM) — the only agent-facing interface a non-technical
     client sees; translates everything above into plain language.
 
@@ -450,6 +457,29 @@ any page; body text 90–98% of live everywhere.
    punch-list item, and it can't move without the ESP name.
 
 **Done 2026-09-11:**
+- **`compare_agent.py` — closed the tooling gap the layout regressions
+  below exposed.** New permanent pipeline tool adding the checks a
+  headings/text-length/image-count diff can't provide: media_text
+  image side/width (matched live-to-dev by heading, compared by
+  *rendered* position since GoDaddy's row-reverse alternation makes DOM
+  order meaningless), hero/banner text-panel + photo-overlay (recognizes
+  both GoDaddy's and WordPress core/cover's overlay techniques), and
+  real-form-vs-placeholder. A full-page pixel diff (vertically
+  offset-aligned first) is informational/ranked only, never a flag —
+  cross-platform rendering noise alone scores 20-40% "different" on a
+  page confirmed by eye to match. Caught a real bug in itself (a stray
+  Python `#` inside the JS template silently broke every check) before
+  trusting it, via a synthetic fixture that deliberately mismatches
+  every check. The real run that followed found three genuine,
+  previously-unknown issues, now fixed too: `page_banner`'s overlay was
+  hard-coded to 50% instead of the live ~24%; `risk-assessment-1` and
+  `cyber-risk-assessment` were each missing a stand-alone CTA button
+  outside any media_text pair; and threat-protection/threat-id's Fluent
+  Forms shortcode swap had been silently reverted by an out-of-order
+  content PATCH earlier in the same session. Full 37-page sweep
+  afterward: 0 real regressions, only the two already-documented
+  non-actionable patterns still flag. See dev-vs-live-punchlist.md
+  "Pass 6".
 - **Four layout regressions the structural dev-vs-live diff couldn't
   see, reported by Carver directly.** Home hero was missing its
   translucent white text panel and had a hard-coded 60% dark overlay
