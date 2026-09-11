@@ -200,7 +200,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
             "alt": "Banner with a man in a business suit pointing at interconnected circles"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -1130,7 +1131,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
             "alt": ""
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -1583,7 +1585,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
             "alt": ""
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -1792,7 +1795,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
             "alt": "Data center with racks of equipment glowing inside data cabinets"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -1932,6 +1936,11 @@
         {
           "type": "paragraph",
           "text": "Take advantage of our Free Cyber Risk Self Assessment to identify potential gaps in your cybersecurity defenses."
+        },
+        {
+          "type": "button",
+          "text": "Take Free Assessment",
+          "href": "https://stratecon.tech/cyber-risk-assessment"
         }
       ],
       "meta_title": "Cyber Risk Assessment | Stratecon Tech Advisors",
@@ -2279,7 +2288,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
             "alt": "Rows of data racks full of computers and computer equipment"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -2667,7 +2677,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/6yOme1a/:/cr=t:0%25,l:7.83%25,w:77.52%25,h:77.52%25/rs=w:1535,m",
             "alt": "Rows of data racks full of computers and computer equipment"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -2874,7 +2885,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/2644/:/cr=t:2.52%25,l:0%25,w:94.97%25,h:94.97%25/rs=w:1535,m",
             "alt": "Data center with racks of glowing equipment in data cabinets"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -3941,7 +3953,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
             "alt": "Man in business suit pointing to a circle in interconnected circles diagram"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -4410,7 +4423,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/3258/:/cr=t:8.19%25,l:11.16%25,w:80.65%25,h:80.65%25/rs=w:1535,m",
             "alt": "Man in a business suit pointing at interconnected circles"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -5792,7 +5806,8 @@
           "image": {
             "src": "https://img1.wsimg.com/isteam/stock/yrY8e9w/:/cr=t:0%25,l:1.83%25,w:96.34%25,h:100%25/rs=w:1535,m",
             "alt": "Picture of an eye with a digital background, related to artificial intelligence (AI) for CX"
-          }
+          },
+          "dim_ratio": 24
         },
         {
           "type": "media_text",
@@ -6300,6 +6315,11 @@
         {
           "type": "paragraph",
           "text": "Our Advisors are standing by to discuss your Cyber Risk Self Assessment results, at your convenience. We look forward to working with you to build the customized cybersecurity strategy that will secure your business, and your brand."
+        },
+        {
+          "type": "button",
+          "text": "Get in Touch",
+          "href": "https://stratecon.tech/contact"
         }
       ],
       "meta_title": "Free Cyber Risk Self-Assessment | Stratecon Tech",

@@ -1007,18 +1007,25 @@ def extract_page_banner(page, page_url):
 
             const bg = wb.querySelector('[data-aid="BACKGROUND_IMAGE_RENDERED"], [data-ux="Background"]') || wb;
             let imgUrl = '';
+            let dimAlpha = 0;
             for (const el of [bg, ...bg.querySelectorAll('*')]) {
                 const bi = getComputedStyle(el).backgroundImage;
                 if (bi && bi !== 'none') {
-                    // the value is usually "linear-gradient(...), url('...')"
+                    // the value is usually "linear-gradient(rgba(0,0,0,N) ...), url('...')"
                     const m = bi.match(/url\((['"]?)(.*?)\1\)/);
-                    if (m && m[2]) { imgUrl = m[2]; break; }
+                    if (m && m[2]) {
+                        imgUrl = m[2];
+                        const dm = bi.match(/rgba?\([^)]*,\s*([\d.]+)\)/);
+                        if (dm) dimAlpha = parseFloat(dm[1]) || 0;
+                        break;
+                    }
                 }
             }
             const abs = (u) => { try { return new URL(u, baseUrl).href; } catch (e) { return u || ''; } };
             return {
                 title: title,
                 title_role: titleEl.getAttribute('data-typography') || '',
+                dim_ratio: Math.round(dimAlpha * 100),
                 image: imgUrl ? {
                     src: abs(imgUrl),
                     alt: (bg && bg.getAttribute('aria-label')) || '',
@@ -1032,6 +1039,7 @@ def extract_page_banner(page, page_url):
     banner = {"type": "page_banner", "title": data["title"]}
     if data.get("title_role"):
         banner["title_role"] = data["title_role"]
+    banner["dim_ratio"] = data.get("dim_ratio") or 0
     if data.get("image") and data["image"].get("src"):
         banner["image"] = {
             "src": data["image"]["src"],

@@ -9,3 +9,7 @@ __pycache__/
 
 # Content Structuring Agent keeps a pristine copy of the crawl here
 structured_content.raw.json
+
+# compare_agent.py output -- regenerated screenshots/diff images/raw JSON
+# every run; write real findings into dev-vs-live-punchlist.md by hand
+comparison-output/

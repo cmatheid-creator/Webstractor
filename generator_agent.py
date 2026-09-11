@@ -877,8 +877,14 @@ def block_to_gutenberg(block):
             )
         src = xml_escape(display_image_url(image["src"]))
         alt = xml_escape(image.get("alt", ""))
+        # dim_ratio is the overlay strength actually captured from the
+        # live banner (see crawler_agent.py's extract_page_banner()) --
+        # confirmed ~24% on this site, not the 50% this used to be
+        # hard-coded to (compare_agent.py's hero-overlay check is what
+        # caught the mismatch).
+        dim_ratio = block.get("dim_ratio", 0)
         return _cover_block(
-            src, alt, "migration-page-banner", 50, inner_markup,
+            src, alt, "migration-page-banner", dim_ratio, inner_markup,
             "page banner background image still points at the original site "
             "(a GoDaddy stock photo with no importable URL) -- the Stratecon Migration "
             "Repair plugin sideloads it and repoints this reference.",
